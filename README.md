@@ -55,12 +55,16 @@ di creazione.
 
 Requisiti principali del sistema/prodotto finale da realizzare
 Le funzionalità del sistema includono:
+
 ● La possibilità per gli utenti di creare una configurazione personalizzata da zero o da
 una parzialmente completa
+
 ● La generazione del codice e la possibilità per gli utenti di esportarlo tramite un file ZIP
 che contiene tutti i componenti
+
 ● La fornitura di una guida dettagliata per assistere gli utenti nel processo di deploy
 dell'applicazione sul cloud
+
 Dopo aver arricchito l'applicazione mobile con il codice generato dal sistema, inclusi i
 componenti di autenticazione e le API, l'applicazione è in grado di:
 
