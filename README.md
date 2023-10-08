@@ -65,6 +65,9 @@ Dopo aver arricchito l'applicazione mobile con il codice generato dal sistema, i
 componenti di autenticazione e le API, l'applicazione è in grado di:
 
 ● Permettere all’utente di registrarsi ed autenticarsi
+
 ● Creare nuove entità
+
 ● Modificare le configurazioni delle entità esistenti
+
 ● Eliminare entità
