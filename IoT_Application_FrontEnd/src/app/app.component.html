@@ -1,32 +1,100 @@
-<div class="page">
-    <div class="page-box">AGGIUNGI ENTITA'</div>
-    <div class="page-content">
-        <div class="page-content-data">
-            <div class="page-content-data-inner">
+<ngx-graph class="chart-container" [view]="[800, 500]" [showMiniMap]="true" [links]="[
+    {
+      id: 'a',
+      source: 'first',
+    target: 'second',
+      label: 'is parent of'
+    }, {
+      id: 'b',
+      source: 'first',
+      target: 'third',
+      label: 'custom label'
+    }
+  ]" [nodes]="[
+    {
+      id: 'first',
+      label: 'A'
+    }, {
+      id: 'second',
+      label: 'B'
+    }, {
+      id: 'third',
+      label: 'C'
+    }
+  ]">
 
-                <form class="formAddEntity"  [formGroup]="form">
-                    <mat-card>
-                        <mat-card-header>
-                            <mat-card-title>Aggiungi Entità</mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <h3>NOME ENTITA'</h3>
-                            <mat-form-field>
-                                <input matInput placeholder="Nome entità" formControlName="nome">
-                            </mat-form-field>
-                        </mat-card-content>
-                        <mat-card-actions>
-                            <button mat-button (click)="addEntity()">Aggiungi Entità</button>
-                        </mat-card-actions>
-                        <br>
-                        <mat-card-actions>
-                            <button mat-button (click)="export()">Esporta</button>
-                        </mat-card-actions>
-                    </mat-card>
-                </form>
+  <ng-template #defsTemplate>
+    <svg:marker
+        id="arrow"
+        viewBox="0 -5 10 10"
+        refX="8"
+        refY="0"
+        markerWidth="4"
+        markerHeight="4"
+        orient="auto"
+    >
+        <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+    </svg:marker>
+</ng-template>
 
-             </div>
-            </div>
-        </div>
+<ng-template #nodeTemplate let-node>
+    <svg:g
+        (click)="click()"
+        class="node"
+    >
+        <svg:rect
+            [attr.width]="node.dimension.width"
+            [attr.height]="node.dimension.height"
+            [attr.fill]="node.data.color"
+        />
+        <svg:text
+            alignment-baseline="central"
+            [attr.x]="10"
+            [attr.y]="node.dimension.height / 2"
+        >
+            {{ node.label }}
+        </svg:text>
+    </svg:g>
+</ng-template>
+</ngx-graph>
+<mat-card-actions>
+  <button mat-button (click)="add()">Aggiungi entità</button>
+</mat-card-actions>
+
+
+<div class="page" *ngIf = showForm>
+  <div class="page-box">AGGIUNGI ENTITA'</div>
+  <div class="page-content">
+    <div class="page-content-data">
+      <div class="page-content-data-inner">
+
+        <form class="formAddEntity" [formGroup]="form">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Aggiungi Entità</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <h3>NOME ENTITA'</h3>
+              <mat-form-field>
+                <input matInput placeholder="Nome entità" formControlName="nome">
+              </mat-form-field>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="addEntity()">Aggiungi Entità</button>
+            </mat-card-actions>
+            <br>
+            <mat-card-actions>
+              <button mat-button (click)="export()">Esporta</button>
+            </mat-card-actions>
+            <br>
+            <mat-card-actions>
+              <button mat-button (click)="close()">Chiudi</button>
+            </mat-card-actions>
+          </mat-card>
+        </form>
+
+      </div>
     </div>
+  </div>
+</div>
 <router-outlet></router-outlet>

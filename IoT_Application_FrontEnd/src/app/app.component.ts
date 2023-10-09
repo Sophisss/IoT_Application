@@ -21,12 +21,10 @@ export class AppComponent {
 
   entities: Entity[] = [];
 
-  configuration: Configuration
-    /**
-     * Constructor for this Component.
-     * @param httpClient the HttpClient object.
-     */
-    = new Configuration;
+  configuration: Configuration = new Configuration;
+
+
+  showForm = false
 
   /**
    * Constructor for this Component. 
@@ -56,6 +54,18 @@ export class AppComponent {
     this.form = this.formBuilder.group({
       nome: ['', Validators.required]
     });
+  }
+
+  add() {
+    this.showForm = true
+  }
+
+  close() {
+    this.showForm = false
+  }
+
+  click(){
+    console.log("Stampa")
   }
 
   addEntity() {
