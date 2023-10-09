@@ -1,4 +1,4 @@
-# IoT_DevQ_Application
+# IoT Application
 Lo scopo di questa applicazione è la creazione di un applicativo di configurazione e
 un’applicazione mobile di esempio.
 L’applicativo di configurazione verrà utilizzato in scenari in cui del personale tecnico
