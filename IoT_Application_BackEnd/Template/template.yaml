@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Test template
+
+# region parameters
+
+Parameters:
+
+  Project:
+    Type: String
+    Description: Project name
+
+# endregion
+
+# region globals
+
+Globals:
+  Function:
+    Timeout: 10
+    Runtime: python3.9
+    CodeUri: ../src/
+    MemorySize: 256
+    Environment:
+      Variables:
+        AWS_ACCOUNT_ID: !Ref AWS::AccountId
+        DYNAMO_REGION: !Ref AWS::Region
+
+# endregion
+
+Resources:
+
+  ApplicationApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v2
+      Name: !Sub "${Project}-ApplicationApiGateway"
+      EndpointConfiguration:
+        Type: REGIONAL
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'Content-Type'"
+        AllowOrigin: "'*'"
+
+
+  TestAPI:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "${Project}-TestAPI"
+      Description: Test API
+      CodeUri: ../src/Controller/
+      Handler: testController.handler
+      Tags:
+        Name: !Sub "${Project}-TestAPI"
+      Events:
+        TestAPI:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApplicationApiGateway
+            Path: /test
+            Method: POST
+
+    # endregion
+
+Outputs:
+
+  APIGatewayId:
+    Description: API gateway id
+    Value: !Sub 'https://${ApplicationApiGateway}.execute-api.${AWS::Region}.amazonaws.com/v2/'
+    Export:
+      Name: !Sub "${Project}-ApiGatewayId"
