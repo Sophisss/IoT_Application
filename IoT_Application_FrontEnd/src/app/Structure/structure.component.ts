@@ -12,16 +12,16 @@ import {JsonDownloadService} from "../Services/JSONdownload/json-download.servic
 })
 export class StructureComponent {
 
+  //This is a variable, to associate all Http response.
   responseData: any;
 
   //This is the variable for the FormGroup.
   form!: FormGroup;
 
-  entities: Entity[] = [];
-
+  //New configuration
   configuration: Configuration = new Configuration;
 
-
+  //Boolean variables to indicate if form is visible.
   showForm = false
 
   entity!: Entity;
@@ -77,36 +77,27 @@ export class StructureComponent {
   }
 
   saveConfiguration() {
-    this.configuration.entities.push(this.entity)
-    const jsonEntities = [];
-    for (const entity of this.configuration.entities) {
-      const jsonFields = [];
-
-      for (const field of entity.fields) {
-        jsonFields.push({
-          name: field.name,
-          type: field.type,
-          required: field.required
-        });
-
-      }
-
-      jsonEntities.push({
-        name: entity.entity_name,
-        fields: jsonFields
-      });
-    }
-
+    this.configuration.entities.push(this.entity);
+  
+    const jsonEntities = this.configuration.entities.map(entity => ({
+      name: entity.entity_name,
+      fields: entity.fields.map(field => ({
+        name: field.name,
+        type: field.type,
+        required: field.required
+      }))
+    }));
+  
     const jsonObject = {
       entities: jsonEntities
     };
-
-
-    this.resetForm()
-    console.log(jsonObject)
-
+  
+    this.resetForm();
+    console.log(jsonObject);
+  
     this.jsonDownloadService.setData(jsonObject);
   }
+  
 
   closeAttributesForm() {
     this.showForm = false;
@@ -116,6 +107,4 @@ export class StructureComponent {
     this.jsonDownloadService.downloadJson()
   }
 
-  click() {
-  }
 }
