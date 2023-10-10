@@ -1,8 +1,8 @@
 .page {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start; /* Align items to the top-left */
+  justify-content: flex-start; /* Align content to the top-left */
   height: 100vh;
 
   .page-box {
@@ -15,7 +15,7 @@
   .page-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; /* Align items to the top-left */
     width: 100%;
 
     .page-content-data {
@@ -87,7 +87,3 @@
     }
   }
 }
-
-
-
-

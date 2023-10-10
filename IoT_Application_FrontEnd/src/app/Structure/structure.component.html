@@ -19,10 +19,6 @@
             </mat-card-actions>
             <br>
             <mat-card-actions>
-              <button (click)="saveConfiguration()" mat-button>Salva</button>
-            </mat-card-actions>
-            <br>
-            <mat-card-actions>
               <button (click)="export()" mat-button>Esporta configurazione</button>
             </mat-card-actions>
           </mat-card>
@@ -47,11 +43,11 @@
               </mat-form-field>
             </mat-card-content>
             <mat-card-actions>
-              <button (click)="saveAttributes()" mat-button>Salva</button>
+              <button (click)="saveAttributes()" mat-button>Salva Attributo</button>
             </mat-card-actions>
             <br>
             <mat-card-actions>
-              <button (click)="closeAttributesForm()" mat-button>Chiudi</button>
+              <button (click)="saveConfiguration()" mat-button>Chiudi e salva</button>
             </mat-card-actions>
           </mat-card>
         </form>
@@ -60,4 +56,4 @@
     </div>
   </div>
 </div>
-
+<div id="drawflow-container" ></div>
