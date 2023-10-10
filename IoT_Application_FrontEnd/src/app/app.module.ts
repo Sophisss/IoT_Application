@@ -7,10 +7,9 @@ import { MaterialModule } from './material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxGraphModule } from '@swimlane/ngx-graph';
-import { StructureComponent } from './structure/structure.component';
+import { StructureComponent } from './Structure/structure.component';
 import { FooterComponent } from './componentsHome/footer/footer.component';
 import { HeaderHomeComponent } from './componentsHome/header-home/header-home.component';
-import { EntityComponentComponent } from './structure/entity-component/entity-component.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +17,6 @@ import { EntityComponentComponent } from './structure/entity-component/entity-co
     StructureComponent,
     FooterComponent,
     HeaderHomeComponent,
-    EntityComponentComponent
   ],
   imports: [
     BrowserModule,

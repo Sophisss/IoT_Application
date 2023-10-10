@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import { environment } from 'src/environments/environments';
-import { Entity } from '../Models/Entity';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { Configuration } from '../Models/Configuration';
-import { Field } from '../Models/Field';
+import {Component} from '@angular/core';
+import {Entity} from '../Models/Entity';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Configuration} from '../Models/Configuration';
+import {Field} from '../Models/Field';
+import {JsonDownloadService} from "../Services/JSONdownload/json-download.service";
 
 @Component({
   selector: 'app-structure',
@@ -28,12 +27,15 @@ export class StructureComponent {
   entity!: Entity;
 
   /**
-   * Constructor for this Component. 
-   * @param httpClient the HttpClient object.
+   * Constructor for this Component.
+   * @param formBuilder
+   * @param jsonDownloadService
    */
   constructor(
-    private formBuilder: FormBuilder
-  ) { }
+    private formBuilder: FormBuilder,
+    private jsonDownloadService: JsonDownloadService,
+  ) {
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -49,7 +51,7 @@ export class StructureComponent {
     this.responseData = null;
   }
 
-  //This is the method for init the FormGroup. 
+  //This is the method for init the FormGroup.
   initForm() {
     this.form = this.formBuilder.group({
       nome: ['', Validators.required],
@@ -65,7 +67,7 @@ export class StructureComponent {
     this.showForm = true
   }
 
-  save() {
+  saveAttributes() {
     const nomeAttributo = this.form.value.nomeAttributo
     const type = this.form.value.type
     const isrequired = this.form.value.isrequired
@@ -74,7 +76,7 @@ export class StructureComponent {
     this.resetForm()
   }
 
-  saveConfig() {
+  saveConfiguration() {
     this.configuration.entities.push(this.entity)
     const jsonEntities = [];
     for (const entity of this.configuration.entities) {
@@ -102,6 +104,8 @@ export class StructureComponent {
 
     this.resetForm()
     console.log(jsonObject)
+
+    this.jsonDownloadService.setData(jsonObject);
   }
 
   closeAttributesForm() {
@@ -109,7 +113,7 @@ export class StructureComponent {
   }
 
   export() {
-
+    this.jsonDownloadService.downloadJson()
   }
 
   click() {
