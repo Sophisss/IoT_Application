@@ -62,9 +62,7 @@ export class StructureComponent {
   openForm() {
     const nome = this.form.value.nome;
     this.entity = new Entity(nome);
-    this.configuration.entities.push(this.entity)
     this.showForm = true
-    console.log("Entità aggiunta")
   }
 
   save() {
@@ -76,35 +74,46 @@ export class StructureComponent {
     this.resetForm()
   }
 
+  saveConfig() {
+    this.configuration.entities.push(this.entity)
+    const jsonEntities = [];
+    for (const entity of this.configuration.entities) {
+      const jsonFields = [];
+
+      for (const field of entity.fields) {
+        jsonFields.push({
+          name: field.name,
+          type: field.type,
+          required: field.required
+        });
+
+      }
+
+      jsonEntities.push({
+        name: entity.entity_name,
+        fields: jsonFields
+      });
+    }
+
+    const jsonObject = {
+      entities: jsonEntities
+    };
+
+
+    this.resetForm()
+    console.log(jsonObject)
+  }
+
   closeAttributesForm() {
     this.showForm = false;
   }
 
   export() {
-    const jsonEntities = this.configuration.entities.map(entity => (this.exportFields(entity)));
-    const jsonObject = {
-      entities: jsonEntities
-    };
-    this.resetForm()
-    console.log(jsonObject)
+
   }
-
-  exportFields(entity: Entity) {
-    const jsonField = entity.fields.map(fields => ({
-      name: entity.entity_name,
-      fields: [{
-        name: fields.name,
-        type: fields.type,
-        required: fields
-      }]
-    }))
-    return jsonField
-  }
-
-
 
   click() {
-    console.log("Stampa")
+
   }
 
 }
