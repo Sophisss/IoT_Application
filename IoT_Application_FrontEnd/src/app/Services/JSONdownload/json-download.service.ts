@@ -6,7 +6,8 @@ import {Injectable} from '@angular/core';
 export class JsonDownloadService {
   private jsonData: any = null;
 
-  constructor() { }
+  constructor() {
+  }
 
   setData(data: any) {
     this.jsonData = data;

@@ -1,10 +1,9 @@
-import { Entity } from "./Entity";
-import { Link } from "./Link";
+import {Entity} from "./Entity";
+import {Link} from "./Link";
 
 export class Configuration {
 
-    entities : Entity[] = []
+  entities: Entity[] = []
 
-    links : Link[] = []
-
+  links: Link[] = []
 }

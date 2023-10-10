@@ -1,13 +1,12 @@
-import { Field } from "./Field";
+import {Field} from "./Field";
 
 export class Entity {
 
-    entity_name: String;
+  entity_name: String;
 
-    fields : Field[] = []
+  fields: Field[] = []
 
-    constructor(entity_name: String) {
-        this.entity_name = entity_name
-    }
-
+  constructor(entity_name: String) {
+    this.entity_name = entity_name
+  }
 }

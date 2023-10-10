@@ -117,7 +117,5 @@ export class StructureComponent {
   }
 
   click() {
-
   }
-
 }

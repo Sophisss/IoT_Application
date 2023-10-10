@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { StructureComponent } from './Structure/structure.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {StructureComponent} from './Structure/structure.component';
 
 const routes: Routes = [
-{ path: '', component: StructureComponent }
+  {path: '', component: StructureComponent}
 ];
 
 @NgModule({
@@ -11,4 +11,5 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

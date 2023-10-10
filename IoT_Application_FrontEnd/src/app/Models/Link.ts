@@ -1,16 +1,15 @@
-import { Field } from "./Field";
+import {Field} from "./Field";
 
 export class Link {
 
-    first_entity: String;
-    
-    second_entity: String
+  first_entity: String;
 
-    fields : Field[] = []
+  second_entity: String
 
-    constructor(first_entity: String, second_entity: String) {
-        this.first_entity = first_entity
-        this.second_entity = second_entity
-    }
+  fields: Field[] = []
 
+  constructor(first_entity: String, second_entity: String) {
+    this.first_entity = first_entity
+    this.second_entity = second_entity
+  }
 }

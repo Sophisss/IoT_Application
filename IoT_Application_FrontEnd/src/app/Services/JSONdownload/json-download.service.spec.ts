@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { JsonDownloadService } from './json-download.service';
+import {JsonDownloadService} from './json-download.service';
 
 describe('JsonDownloadService', () => {
   let service: JsonDownloadService;
