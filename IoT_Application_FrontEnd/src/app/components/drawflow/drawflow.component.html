@@ -18,7 +18,7 @@
               <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">Home</li>
           </ul>
       </div>
-      <div id="drawflow" (ondrop)="drop($event)" (dragover)="allowDrop($event)">
+      <div id="drawflow" (drop)="drop($event)" (dragover)="allowDrop($event)">
 
           <div class="btn-export" (click)="export()">Export</div>
           <div class="btn-clear" (click)="clearModuleSelected()">Clear</div>

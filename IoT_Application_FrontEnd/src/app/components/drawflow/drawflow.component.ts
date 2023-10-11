@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Drawflow from 'drawflow';
 import { EntityComponent } from './entity/entity.component';
 
@@ -12,13 +12,7 @@ export class DrawflowComponent implements OnInit {
 
   editor!: Drawflow;
 
-  mobile_item_selec = ''
-
-  mobile_last_move: any
-
-  constructor(private entityComponent: EntityComponent){
-
-  }
+  entityComponent!: EntityComponent;
 
 
   ngOnInit(): void {
@@ -50,22 +44,29 @@ export class DrawflowComponent implements OnInit {
   }
 
   drag(ev: any) {
+    console.log("drag")
       ev.dataTransfer.setData('node', ev.target.getAttribute('data-node'));
   }
 
   drop(ev: any) {
+    console.log("drop")
       ev.preventDefault();
       const data = ev.dataTransfer.getData("node");
+      console.log("data:" + data)
       this.addNodeToDrawFlow(data, ev.clientX, ev.clientY);
   }
 
   addNodeToDrawFlow(name: string, pos_x: number, pos_y: number) {
+    console.log("sono dentro")
+    console.log("name: " + name)
     pos_x = pos_x * (this.editor.precanvas.clientWidth / (this.editor.precanvas.clientWidth * this.editor.zoom)) - (this.editor.precanvas.getBoundingClientRect().x * (this.editor.precanvas.clientWidth / (this.editor.precanvas.clientWidth * this.editor.zoom)));
     pos_y = pos_y * (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom)) - (this.editor.precanvas.getBoundingClientRect().y * (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom)));
 
     switch (name) {
       case 'entity':
-        const entityHtml = this.entityComponent.getHtmlContent()
+        console.log("Switch")
+        const entityHtml = this.entityComponent.getHtmlContent();
+        console.log(entityHtml)
         this.editor.addNode(
           'entity',
           0,
@@ -75,14 +76,34 @@ export class DrawflowComponent implements OnInit {
           'entity',
           {},
           entityHtml,
-          ""
+          false
         );
         break;
       case 'link':
-        this.editor.addNode
+        this.editor.addNode(
+          'link',
+          0,
+          1,
+          pos_x,
+          pos_y,
+          'link',
+          {},
+          "entityHtml",
+          false
+        )
         break;
       case 'table':
-        this.editor.addNode
+        this.editor.addNode(
+          'table',
+          0,
+          1,
+          pos_x,
+          pos_y,
+          'table',
+          {},
+          "entityHtml",
+          false
+        )
         break;
       default:
     }
