@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Drawflow from 'drawflow';
+import { EntityComponent } from './entity/entity.component';
+
 
 @Component({
   selector: 'app-drawflow',
@@ -12,29 +14,35 @@ export class DrawflowComponent implements OnInit {
 
   mobile_item_selec = ''
 
-  mobile_last_move = null
+  mobile_last_move: any
+
+  constructor(private entityComponent: EntityComponent){
+
+  }
+
 
   ngOnInit(): void {
     try {
-      const id = document.getElementById("drawflow") as HTMLElement;
-      const element = document.getElementsByClassName('drag-drawflow');
-      for (var i = 0; i < element.length; i++) {
-        element[i].addEventListener('touchend', this.drop, false);
-        element[i].addEventListener('touchmove', this.positionMobile, false);
-        element[i].addEventListener('touchstart', this.drag, false);
-      }
-      this.editor = new Drawflow(id);
-      this.editor.reroute = true
-      this.editor.editor_mode = 'edit'
-      this.editor.start();
+      this.initializeDrawflow();
       console.log("Connesso")
     } catch (exception) {
       console.error('Unable to start Drawflow', exception);
     }
   }
 
-  positionMobile(ev: any) {
-    this.mobile_last_move = ev;
+  initializeDrawflow() {
+    const id = document.getElementById("drawflow") as HTMLElement;
+    this.editor = new Drawflow(id);
+    this.editor.reroute = true
+    this.editor.editor_mode = 'edit'
+    this.editor.start();
+
+    // Gestisci l'evento "dragstart" sugli elementi trascinabili
+    const dragElements = document.querySelectorAll('.drag-drawflow');
+    dragElements.forEach((element) => {
+      element.addEventListener('dragstart', (ev) => this.drag(ev));
+    });
+
   }
 
   allowDrop(ev: any) {
@@ -42,42 +50,22 @@ export class DrawflowComponent implements OnInit {
   }
 
   drag(ev: any) {
-    if (ev.type === "touchstart") {
-      this.mobile_item_selec = ev.target.closest(".drag-drawflow").getAttribute('data-node');
-    } else {
-      ev.dataTransfer.setData("node", ev.target.getAttribute('data-node'));
-    }
+      ev.dataTransfer.setData('node', ev.target.getAttribute('data-node'));
   }
 
-  drop(){
-
-  }
-
-  /**
-   * drop(ev: any){
-    if (ev.type === "touchend") {
-      var parentdrawflow = document.elementFromPoint(this.mobile_last_move.touches[0].clientX, this.mobile_last_move.touches[0].clientY).closest("#drawflow");
-      if (parentdrawflow != null) {
-        this.addNodeToDrawFlow(this.mobile_item_selec, this.mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY);
-      }
-      this.mobile_item_selec = '';
-    } else {
+  drop(ev: any) {
       ev.preventDefault();
-      var data = ev.dataTransfer.getData("node");
+      const data = ev.dataTransfer.getData("node");
       this.addNodeToDrawFlow(data, ev.clientX, ev.clientY);
-    }
-
   }
-   * 
-   */
 
-
-  addNodeToDrawFlow(name: any, pos_x: any, pos_y: any) {
+  addNodeToDrawFlow(name: string, pos_x: number, pos_y: number) {
     pos_x = pos_x * (this.editor.precanvas.clientWidth / (this.editor.precanvas.clientWidth * this.editor.zoom)) - (this.editor.precanvas.getBoundingClientRect().x * (this.editor.precanvas.clientWidth / (this.editor.precanvas.clientWidth * this.editor.zoom)));
     pos_y = pos_y * (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom)) - (this.editor.precanvas.getBoundingClientRect().y * (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom)));
 
     switch (name) {
       case 'entity':
+        const entityHtml = this.entityComponent.getHtmlContent()
         this.editor.addNode(
           'entity',
           0,
@@ -86,7 +74,7 @@ export class DrawflowComponent implements OnInit {
           pos_y,
           'entity',
           {},
-          "html",
+          entityHtml,
           ""
         );
         break;
@@ -96,10 +84,11 @@ export class DrawflowComponent implements OnInit {
       case 'table':
         this.editor.addNode
         break;
-      default : 
+      default:
     }
   }
-
+  
+  
   export() {
     console.log("Export")
   }
