@@ -1,0 +1,28 @@
+<div class="page">
+  <div class="page-content">
+    <div class="page-content-data">
+      <div class="page-content-data-inner">
+        <button (click)="open()" *ngIf="!openDialog">
+          NUOVO PROGETTO
+        </button>
+
+        <div *ngIf="openDialog">
+          <h1 mat-dialog-title>NOME PROGETTO</h1>
+          <div mat-dialog-content>
+            <p>Inserisci il nome del nuovo progetto</p>
+            <mat-form-field>
+              <mat-label>Project name</mat-label>
+              <input matInput>
+            </mat-form-field>
+          </div>
+          <div mat-dialog-actions>
+            <button mat-button (click)="onNoClick()">Chiudi</button>
+            <button mat-button cdkFocusInitial (click)="changeRoute('/structure')">Conferma</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{
+    "nomeProgetto": "...",
+    "entities": [
+      {
+        "name": "Device",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "required": "true"
+          }
+        ]
+      }
+    ],
+    "awsconfig": {
+      "dynamo": {
+        "Tables": [
+          ...
+        ]
+      }
+    } 
+  }

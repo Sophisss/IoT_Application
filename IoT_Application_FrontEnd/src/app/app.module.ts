@@ -7,9 +7,10 @@ import {MaterialModule} from './material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import {StructureComponent} from './Structure/structure.component';
+import {StructureComponent} from './components/pages/Structure/structure.component';
 import {FooterComponent} from './componentsHome/footer/footer.component';
 import {HeaderHomeComponent} from './componentsHome/header-home/header-home.component';
+import { HomeComponent } from './components/pages/home/home.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import {HeaderHomeComponent} from './componentsHome/header-home/header-home.comp
     StructureComponent,
     FooterComponent,
     HeaderHomeComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

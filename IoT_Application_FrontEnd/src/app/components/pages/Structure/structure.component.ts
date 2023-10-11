@@ -1,11 +1,10 @@
-import {Component, ElementRef} from '@angular/core';
-import {Entity} from '../Models/Entity';
+import {Component} from '@angular/core';
+import {Entity} from '../../../Models/Entity';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Configuration} from '../Models/Configuration';
-import {Field} from '../Models/Field';
-import {JsonDownloadService} from "../Services/JSONdownload/json-download.service";
-import { Link } from '../Models/Link';
-import Drawflow, * as drawflow from 'drawflow';
+import {Configuration} from '../../../Models/Configuration';
+import {Field} from '../../../Models/Field';
+import {JsonDownloadService} from "../../../Services/JSONdownload/json-download.service";
+import { Link } from '../../../Models/Link';
 
 
 
@@ -30,8 +29,6 @@ export class StructureComponent {
 
   entity!: Entity;
 
-  editor : any
-
   /**
    * Constructor for this Component.
    * @param formBuilder
@@ -44,21 +41,6 @@ export class StructureComponent {
   }
 
   ngOnInit(): void {
-    const drawFlowHtmlElement = <HTMLElement>document.getElementById('drawflow-container');
-
-    const testEditor = new Drawflow(drawFlowHtmlElement);
-
-    this.editor = new Drawflow(drawFlowHtmlElement);
-
-    this.editor.reroute = true;
-    this.editor.curvature = 0.5;
-    this.editor.reroute_fix_curvature = true;
-    this.editor.reroute_curvature = 0.5;
-    this.editor.force_first_input = false;
-    this.editor.line_path = 1;
-    this.editor.editor_mode = 'edit';
-
-    this.editor.start();
     this.initForm();
   }
 
@@ -108,7 +90,7 @@ export class StructureComponent {
   
     const jsonObject = {
       entities: jsonEntities,
-      links : jsonLinks
+      links : jsonLinks,
     };
   
     this.resetForm();
