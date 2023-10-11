@@ -4,17 +4,14 @@
           <i class="fab fa-entity"></i><span> Entity</span>
       </div>
       <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="link">
-          <i class="fab fa-slack"></i><span> Link</span>
+          <i class="fab fa-link"></i><span> Link</span>
       </div>
       <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="table">
-          <i class="fab fa-github"></i><span>Table</span>
+          <i class="fab fa-table"></i><span>Table</span>
       </div>
-      <div class="drag-drawflow" draggable="true" ondragstart="drag(event)" data-node="parameter">
-          <i class="fab fa-telegram"></i><span> Parameter</span>
-      </div>
-
-
   </div>
+
+
   <div class="col-right">
       <div class="menu">
           <ul>
@@ -23,11 +20,8 @@
       </div>
       <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
 
-          <div class="btn-export" onclick="Swal.fire({ title: 'Export',
-      html: '<pre><code>'+JSON.stringify(editor.export(), null,4)+'</code></pre>'
-      })">Export</div>
-          <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
+          <div class="btn-export" (click)="export()">Export</div>
+          <div class="btn-clear" (click)="clearModuleSelected()">Clear</div>
       </div>
   </div>
 </div>
-

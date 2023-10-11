@@ -11,6 +11,10 @@ import {StructureComponent} from './components/pages/Structure/structure.compone
 import {FooterComponent} from './componentsHome/footer/footer.component';
 import {HeaderHomeComponent} from './componentsHome/header-home/header-home.component';
 import { HomeComponent } from './components/pages/home/home.component';
+import { DrawflowComponent } from './components/drawflow/drawflow.component';
+import { EntityComponent } from './components/drawflow/entity/entity.component';
+import { LinkComponent } from './components/drawflow/link/link.component';
+import { TableComponent } from './components/drawflow/table/table.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +23,10 @@ import { HomeComponent } from './components/pages/home/home.component';
     FooterComponent,
     HeaderHomeComponent,
     HomeComponent,
+    DrawflowComponent,
+    EntityComponent,
+    LinkComponent,
+    TableComponent,
   ],
   imports: [
     BrowserModule,
