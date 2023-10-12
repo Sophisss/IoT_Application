@@ -1,0 +1,98 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the top-left */
+    justify-content: flex-start; /* Align content to the top-left */
+    height: 100vh;
+  
+    .page-box {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #333;
+    }
+  
+    .page-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Align items to the top-left */
+      width: 100%;
+  
+      .page-content-data {
+        width: 100%;
+        max-width: 400px;
+  
+        .page-content-data-inner {
+          background-color: #f5f5f5;
+          border-radius: 10px;
+          padding: 20px;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  
+          mat-drawer {
+    background-color: #0f172a;
+    width: 260px;
+  }
+  
+  mat-drawer-container {
+    height: 100%;
+  }
+  
+          form {
+            mat-card {
+              width: 100%;
+  
+              mat-card-header {
+                background-color: #0f172a;
+                color: white;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+              }
+  
+              mat-card-content {
+                h3 {
+                  font-size: 24px;
+                  margin-bottom: 10px;
+                  color: #333;
+                }
+  
+                mat-form-field {
+                  width: 100%;
+                  margin-bottom: 20px;
+  
+                  input {
+                    font-size: 20px;
+                    border: 2px solid #ddd;
+                    border-radius: 5px;
+                    padding: 10px;
+                  }
+                }
+              }
+  
+              mat-card-actions {
+                display: flex;
+                justify-content: flex-end;
+  
+                button {
+                  background-color: #0f172a;
+                  color: white;
+                  padding: 12px 24px;
+                  border: none;
+                  border-radius: 5px;
+                  cursor: pointer;
+                  transition: background-color 0.3s;
+  
+                  &:hover {
+                    background-color: #0f172a;
+                  }
+  
+                  .add-entity-button-text {
+                    font-weight: bold;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }

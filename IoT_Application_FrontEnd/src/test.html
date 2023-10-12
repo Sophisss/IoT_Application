@@ -1,0 +1,62 @@
+<div class="page">
+    <div class="page-content">
+      <div class="page-content-data">
+        <div class="page-content-data-inner">
+  
+          <form *ngIf="!showForm" [formGroup]="form" class="formAddEntity">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Aggiungi Entità</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <h3>NOME ENTITA'</h3>
+                <mat-form-field>
+                  <input formControlName="nome" matInput placeholder="Nome entità">
+                </mat-form-field>
+              </mat-card-content>
+              <mat-card-actions>
+                <button (click)="openForm()" mat-button>Aggiungi campi</button>
+              </mat-card-actions>
+              <br>
+              <mat-card-actions>
+                <button (click)="saveEntity()" mat-button>Salva Entità</button>
+              </mat-card-actions>
+              <br>
+              <mat-card-actions>
+                <button (click)="export()" mat-button>Esporta configurazione</button>
+              </mat-card-actions>
+            </mat-card>
+          </form>
+  
+          <br>
+  
+          <form *ngIf="showForm" [formGroup]="form" class="formAddAttributes">
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title>Aggiungi Attributi</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <mat-form-field>
+                  <input formControlName="nomeAttributo" matInput placeholder="Nome attributo">
+                </mat-form-field>
+                <mat-form-field>
+                  <input formControlName="type" matInput placeholder="Tipo attributo">
+                </mat-form-field>
+                <mat-form-field>
+                  <input formControlName="isrequired" matInput placeholder="Campo Required">
+                </mat-form-field>
+              </mat-card-content>
+              <mat-card-actions>
+                <button (click)="saveAttributes()" mat-button>Salva Attributo</button>
+              </mat-card-actions>
+              <br>
+              <mat-card-actions>
+                <button (click)="saveConfiguration()" mat-button>Chiudi e salva</button>
+              </mat-card-actions>
+            </mat-card>
+          </form>
+  
+        </div>
+      </div>
+    </div>
+  </div>
