@@ -13,8 +13,8 @@ import {HeaderHomeComponent} from './componentsHome/header-home/header-home.comp
 import { HomeComponent } from './components/pages/home/home.component';
 import { DrawflowComponent } from './components/drawflow/drawflow.component';
 import { EntityComponent } from './components/drawflow/entity/entity.component';
-import { LinkComponent } from './components/drawflow/link/link.component';
 import { TableComponent } from './components/drawflow/table/table.component';
+import { DragDropModule} from '@angular/cdk/drag-drop'
 
 @NgModule({
   declarations: [
@@ -25,7 +25,6 @@ import { TableComponent } from './components/drawflow/table/table.component';
     HomeComponent,
     DrawflowComponent,
     EntityComponent,
-    LinkComponent,
     TableComponent,
   ],
   imports: [
@@ -35,6 +34,7 @@ import { TableComponent } from './components/drawflow/table/table.component';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -6,7 +6,7 @@ import { DrawflowComponent } from './components/drawflow/drawflow.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'structure', component: DrawflowComponent}
+  {path: 'structure', component: StructureComponent}
 ];
 
 @NgModule({
