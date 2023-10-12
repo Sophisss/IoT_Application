@@ -20,8 +20,8 @@ export class HomeComponent {
   }
 
   changeRoute(route: string) {
-    if (route === '/structure') {
-      this.router.navigate(['/structure']);
+    if (route === '/drawer') {
+      this.router.navigate(['/drawer']);
     }
   }
 

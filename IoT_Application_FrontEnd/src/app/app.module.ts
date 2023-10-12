@@ -7,14 +7,13 @@ import {MaterialModule} from './material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import {StructureComponent} from './components/pages/Structure/structure.component';
+import {StructureComponent} from './pages/Structure/structure.component';
 import {FooterComponent} from './componentsHome/footer/footer.component';
 import {HeaderHomeComponent} from './componentsHome/header-home/header-home.component';
-import { HomeComponent } from './components/pages/home/home.component';
-import { DrawflowComponent } from './components/drawflow/drawflow.component';
-import { EntityComponent } from './components/drawflow/entity/entity.component';
-import { TableComponent } from './components/drawflow/table/table.component';
-import { DragDropModule} from '@angular/cdk/drag-drop'
+import { HomeComponent } from './pages/home/home.component';
+import { DragDropModule} from '@angular/cdk/drag-drop';
+import { BlankComponent } from './er-drawer/blank/blank.component';
+import { SidenavComponent } from './er-drawer/sidenav/sidenav.component'
 
 @NgModule({
   declarations: [
@@ -23,9 +22,8 @@ import { DragDropModule} from '@angular/cdk/drag-drop'
     FooterComponent,
     HeaderHomeComponent,
     HomeComponent,
-    DrawflowComponent,
-    EntityComponent,
-    TableComponent,
+    BlankComponent,
+    SidenavComponent,
   ],
   imports: [
     BrowserModule,
