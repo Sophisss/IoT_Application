@@ -4,7 +4,7 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   display: flex;
 }
 
@@ -17,7 +17,6 @@ mat-drawer-container {
   height: 100%;
 }
 
-
 .drag-drawflow {
   line-height: 50px;
   border-bottom: 1px solid var(--border-color);
@@ -27,37 +26,51 @@ mat-drawer-container {
   width: 100%;
   height: 100%;
 }
-  
-  .btn-export {
-    float: right;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: white;
-    font-weight: bold;
-    border: 1px solid #0f172a;
-    background: #0f172a;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    z-index: 5;
-  }
-  
-  .btn-clear {
-    float: right;
-    position: absolute;
-    top: 10px;
-    right: 85px;
-    color: white;
-    font-weight: bold;
-    border: 1px solid #0f172a;
-    background: #0f172a;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    z-index: 5;
-  }
-  .swal-wide{
-      width:80% !important;
-  }
-  
+
+.btn-import {
+  float: right;
+  position: absolute;
+  top: 10px;
+  right: 150px;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #0f172a;
+  background: #0f172a;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.btn-export {
+  float: right;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #0f172a;
+  background: #0f172a;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.btn-clear {
+  float: right;
+  position: absolute;
+  top: 10px;
+  right: 85px;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #0f172a;
+  background: #0f172a;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 5;
+}
+.swal-wide {
+  width: 80% !important;
+}

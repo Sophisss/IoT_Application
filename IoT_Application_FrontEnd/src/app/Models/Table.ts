@@ -1,16 +1,26 @@
 export class Table {
 
-    name : String
+    table_id : Number
 
-    partition_key : String
+    name: String
 
-    sort_Key : String
+    partition_key: String | undefined
+
+    sort_Key: String | undefined
 
 
-    constructor(name: String, pk: String, sk: String){
+    constructor(id: Number, name: String) {
+        this.table_id = id
         this.name = name
-        this.partition_key = pk
-        this.sort_Key = sk
+    }
+
+
+    setPartitionKey(partition_key: String): void {
+        this.partition_key = partition_key;
+    }
+
+    setSortKey(sort_Key: String): void {
+        this.sort_Key = sort_Key;
     }
 
 }

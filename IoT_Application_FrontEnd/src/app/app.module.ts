@@ -13,7 +13,9 @@ import {HeaderHomeComponent} from './componentsHome/header-home/header-home.comp
 import { HomeComponent } from './pages/home/home.component';
 import { DragDropModule} from '@angular/cdk/drag-drop';
 import { BlankComponent } from './er-drawer/blank/blank.component';
-import { SidenavComponent } from './er-drawer/sidenav/sidenav.component'
+import { SidenavComponent } from './er-drawer/sidenav/sidenav.component';
+import { EntityComponent } from './er-drawer/components/entity/entity.component';
+import { TableComponent } from './er-drawer/components/table/table.component'
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { SidenavComponent } from './er-drawer/sidenav/sidenav.component'
     HomeComponent,
     BlankComponent,
     SidenavComponent,
+    EntityComponent,
+    TableComponent,
   ],
   imports: [
     BrowserModule,

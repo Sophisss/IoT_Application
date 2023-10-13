@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import Drawflow from 'drawflow';
+import { GeneratorService } from 'src/app/Services/Generator/generator.service';
 
 @Component({
   selector: 'app-blank',
@@ -14,6 +15,8 @@ export class BlankComponent {
 
   sideBarOpen = true;
 
+  constructor(private generatorService: GeneratorService) { }
+
   ngOnInit(): void {
     this.initializeDrawflow();
   }
@@ -26,34 +29,63 @@ export class BlankComponent {
     this.editor.start();
     this.addEditorEvents();
 
-    // Gestisci l'evento "dragstart" sugli elementi trascinabili
+    //TODO rivedi
     const dragElements = document.querySelectorAll('.drag-drawflow');
     dragElements.forEach((element) => {
       element.addEventListener('dragstart', (ev) => this.drag(ev));
     });
 
   }
-  
+
   addEditorEvents() {
+    //TODO rivedi creazione
     this.editor.on('nodeCreated', (id: any) => {
       console.log('Editor Event :>> Node created ' + id, this.editor.getNodeFromId(id));
     });
 
-    this.editor.on('nodeMoved', (id: any) => {
-      console.log('Editor Event :>> Node moved ' + id);
+    this.editor.on('nodeRemoved', (id: number) => {
+      console.log('Node removed ' + id);
+      this.removeNode(id);
     });
 
-    this.editor.on('nodeRemoved', (id: any) => {
-      console.log('Editor Event :>> Node removed ' + id);
+    this.editor.on('connectionCreated', (connection) => {
+      console.log('Connection created');
+      this.addLink(connection)
+    })
+
+    this.editor.on('connectionRemoved', (connection: any) => {
+      console.log('Connection removed ', connection);
+      this.removeLink(connection.output_id, connection.input_id)
     });
 
     this.editor.on('nodeSelected', (id: any) => {
-      console.log('Editor Event :>> Node selected ' + id, this.editor.getNodeFromId(id));
       this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
-      console.log('Editor Event :>> Node selected :>> this.selectedNode :>> ', this.selectedNode);
-      console.log('Editor Event :>> Node selected :>> this.selectedNode :>> ', this.selectedNode.data);
     });
+  }
 
+  removeNode(id: number) {
+    this.generatorService.removeObject(id, this.selectedNode.class)
+  }
+
+  addLink(connection: any) {
+    const first = this.editor.getNodeFromId(connection.output_id)
+    const second = this.editor.getNodeFromId(connection.input_id)
+    this.generatorService.saveLink(first.id, second.id)
+  }
+
+
+  removeLink(first_entity: string, second_entity: string){
+    this.generatorService.removeLink(first_entity, second_entity)
+  }
+
+  addObjectRelativeClassNode(id: number | string) {
+    const node = this.editor.getNodeFromId(id)
+    if(node.class == 'Entity'){
+      this.generatorService.saveEntity(node.id, node.name)
+    }
+    else if (node.class == 'Table') {
+      this.generatorService.saveTable(node.id, node.name)
+    }
   }
 
   allowDrop(ev: any) {
@@ -94,17 +126,18 @@ export class BlankComponent {
       </div>
       `;
         console.log(entityHtml)
-        this.editor.addNode(
-          'entity',
+        const entity_id = this.editor.addNode(
+          name,
           1,
           1,
           pos_x,
           pos_y,
-          'entity',
+          'Entity',
           {},
           entityHtml,
           false
         );
+        this.addObjectRelativeClassNode(entity_id)
         break;
       case 'table':
         const tableHtml = `
@@ -124,28 +157,35 @@ export class BlankComponent {
         </div>
       </div>
       `;
-        this.editor.addNode(
-          'table',
-          0,
+        const table_id = this.editor.addNode(
+          'IoT',
+          1,
           0,
           pos_x,
           pos_y,
-          'table',
+          'Table',
           {},
           tableHtml,
           false
         )
+        this.addObjectRelativeClassNode(table_id)
         break;
       default:
     }
   }
 
+  import() {
+    console.log("import")
+  }
+
 
   export() {
-
+    this.generatorService.export()
+    console.log("Export")
   }
 
   clearModuleSelected() {
+    this.generatorService.clear();
     this.editor.clear();
   }
 
