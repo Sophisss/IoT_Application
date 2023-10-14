@@ -1,3 +1,8 @@
+/**
+ * This model represents a table. 
+ * Each table consists of an id, a name, 
+ * partition key and sort key.
+ */
 export class Table {
 
     table_id : Number
