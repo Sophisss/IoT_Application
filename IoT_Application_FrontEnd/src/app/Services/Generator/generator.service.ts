@@ -170,7 +170,6 @@ export class GeneratorService {
     if (class_name == 'Entity') {
       const elementIndex = this.configuration.entities.findIndex(entity => entity.entity_id === id);
       this.configuration.entities.splice(elementIndex, 1)
-      console.log(this.configuration.entities)
     } else if (class_name == 'Table') {
       const elementIndex = this.configuration.tables.findIndex(table => table.table_id === id);
       this.configuration.tables.splice(elementIndex, 1)
@@ -188,7 +187,6 @@ export class GeneratorService {
   removeLink(first_entity: string, second_entity: string) {
     const elementIndex = this.configuration.links.findIndex(link =>
       link.first_entity.entity_id === parseInt(first_entity) && link.second_entity.entity_id === parseInt(second_entity));
-      console.log(elementIndex)
     this.configuration.links.splice(elementIndex, 1)
     this.saveConfiguration();
   }

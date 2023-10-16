@@ -5,8 +5,10 @@
         </mat-drawer>
       </mat-drawer-container>
     <div class="col-right">
-        <div id="drawflow" (drop)="drop($event)" (dragover)="allowDrop($event)">
-            <div class="btn-import" (click)="import()">Import</div>
+        <div id="drawflow" 
+        (drop)="drop($event)" 
+        (dragover)="allowDrop($event)">
+            <div class="btn-import" (click)="import($event)">Import</div>
             <div class="btn-export" (click)="export()">Export</div>
             <div class="btn-clear" (click)="clearModuleSelected()">Clear</div>
         </div>

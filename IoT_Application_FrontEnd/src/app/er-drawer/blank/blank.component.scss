@@ -17,16 +17,6 @@ mat-drawer-container {
   height: 100%;
 }
 
-.drag-drawflow {
-  line-height: 50px;
-  border-bottom: 1px solid var(--border-color);
-  padding-left: 20px;
-  cursor: move;
-  user-select: none;
-  width: 100%;
-  height: 100%;
-}
-
 .btn-import {
   float: right;
   position: absolute;
@@ -97,14 +87,6 @@ mat-drawer-container {
   .drawflow-node .box p {
     margin-top: 5px;
     margin-bottom: 5px;
-  }
-
-  .drawflow-node.welcome {
-    width: 250px;
-  }
-
-  .drawflow-node.slack .title-box {
-    border-radius: 4px;
   }
 
   .drawflow-node input,

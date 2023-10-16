@@ -1,41 +1,44 @@
 import {Injectable} from '@angular/core';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Class that acts as a service that takes care of JSON export.
+ */
 export class JsonDownloadService {
-  private jsonData: any = null;
+  jsonData: any;
 
-  constructor() {
-  }
-
+  /**
+   * Set the data that will be downloaded next.
+   * @param data data to download.
+   */
   setData(data: any) {
     this.jsonData = data;
   }
 
+  /**
+   * Get the data set previously.
+   * @returns set data.
+   */
   getData(): any {
     return this.jsonData;
   }
 
+  /**
+   * Download data as JSON file.
+   */
   downloadJson() {
-    const jsonData = this.jsonData;
-
-    if (jsonData) {
+    const jsonData = this.getData();
+    
+    if(jsonData) {
       const jsonStr = JSON.stringify(jsonData, null, 2);
       const blob = new Blob([jsonStr], {type: 'application/json'});
-      const url = window.URL.createObjectURL(blob);
+      saveAs(blob, "structure.json");
 
-      // Create a temporary anchor element to trigger the download
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'structure.json'; // Specify the file name
-      a.click();
-
-      // Clean up resources
-      window.URL.revokeObjectURL(url);
-    } else {
-      // Handle the case where data is not available
-      console.error('No JSON data available.');
+    }else {
+      alert('No JSON data available.');
     }
   }
 }

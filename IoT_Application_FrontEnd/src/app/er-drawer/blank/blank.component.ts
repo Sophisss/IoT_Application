@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import Drawflow from 'drawflow';
 import { GeneratorService } from 'src/app/Services/Generator/generator.service';
+import { ImportServiceService } from 'src/app/Services/Import_Json/import-service.service';
+import { Drawflowoverride } from '../drawflow/drawflowOverride';
 
 @Component({
   selector: 'app-blank',
@@ -11,11 +13,10 @@ import { GeneratorService } from 'src/app/Services/Generator/generator.service';
  * This class represents my canvas.
  */
 export class BlankComponent {
-
   /**
    * Variable representing an instance of the Drawflow editor.
    */
-  editor!: Drawflow;
+  editor!: Drawflowoverride;
 
   /**
    * Variable that tracks the selected node in the Drawflow editor.
@@ -24,29 +25,47 @@ export class BlankComponent {
 
   sideBarOpen = true;
 
+  connection = false
+
+  precanvas: any
+  events: any;
+
+  
+
   /**
    * Constructor for this Component.
    * @param generatorService service to generate JSON configuration.
    */
   constructor(
-    private generatorService: GeneratorService
+    private generatorService: GeneratorService,
+    private importService: ImportServiceService
   ) { }
 
   ngOnInit(): void {
-    this.initializeDrawflow();
+    this.initDrawingBoard();
   }
 
   /**
-   * This method initializes the Drawflow editor.
+   * Initializes the drawing board, which includes creating a Drawflow editor
+   * and setting up various configuration options.
    */
-  initializeDrawflow() {
-    const id = document.getElementById("drawflow") as HTMLElement;
-    this.editor = new Drawflow(id);
-    this.editor.reroute = true
-    this.editor.editor_mode = 'edit'
-    this.editor.start();
+  initDrawingBoard() {
+    this.initDrawFlow();
     this.addEditorEvents();
-    this.dragstart()
+    this.dragstart();
+  }
+
+  /**
+   * This method initializes the Drawflow editor and configures its settings.
+   */
+  initDrawFlow() {
+    const drawflowElement = <HTMLElement>document.getElementById('drawflow');
+    this.editor = new Drawflowoverride(drawflowElement);
+    this.editor.reroute = false
+    this.editor.force_first_input = false;
+    this.editor.line_path = 1;
+    this.editor.editor_mode = 'edit';
+    this.editor.start();
   }
 
   /**
@@ -76,7 +95,7 @@ export class BlankComponent {
     });
 
     this.editor.on('connectionCreated', (connection) => {
-      console.log('Connection created');
+      console.log('Connection created: ' + connection);
       this.addLink(connection)
     })
 
@@ -89,9 +108,24 @@ export class BlankComponent {
       this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
     });
 
-    this.editor.on('click', (e: any) => {
-      console.log('Click :', e);
+    this.editor.on('contextmenu', (event: any) => {
+      console.log("contextmenu: " + event)
     });
+
+    this.editor.on('click', (event: any) => {
+      this.click(event)
+      console.log("click: " + event)
+    });
+  }
+
+  click(event : any) {
+    console.log("dentro click")
+    switch(event.target.classList[0]){
+      case 'input':
+        console.log(event)
+        this.connection = true;
+        this.editor.addConnection(event.target)
+    }
   }
 
   /**
@@ -224,7 +258,7 @@ export class BlankComponent {
   /**
    * This method import a configuration.
    */
-  import() {
+  import(event: Event) {
     console.log("import")
   }
 
@@ -245,3 +279,5 @@ export class BlankComponent {
   }
 
 }
+
+
