@@ -28,7 +28,9 @@ export class BlankComponent {
    * Constructor for this Component.
    * @param generatorService service to generate JSON configuration.
    */
-  constructor(private generatorService: GeneratorService) { }
+  constructor(
+    private generatorService: GeneratorService
+  ) { }
 
   ngOnInit(): void {
     this.initializeDrawflow();
@@ -44,13 +46,18 @@ export class BlankComponent {
     this.editor.editor_mode = 'edit'
     this.editor.start();
     this.addEditorEvents();
+    this.dragstart()
+  }
 
-    //TODO rivedi
+  /**
+   * This method handles the dragstart event on elements with class .drag-drawflow.
+   * It is used to attach an event handler to draggable elements.
+   */
+  dragstart() {
     const dragElements = document.querySelectorAll('.drag-drawflow');
     dragElements.forEach((element) => {
       element.addEventListener('dragstart', (ev) => this.drag(ev));
     });
-
   }
 
   /**
@@ -58,9 +65,9 @@ export class BlankComponent {
    * inside the editor.
    */
   addEditorEvents() {
-    //TODO rivedi creazione
     this.editor.on('nodeCreated', (id: any) => {
-      console.log('Editor Event :>> Node created ' + id, this.editor.getNodeFromId(id));
+      console.log('Node created ' + id)
+      this.addObjectRelativeClassNode(id)
     });
 
     this.editor.on('nodeRemoved', (id: number) => {
@@ -80,6 +87,10 @@ export class BlankComponent {
 
     this.editor.on('nodeSelected', (id: any) => {
       this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
+    });
+
+    this.editor.on('click', (e: any) => {
+      console.log('Click :', e);
     });
   }
 
@@ -108,7 +119,7 @@ export class BlankComponent {
    * @param first_entity first entity id to remove.
    * @param second_entity second entity id to remove.
    */
-  removeLink(first_entity: string, second_entity: string){
+  removeLink(first_entity: string, second_entity: string) {
     this.generatorService.removeLink(first_entity, second_entity)
   }
 
@@ -116,11 +127,11 @@ export class BlankComponent {
   /**
    * This method adds an object associated with a Drawflow editor node,
    * based on the node class, and saves this object.
-   * @param id node id from which to obtain the associated object.
+   * @param id node id from which to obtain the associated node.
    */
   addObjectRelativeClassNode(id: number | string) {
     const node = this.editor.getNodeFromId(id)
-    if(node.class == 'Entity'){
+    if (node.class == 'Entity') {
       this.generatorService.saveEntity(node.id, node.name)
     }
     else if (node.class == 'Table') {
@@ -184,19 +195,7 @@ export class BlankComponent {
         </div>
       </div>
       `;
-        console.log(entityHtml)
-        const entity_id = this.editor.addNode(
-          name,
-          1,
-          1,
-          pos_x,
-          pos_y,
-          'Entity',
-          {},
-          entityHtml,
-          false
-        );
-        this.addObjectRelativeClassNode(entity_id)
+        this.editor.addNode(name, 1, 1, pos_x, pos_y, 'Entity', {}, entityHtml, false);
         break;
       case 'table':
         const tableHtml = `
@@ -216,18 +215,7 @@ export class BlankComponent {
         </div>
       </div>
       `;
-        const table_id = this.editor.addNode(
-          'IoT',
-          1,
-          0,
-          pos_x,
-          pos_y,
-          'Table',
-          {},
-          tableHtml,
-          false
-        )
-        this.addObjectRelativeClassNode(table_id)
+        this.editor.addNode('IoT', 0, 0, pos_x, pos_y, 'Table', {}, tableHtml, false);
         break;
       default:
     }

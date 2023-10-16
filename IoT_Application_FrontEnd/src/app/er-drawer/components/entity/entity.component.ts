@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-entity',
@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./entity.component.scss']
 })
 export class EntityComponent {
+  @Input()
+  entityData!: string;
 
 }
