@@ -114,7 +114,8 @@ export class GeneratorService {
     const jsonEntities = this.configuration.entities.map(entity => ({
       name: entity.entity_name,
       entity_id: entity.entity_id,
-      fields: this.createFields(entity)
+      fields: this.createFields(entity),
+      primary_key : []
     }));
     return jsonEntities
   }

@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import Drawflow from 'drawflow';
 import { GeneratorService } from 'src/app/Services/Generator/generator.service';
-import { ImportServiceService } from 'src/app/Services/Import_Json/import-service.service';
-import { Drawflowoverride } from '../drawflow/drawflowOverride';
 
 @Component({
   selector: 'app-blank',
@@ -16,7 +14,7 @@ export class BlankComponent {
   /**
    * Variable representing an instance of the Drawflow editor.
    */
-  editor!: Drawflowoverride;
+  editor!: Drawflow;
 
   /**
    * Variable that tracks the selected node in the Drawflow editor.
@@ -25,20 +23,12 @@ export class BlankComponent {
 
   sideBarOpen = true;
 
-  connection = false
-
-  precanvas: any
-  events: any;
-
-  
-
   /**
    * Constructor for this Component.
    * @param generatorService service to generate JSON configuration.
    */
   constructor(
-    private generatorService: GeneratorService,
-    private importService: ImportServiceService
+    private generatorService: GeneratorService
   ) { }
 
   ngOnInit(): void {
@@ -60,9 +50,9 @@ export class BlankComponent {
    */
   initDrawFlow() {
     const drawflowElement = <HTMLElement>document.getElementById('drawflow');
-    this.editor = new Drawflowoverride(drawflowElement);
+    this.editor = new Drawflow(drawflowElement);
     this.editor.reroute = false
-    this.editor.force_first_input = false;
+    this.editor.force_first_input = true;
     this.editor.line_path = 1;
     this.editor.editor_mode = 'edit';
     this.editor.start();
@@ -118,14 +108,21 @@ export class BlankComponent {
     });
   }
 
-  click(event : any) {
-    console.log("dentro click")
-    switch(event.target.classList[0]){
-      case 'input':
-        console.log(event)
-        this.connection = true;
-        this.editor.addConnection(event.target)
+  click(event: any) {
+    if (event.target.classList.contains('input')) {
+      console.log("input")
+      this.drawConnection(event);
     }
+  }
+
+  drawConnection(ele: any) {
+    var connection = document.createElementNS('http://www.w3.org/2000/svg',"svg");
+    var path = document.createElementNS('http://www.w3.org/2000/svg',"path");
+    path.classList.add("main-path");
+    path.setAttributeNS(null, 'd', '');
+    connection.classList.add("connection");
+    connection.appendChild(path);
+    this.editor.precanvas.appendChild(connection);
   }
 
   /**

@@ -199,10 +199,11 @@ mat-drawer-container {
     position: absolute;
     pointer-events: none;
     aspect-ratio: 1/1;
+    stroke-dasharray: 5;
+    animation: dashdraw .5s linear infinite;
   }
 
   .drawflow .connection .main-path {
-    fill: none;
     stroke-width: 5px;
     stroke: #4682b4;
     pointer-events: all;
@@ -215,7 +216,7 @@ mat-drawer-container {
   .drawflow .connection .main-path.selected {
     stroke: #43b993;
   }
-
+  
   .drawflow .connection .point {
     cursor: move;
     stroke: #000;
@@ -286,6 +287,12 @@ mat-drawer-container {
       width: calc(100vw - 51px);
     }
   }
+
+  @keyframes dashdraw {
+    0% {
+        stroke-dashoffset: 10
+      }
+    }
 
   :root {
     --border-color: #cacaca;
