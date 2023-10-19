@@ -53,6 +53,7 @@ export class BlankComponent {
     this.editor = new Drawflow(drawflowElement);
     this.editor.reroute = false
     this.editor.force_first_input = true;
+    this.editor.draggable_inputs = true;
     this.editor.line_path = 1;
     this.editor.editor_mode = 'edit';
     this.editor.start();
@@ -106,23 +107,37 @@ export class BlankComponent {
       this.click(event)
       console.log("click: " + event)
     });
+
+    this.editor.on('connectionStart', (event: any) => {
+      console.log("connectionStart: " + event)
+    });
+
   }
 
   click(event: any) {
     if (event.target.classList.contains('input')) {
       console.log("input")
-      this.drawConnection(event);
+      event.target.addEventListener('connectionStart', () => this.drawConnection(event.target));
     }
   }
 
   drawConnection(ele: any) {
-    var connection = document.createElementNS('http://www.w3.org/2000/svg',"svg");
-    var path = document.createElementNS('http://www.w3.org/2000/svg',"path");
+    console.log("DRAW CONNECTION")
+    var connection = document.createElementNS('http://www.w3.org/2000/svg', "svg");
+    var path = document.createElementNS('http://www.w3.org/2000/svg', "path");
     path.classList.add("main-path");
     path.setAttributeNS(null, 'd', '');
     connection.classList.add("connection");
     connection.appendChild(path);
     this.editor.precanvas.appendChild(connection);
+    var id_output = ele.parentElement.parentElement.id.slice(5);
+    var output_class = ele.classList[1];
+    console.log("id output: " + id_output);
+    console.log("output_class: " + output_class);
+    this.dispatch('connectionStart', { output_id: id_output, output_class:  output_class });
+  }
+
+  dispatch(event: string, details: any) {
   }
 
   /**
