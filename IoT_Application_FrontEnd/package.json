@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "aws-deploy": "aws s3 sync dist/io-t-application-front-end/ s3://devq.iot.iot-platform"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "d3": "^7.8.5",
+    "@hyperjump/json-schema": "^1.6.1",
     "drawflow": "^0.0.59",
     "file-saver": "^2.0.5",
     "http-client": "^4.3.1",

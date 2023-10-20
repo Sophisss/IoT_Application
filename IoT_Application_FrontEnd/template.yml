@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Template for describing resources related to application deployment
+
+Parameters:
+
+  Project:
+    Type: String
+    Description: Project name
+
+Resources:
+
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    DeletionPolicy: Retain
+
+    Properties:
+      BucketName: devq.iot.iot-platform
+
+
+  APIInvocationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: "/"
+      RoleName: !Sub "${Project}-APIInvocationRole"
+      AssumeRolePolicyDocument: !Sub "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+      MaxSessionDuration: 3600
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+
+
+  APIInvocationPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub "${Project}-APIInvocationPolicy"
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - "s3:PutObject*"
+              - "s3:GetObject*"
+              - "s3:DeleteObject"
+            Resource:
+              - "arn:aws:s3:::devq.iot.iot-platform"
+
+      Roles:
+        - !Ref APIInvocationRole
+
