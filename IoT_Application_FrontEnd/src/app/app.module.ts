@@ -14,7 +14,8 @@ import { DragDropModule} from '@angular/cdk/drag-drop';
 import { BlankComponent } from './er-drawer/blank/blank.component';
 import { SidenavComponent } from './er-drawer/sidenav/sidenav.component';
 import { EntityComponent } from './er-drawer/components/entity/entity.component';
-import { TableComponent } from './er-drawer/components/table/table.component'
+import { TableComponent } from './er-drawer/components/table/table.component';
+import { ProvaComponent } from './er-drawer/prova/prova.component'
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { TableComponent } from './er-drawer/components/table/table.component'
     SidenavComponent,
     EntityComponent,
     TableComponent,
+    ProvaComponent,
   ],
   imports: [
     BrowserModule,

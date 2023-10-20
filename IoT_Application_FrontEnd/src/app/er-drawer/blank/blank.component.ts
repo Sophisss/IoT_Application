@@ -64,7 +64,7 @@ export class BlankComponent {
    * It is used to attach an event handler to draggable elements.
    */
   dragstart() {
-    const dragElements = document.querySelectorAll('.drag-drawflow');
+    const dragElements = document.querySelectorAll('.dragging-node');
     dragElements.forEach((element) => {
       element.addEventListener('dragstart', (ev) => this.drag(ev));
     });
@@ -117,10 +117,14 @@ export class BlankComponent {
   click(event: any) {
     if (event.target.classList.contains('input')) {
       console.log("input")
-      event.target.addEventListener('connectionStart', () => this.drawConnection(event.target));
+      //event.target.addEventListener('connectionStart', () => this.drawConnection(event.target));
     }
   }
 
+  /**
+   * This method creates and draws a connection.
+   * @param ele element from which the connection starts.
+   */
   drawConnection(ele: any) {
     console.log("DRAW CONNECTION")
     var connection = document.createElementNS('http://www.w3.org/2000/svg', "svg");
