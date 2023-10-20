@@ -6,7 +6,7 @@ import { ProvaComponent } from './er-drawer/prova/prova.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'drawer', component: BlankComponent}
+  {path: 'drawer', component: ProvaComponent}
 ];
 
 @NgModule({

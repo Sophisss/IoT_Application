@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "aws-deploy": "aws s3 sync dist/io-t-application-front-end/ s3://devq.iot.iot-platform"
+    "aws-deploy": "aws s3 sync dist/iot-application-front-end/ s3://devq.iot.iot-platform"
   },
   "private": true,
   "dependencies": {

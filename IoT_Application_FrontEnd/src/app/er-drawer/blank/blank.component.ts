@@ -21,6 +21,8 @@ export class BlankComponent {
    */
   selectedNode: any = {};
 
+  selectedInputNode: any = null;
+
   sideBarOpen = true;
 
   /**
@@ -111,22 +113,28 @@ export class BlankComponent {
     this.editor.on('connectionStart', (event: any) => {
       console.log("connectionStart: " + event)
     });
-
   }
 
+  /**
+   * This method handles the click event on an element in the editor. 
+   * In particular it handles the click event on an input point.
+   * @param event click event generated.
+   */
   click(event: any) {
     if (event.target.classList.contains('input')) {
-      console.log("input")
-      //event.target.addEventListener('connectionStart', () => this.drawConnection(event.target));
+      console.log("Input selezionato");
+      this.selectedInputNode = event.target;
+      //addEventListener('connectionStart', (ev: any) => this.drawConnection(ev.target));
+      this.drawConnectionInput(this.selectedInputNode);
     }
+    this.selectedInputNode = null;
   }
 
   /**
    * This method creates and draws a connection.
    * @param ele element from which the connection starts.
    */
-  drawConnection(ele: any) {
-    console.log("DRAW CONNECTION")
+  drawConnectionInput(ele: any) {
     var connection = document.createElementNS('http://www.w3.org/2000/svg', "svg");
     var path = document.createElementNS('http://www.w3.org/2000/svg', "path");
     path.classList.add("main-path");
@@ -138,20 +146,28 @@ export class BlankComponent {
     var output_class = ele.classList[1];
     console.log("id output: " + id_output);
     console.log("output_class: " + output_class);
-    this.dispatch('connectionStart', { output_id: id_output, output_class:  output_class });
+    // const event = new CustomEvent('connectionStart', {
+    //   detail: {
+    //     output_id: id_output,
+    //     output_class: output_class
+    //   }
+    // });
+    // this.editor.precanvas.dispatchEvent(event);
+
+    //----------
+    //this.dispatch('connectionStart', { output_id: id_output, output_class:  output_class });
   }
 
-  dispatch(event: string, details: any) {
-  }
-
-  /**
-   * Removes a node from the Drawflow editor 
-   * and calls the generator service to remove the associated object.
-   * @param id node id to remove.
-   */
-  removeNode(id: number) {
-    this.generatorService.removeObject(id, this.selectedNode.class)
-  }
+  //   dispatch (event, details) {
+  //     // Check if this event not exists
+  //     if (this.events[event] === undefined) {
+  //         // console.error(`This event: ${event} does not exist`);
+  //         return false;
+  //     }
+  //     this.events[event].listeners.forEach((listener) => {
+  //         listener(details);
+  //     });
+  // }
 
   /**
    * Adds a connection between two nodes in the Drawflow editor and saves this connection.
@@ -272,6 +288,15 @@ export class BlankComponent {
   }
 
   /**
+  * Removes a node from the Drawflow editor 
+  * and calls the generator service to remove the associated object.
+  * @param id node id to remove.
+  */
+  removeNode(id: number) {
+    this.generatorService.removeObject(id, this.selectedNode.class)
+  }
+
+  /**
    * This method import a configuration.
    */
   import(event: Event) {
@@ -279,7 +304,8 @@ export class BlankComponent {
   }
 
   /**
-   * This method exports the project.
+   * This method exports the project
+   * and generate a configuration.
    */
   export() {
     this.generatorService.export()
