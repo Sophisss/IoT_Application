@@ -8,13 +8,30 @@
   display: flex;
 }
 
+
 mat-drawer {
-  background-color: #0f172a;
-  width: 260px;
+  background-color: #fff;
+  width: 200px;
 }
 
 mat-drawer-container {
   height: 100%;
+}
+
+.btn-view {
+  float: left;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #0f172a;
+  background: #0f172a;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 5;
+
 }
 
 .btn-import {
@@ -66,19 +83,6 @@ mat-drawer-container {
 }
 
 ::ng-deep {
-  .drawflow-node .title-box {
-    height: 50px;
-    line-height: 50px;
-    background: var(--background-box-title);
-    border-bottom: 1px solid #e9e9e9;
-    border-radius: 4px 4px 0px 0px;
-    padding-left: 10px;
-  }
-
-  .drawflow .title-box svg {
-    position: initial;
-  }
-
   .drawflow-node input,
   .drawflow-node select,
   .drawflow-node textarea {
@@ -127,19 +131,27 @@ mat-drawer-container {
   .drawflow .drawflow-node {
     display: flex;
     align-items: center;
+    text-align: center;
     position: absolute;
     background: #0f172a;
-    width: 160px;
+    width: 70px;
     min-height: 40px;
-    border-radius: 4px;
     border: 2px solid #0f172a;
-    color: #0f172a;
+    color: white;
     z-index: 2;
     padding: 15px;
   }
 
+  .drawflow .drawflow-node.Entity {
+    border-radius: 70%;
+  }
+
+  .drawflow .drawflow-node.Table {
+    border-radius: 6px;
+  }
+
   .drawflow .drawflow-node.selected {
-    background: #0f172a;
+    background: #4682b4;
   }
 
   .drawflow .drawflow-node:hover {
@@ -168,8 +180,15 @@ mat-drawer-container {
     z-index: 1;
     margin-bottom: 5px;
   }
-  .drawflow .drawflow-node .input {
-    visibility: var(--viewInput);
+  .drawflow .drawflow-node.Table .input {
+    visibility: var(--viewInputTable);
+    left: -25px;
+    top: 2px;
+    background: #fff;
+  }
+
+  .drawflow .drawflow-node.Entity .input {
+    visibility: var(--viewInputEntity);
     left: -25px;
     top: 2px;
     background: #fff;
@@ -261,16 +280,19 @@ mat-drawer-container {
 
   #drawflow {
     position: relative;
-    width: calc(100vw - 301px);
+    width: calc(100vw - 240px);
     height: calc(100% - 50px);
     top: 40px;
-    background: var(--background-color);
+    background:  #ffffff;
     background-size: 25px 25px;
     background-image: linear-gradient(to right, #f1f1f1 1px, transparent 1px),
       linear-gradient(to bottom, #f1f1f1 1px, transparent 1px);
-    --viewInput : hidden;
+    --viewInputTable : hidden;
+    --viewInputEntity : hidden;
     --viewOutputHover: visible;
     }
+
+    
 
   @media only screen and (max-width: 768px) {
     .col {
@@ -291,10 +313,4 @@ mat-drawer-container {
         stroke-dashoffset: 10
       }
     }
-
-  :root {
-    --border-color: #cacaca;
-    --background-color: #ffffff;
-    --background-box-title: #f7f7f7;
-  }
 }

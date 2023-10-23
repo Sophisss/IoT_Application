@@ -1,4 +1,5 @@
 import {Field} from "./Field";
+import { Table } from "./Table";
 
 /**
  * This model represents an entity. 
@@ -7,16 +8,25 @@ import {Field} from "./Field";
  */
 export class Entity {
 
-  entity_id : Number
+  id : Number;
 
-  entity_name: String;
+  name: String;
+
+  table: String | undefined;
 
   fields: Field[] = [];
 
-  table_name !: String
-
   constructor(id: Number, entity_name: String) {
-    this.entity_name = entity_name
-    this.entity_id = id
+    this.name = entity_name
+    this.id = id
+  }
+
+  setTable(table_name: String) : void{
+    this.table = table_name;
+  }
+
+
+  resetTable() {
+    this.table = undefined
   }
 }

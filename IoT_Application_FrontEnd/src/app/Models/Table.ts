@@ -5,7 +5,7 @@
  */
 export class Table {
 
-    table_id : Number
+    id : Number
 
     name: String
 
@@ -15,7 +15,7 @@ export class Table {
 
 
     constructor(id: Number, name: String) {
-        this.table_id = id
+        this.id = id
         this.name = name
     }
 

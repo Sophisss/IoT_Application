@@ -23,8 +23,6 @@ export class BlankComponent {
    */
   selectedNode: any = {};
 
-  selectedInputNode: any = null;
-
   sideBarOpen = true;
 
   /**
@@ -56,7 +54,6 @@ export class BlankComponent {
     this.drawflowElement = <HTMLElement>document.getElementById('drawflow');
     this.editor = new Drawflow(this.drawflowElement);
     this.editor.reroute = true;
-    this.editor.force_first_input = true;
     this.editor.draggable_inputs = true;
     this.editor.line_path = 1;
     this.editor.editor_mode = 'edit';
@@ -68,8 +65,7 @@ export class BlankComponent {
    * It is used to attach an event handler to draggable elements.
    */
   dragstart() {
-    const dragElements = document.querySelectorAll('.dragging-node');
-    dragElements.forEach((element) => {
+    document.querySelectorAll('.dragging-node').forEach((element) => {
       element.addEventListener('dragstart', (ev) => this.drag(ev));
     });
   }
@@ -80,7 +76,7 @@ export class BlankComponent {
    */
   addEditorEvents() {
     this.editor.on('nodeCreated', (id: any) => {
-      console.log('Node created ' + id)
+      console.log(this.editor.getNodeFromId(id))
       this.addObjectRelativeClassNode(id)
     });
 
@@ -92,21 +88,24 @@ export class BlankComponent {
 
     this.editor.on('connectionCreated', (connection) => {
       console.log('Connection created: ' + connection);
-      this.drawflowElement.style.setProperty('--viewInput', "hidden");
+      this.drawflowElement.style.setProperty('--viewInputTable', "hidden");
+      this.drawflowElement.style.setProperty('--viewInputEntity', "hidden");
       this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
+      this.addLabelText(document.querySelector(".connection"), "Prova");
       this.addLink(connection)
     })
 
     this.editor.on('connectionRemoved', (connection: any) => {
       console.log('Connection removed ', connection);
-      this.drawflowElement.style.setProperty('--viewInput', "hidden");
+      this.drawflowElement.style.setProperty('--viewInputEntity', "hidden");
       this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
-      this.removeLink(connection.output_id, connection.input_id)
+      this.removeLink(connection)
     });
 
     this.editor.on('connectionCancel', (connection: any) => {
       console.log('Connection cancel ', connection);
-      this.drawflowElement.style.setProperty('--viewInput', "hidden");
+      this.drawflowElement.style.setProperty('--viewInputTable', "hidden");
+      this.drawflowElement.style.setProperty('--viewInputEntity', "hidden");
       this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
     });
 
@@ -122,6 +121,7 @@ export class BlankComponent {
     });
 
     this.editor.on('click', (event: any) => {
+      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
       console.log("click: " + event);
     });
 
@@ -132,29 +132,61 @@ export class BlankComponent {
 
     this.editor.on('connectionStart', (event: any) => {
       console.log("connectionStart: ", event)
-      this.drawflowElement.style.setProperty('--viewInput', "visible");
+      this.drawflowElement.style.setProperty('--viewInputEntity', "visible");
       this.drawflowElement.style.setProperty('--viewOutputHover', "hidden");
+      this.checkNodeConnection(event);
     });
   }
+
+
+  /**
+   * Checks whether an entity is connected to a table and if so, 
+   * prohibits the entity from connecting to another table.
+   * @param event event associated with the node connection.
+   */
+  checkNodeConnection(event: any) {
+    const node = this.editor.getNodeFromId(event.output_id);
+    const outputs = node.outputs;
+    let entityConnectedToTable = false;
+
+    for (const outputKey in outputs) {
+      if (outputs.hasOwnProperty(outputKey)) {
+        outputs[outputKey].connections.forEach((connection) => {
+          const nodeConnection = this.editor.getNodeFromId(connection.node);
+
+          if (nodeConnection.class === 'Table') {
+            entityConnectedToTable = true;
+          }
+        });
+      }
+    }
+    if (entityConnectedToTable) {
+      this.drawflowElement.style.setProperty('--viewInputTable', "hidden");
+    } else {
+      this.drawflowElement.style.setProperty('--viewInputTable', "visible");
+    }
+  }
+
 
   /**
    * Adds a connection between two nodes in the Drawflow editor and saves this connection.
    * @param connection object representing the connection between nodes.
    */
   addLink(connection: any) {
-    const first = this.editor.getNodeFromId(connection.output_id)
-    const second = this.editor.getNodeFromId(connection.input_id)
-    this.generatorService.saveLink(first.id, second.id)
+    const first = this.editor.getNodeFromId(connection.output_id);
+    const second = this.editor.getNodeFromId(connection.input_id);
+    this.generatorService.saveLink(first.id, second.id, second.class)
   }
 
   /**
    * Removes a connection between two entities from the Drawflow editor 
    * and removes the associated link.
-   * @param first_entity first entity id to remove.
-   * @param second_entity second entity id to remove.
+   * @param connection object representing the connection to remove.
    */
-  removeLink(first_entity: string, second_entity: string) {
-    this.generatorService.removeLink(first_entity, second_entity)
+  removeLink(connection: any) {
+    const first = this.editor.getNodeFromId(connection.output_id);
+    const second = this.editor.getNodeFromId(connection.input_id);
+    this.generatorService.removeLinkConfiguration(first.id, second.id, second.class)
   }
 
 
@@ -221,17 +253,17 @@ export class BlankComponent {
     switch (name) {
       case 'entity':
         const entityHtml = `
-      <div>
-        <div class="title-box"><i class="fab fa-entity "></i>Entity</div>
-      </div>
+        <div>
+            <i class="fab fa-entity "></i>Entity
+        </div>
       `;
         this.editor.addNode(name, 1, 1, pos_x, pos_y, 'Entity', {}, entityHtml, false);
         break;
       case 'table':
         const tableHtml = `
-      <div>
-        <div class="title-box"><i class="fab fa-table "></i>Table</div>
-      </div>
+        <div>
+           <i class="fab fa-table "></i>Table
+        </div>
       `;
         this.editor.addNode('IoT', 1, 0, pos_x, pos_y, 'Table', {}, tableHtml, false);
         break;
@@ -264,6 +296,10 @@ export class BlankComponent {
     console.log("Export")
   }
 
+  viewJson() {
+    console.log("View json")
+  }
+
   /**
    * This method clears all contents from the Drawflow editor.
    */
@@ -272,6 +308,18 @@ export class BlankComponent {
     this.editor.clear();
   }
 
+  addLabelText(bgPath: any, labelText: any) {
+        const newid = [bgPath.classList].join().replace(/\s/g, '');
+        bgPath.childNodes[0].id = newid; 
+        let textElem = document.createElementNS(bgPath.namespaceURI, "text");
+        let textElemPath = document.createElementNS(bgPath.namespaceURI, "textPath");
+        textElemPath.setAttribute("href", `#${newid}`);
+        textElemPath.setAttribute("text-anchor", "left");
+        textElemPath.classList.add("label-text");
+        textElemPath.textContent = labelText;
+        textElem.appendChild(textElemPath); 
+        bgPath.appendChild(textElem);
+    }
 }
 
 

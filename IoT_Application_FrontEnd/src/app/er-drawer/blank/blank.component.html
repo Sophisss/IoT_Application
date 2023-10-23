@@ -1,16 +1,13 @@
 <div class="wrapper">
-    <mat-drawer-container>
-        <mat-drawer mode="side" [opened]="sideBarOpen">
-          <app-sidenav></app-sidenav>
-        </mat-drawer>
-      </mat-drawer-container>
-    <div class="col-right">
-        <div id="drawflow" 
-        (drop)="drop($event)" 
-        (dragover)="allowDrop($event)">
-            <div class="btn-import" (click)="import($event)">Import</div>
-            <div class="btn-export" (click)="export()">Export</div>
-            <div class="btn-clear" (click)="clearModuleSelected()">Clear</div>
-        </div>
+  <mat-drawer-container>
+    <mat-drawer mode="side" [opened]="sideBarOpen">
+      <app-sidenav></app-sidenav>
+    </mat-drawer>
+  </mat-drawer-container>
+    <div id="drawflow" (drop)="drop($event)" (dragover)="allowDrop($event)">
+      <div class="btn-view" (click)="viewJson()">View JSON</div>
+      <div class="btn-import" (click)="import($event)">Import</div>
+      <div class="btn-export" (click)="export()">Export</div>
+      <div class="btn-clear" (click)="clearModuleSelected()">Clear</div>
     </div>
 </div>

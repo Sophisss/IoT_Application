@@ -37,27 +37,38 @@ export class GeneratorService {
   }
 
   /**
-   * This method creates a new link between two entities. 
-   * Starting from their ids, extract the two entities from the configuration, 
+   * This method creates a new link between two entities or 
+   * between entity and table. 
+   * Starting from their ids, extract the two object from the configuration, 
    * add the link to the configuration and update the JSON.
-   * @param first_entity first entity id.
-   * @param second_entity second entity id.
+   * @param first_id first object id.
+   * @param second_id second object id.
+   * @param first_class first object class.
+   * @param second_class second object class.
    */
-  saveLink(first_entity: number, second_entity: number) {
+  saveLink(first_id: number, second_id: number, second_class: string) {
+    let firstEntity = undefined;
+    let secondEntity = undefined;
 
-    const firstElementIndex = this.configuration.entities.findIndex(entity => entity.entity_id === first_entity);
-    const secondElementIndex = this.configuration.entities.findIndex(entity => entity.entity_id === second_entity);
+    if (second_class === 'Entity') {
+      firstEntity = this.configuration.entities.find(entity => entity.id === first_id);
+      secondEntity = this.configuration.entities.find(entity => entity.id === second_id);
 
-    const firstEntity = this.configuration.entities.at(firstElementIndex)
-    const secondEntity = this.configuration.entities.at(secondElementIndex)
+      if (firstEntity && secondEntity) {
+        const link = new Link(firstEntity, secondEntity);
+        this.configuration.links.push(link);
+      }
+    } else if (second_class === 'Table') {
+      firstEntity = this.configuration.entities.find(entity => entity.id === first_id);
+      secondEntity = this.configuration.tables.find(table => table.id === second_id);
 
-    if (firstEntity != undefined && secondEntity != undefined) {
-      const link = new Link(firstEntity, secondEntity);
-
-      this.configuration.links.push(link)
-      this.saveConfiguration()
+      if (firstEntity && secondEntity) {
+        firstEntity.setTable(secondEntity.name);
+      }
     }
+    this.saveConfiguration();
   }
+
 
   /**
    * This method create a new table,
@@ -104,6 +115,8 @@ export class GeneratorService {
     };
 
     this.jsonDownloadService.setData(jsonObject);
+
+    return jsonObject;
   }
 
   /**
@@ -112,10 +125,11 @@ export class GeneratorService {
    */
   createEntityJson() {
     const jsonEntities = this.configuration.entities.map(entity => ({
-      name: entity.entity_name,
-      entity_id: entity.entity_id,
+      name: entity.name,
+      table: entity.table,
+      entity_id: entity.id,
       fields: this.createFields(entity),
-      primary_key : []
+      primary_key: []
     }));
     return jsonEntities
   }
@@ -126,8 +140,8 @@ export class GeneratorService {
    */
   createLinkJson() {
     const jsonLink = this.configuration.links.map(link => ({
-      first_entity: link.first_entity.entity_name,
-      second_entity: link.second_entity.entity_name,
+      first_entity: link.first_entity.name,
+      second_entity: link.second_entity.name,
       fields: this.createFields(link)
     }));
     return jsonLink
@@ -140,7 +154,7 @@ export class GeneratorService {
   createTableJson() {
     const jsonTable = this.configuration.tables.map(table => ({
       tableName: table.name,
-      table_id: table.table_id,
+      table_id: table.id,
       partitionKey: table.partition_key,
       sortKey: table.sort_Key
     }))
@@ -169,10 +183,10 @@ export class GeneratorService {
    */
   removeObject(id: number, class_name: string) {
     if (class_name == 'Entity') {
-      const elementIndex = this.configuration.entities.findIndex(entity => entity.entity_id === id);
+      const elementIndex = this.configuration.entities.findIndex(entity => entity.id === id);
       this.configuration.entities.splice(elementIndex, 1)
     } else if (class_name == 'Table') {
-      const elementIndex = this.configuration.tables.findIndex(table => table.table_id === id);
+      const elementIndex = this.configuration.tables.findIndex(table => table.id === id);
       this.configuration.tables.splice(elementIndex, 1)
     }
     this.saveConfiguration()
@@ -184,22 +198,32 @@ export class GeneratorService {
    * and update JSON.
    * @param first_entity first entity id to remove.
    * @param second_entity second entity id to remove.
+   * @param node_class second entity class.
    */
-  removeLink(first_entity: string, second_entity: string) {
-    const elementIndex = this.configuration.links.findIndex(link =>
-      link.first_entity.entity_id === parseInt(first_entity) && link.second_entity.entity_id === parseInt(second_entity));
-    this.configuration.links.splice(elementIndex, 1)
+  removeLinkConfiguration(first_entity: number, second_entity: number, node_class: string) {
+    if (node_class === 'Table') {
+      const entity = this.configuration.entities.find(entity => entity.id === first_entity);
+
+      if(entity){
+        entity.resetTable();
+      }
+    } else {
+      const elementIndex = this.configuration.links.findIndex(link =>
+        link.first_entity.id === first_entity && link.second_entity.id === second_entity);
+      this.configuration.links.splice(elementIndex, 1)
+    }
     this.saveConfiguration();
   }
 
   /**
    * This method delete all configuration.
+   *   
    */
   clear() {
     this.configuration.entities = []
     this.configuration.links = []
     this.configuration.tables = []
-    this.saveConfiguration()
+    this.saveConfiguration();
   }
 
   /**
