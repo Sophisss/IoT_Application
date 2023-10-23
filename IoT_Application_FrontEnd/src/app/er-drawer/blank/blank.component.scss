@@ -79,16 +79,6 @@ mat-drawer-container {
     position: initial;
   }
 
-  .drawflow-node .box {
-    padding: 10px 20px 20px 20px;
-    font-size: 14px;
-    color: #555555;
-  }
-  .drawflow-node .box p {
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-
   .drawflow-node input,
   .drawflow-node select,
   .drawflow-node textarea {
@@ -169,8 +159,8 @@ mat-drawer-container {
   .drawflow .drawflow-node .input,
   .drawflow .drawflow-node .output {
     position: relative;
-    width: 20px;
-    height: 20px;
+    width: 13px;
+    height: 13px;
     background: #fff;
     border-radius: 50%;
     border: 2px solid #000;
@@ -179,14 +169,21 @@ mat-drawer-container {
     margin-bottom: 5px;
   }
   .drawflow .drawflow-node .input {
-    left: -27px;
+    visibility: var(--viewInput);
+    left: -25px;
     top: 2px;
     background: #fff;
   }
 
   .drawflow .drawflow-node .output {
-    right: -3px;
+    visibility: hidden;
+    right: -5px;
     top: 2px;
+    background: #fff;
+  }
+
+  .drawflow .drawflow-node:hover .output {
+    visibility: var(--viewOutputHover);
   }
 
   .drawflow svg {
@@ -204,7 +201,7 @@ mat-drawer-container {
   }
 
   .drawflow .connection .main-path {
-    stroke-width: 5px;
+    stroke-width: 3px;
     stroke: #4682b4;
     pointer-events: all;
   }
@@ -218,9 +215,8 @@ mat-drawer-container {
   }
   
   .drawflow .connection .point {
+    visibility: hidden;
     cursor: move;
-    stroke: #000;
-    stroke-width: 2;
     fill: #fff;
     pointer-events: all;
   }
@@ -272,7 +268,9 @@ mat-drawer-container {
     background-size: 25px 25px;
     background-image: linear-gradient(to right, #f1f1f1 1px, transparent 1px),
       linear-gradient(to bottom, #f1f1f1 1px, transparent 1px);
-  }
+    --viewInput : hidden;
+    --viewOutputHover: visible;
+    }
 
   @media only screen and (max-width: 768px) {
     .col {

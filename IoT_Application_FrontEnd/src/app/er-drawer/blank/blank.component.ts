@@ -16,6 +16,8 @@ export class BlankComponent {
    */
   editor!: Drawflow;
 
+  drawflowElement!: HTMLElement;
+
   /**
    * Variable that tracks the selected node in the Drawflow editor.
    */
@@ -51,9 +53,9 @@ export class BlankComponent {
    * This method initializes the Drawflow editor and configures its settings.
    */
   initDrawFlow() {
-    const drawflowElement = <HTMLElement>document.getElementById('drawflow');
-    this.editor = new Drawflow(drawflowElement);
-    this.editor.reroute = false
+    this.drawflowElement = <HTMLElement>document.getElementById('drawflow');
+    this.editor = new Drawflow(this.drawflowElement);
+    this.editor.reroute = true;
     this.editor.force_first_input = true;
     this.editor.draggable_inputs = true;
     this.editor.line_path = 1;
@@ -84,90 +86,56 @@ export class BlankComponent {
 
     this.editor.on('nodeRemoved', (id: number) => {
       console.log('Node removed ' + id);
+      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
       this.removeNode(id);
     });
 
     this.editor.on('connectionCreated', (connection) => {
       console.log('Connection created: ' + connection);
+      this.drawflowElement.style.setProperty('--viewInput', "hidden");
+      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
       this.addLink(connection)
     })
 
     this.editor.on('connectionRemoved', (connection: any) => {
       console.log('Connection removed ', connection);
+      this.drawflowElement.style.setProperty('--viewInput', "hidden");
+      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
       this.removeLink(connection.output_id, connection.input_id)
     });
 
+    this.editor.on('connectionCancel', (connection: any) => {
+      console.log('Connection cancel ', connection);
+      this.drawflowElement.style.setProperty('--viewInput', "hidden");
+      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
+    });
+
     this.editor.on('nodeSelected', (id: any) => {
+      this.drawflowElement.style.setProperty('--viewOutputHover', "hidden");
+      console.log("nodeSelected")
       this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
     });
 
     this.editor.on('contextmenu', (event: any) => {
+      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
       console.log("contextmenu: " + event)
     });
 
     this.editor.on('click', (event: any) => {
-      this.click(event)
-      console.log("click: " + event)
+      console.log("click: " + event);
+    });
+
+    this.editor.on('nodeMoved', (event: any) => {
+      console.log("nodeMoved: " + event);
+      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
     });
 
     this.editor.on('connectionStart', (event: any) => {
-      console.log("connectionStart: " + event)
+      console.log("connectionStart: ", event)
+      this.drawflowElement.style.setProperty('--viewInput', "visible");
+      this.drawflowElement.style.setProperty('--viewOutputHover', "hidden");
     });
   }
-
-  /**
-   * This method handles the click event on an element in the editor. 
-   * In particular it handles the click event on an input point.
-   * @param event click event generated.
-   */
-  click(event: any) {
-    if (event.target.classList.contains('input')) {
-      console.log("Input selezionato");
-      this.selectedInputNode = event.target;
-      //addEventListener('connectionStart', (ev: any) => this.drawConnection(ev.target));
-      this.drawConnectionInput(this.selectedInputNode);
-    }
-    this.selectedInputNode = null;
-  }
-
-  /**
-   * This method creates and draws a connection.
-   * @param ele element from which the connection starts.
-   */
-  drawConnectionInput(ele: any) {
-    var connection = document.createElementNS('http://www.w3.org/2000/svg', "svg");
-    var path = document.createElementNS('http://www.w3.org/2000/svg', "path");
-    path.classList.add("main-path");
-    path.setAttributeNS(null, 'd', '');
-    connection.classList.add("connection");
-    connection.appendChild(path);
-    this.editor.precanvas.appendChild(connection);
-    var id_output = ele.parentElement.parentElement.id.slice(5);
-    var output_class = ele.classList[1];
-    console.log("id output: " + id_output);
-    console.log("output_class: " + output_class);
-    // const event = new CustomEvent('connectionStart', {
-    //   detail: {
-    //     output_id: id_output,
-    //     output_class: output_class
-    //   }
-    // });
-    // this.editor.precanvas.dispatchEvent(event);
-
-    //----------
-    //this.dispatch('connectionStart', { output_id: id_output, output_class:  output_class });
-  }
-
-  //   dispatch (event, details) {
-  //     // Check if this event not exists
-  //     if (this.events[event] === undefined) {
-  //         // console.error(`This event: ${event} does not exist`);
-  //         return false;
-  //     }
-  //     this.events[event].listeners.forEach((listener) => {
-  //         listener(details);
-  //     });
-  // }
 
   /**
    * Adds a connection between two nodes in the Drawflow editor and saves this connection.
@@ -255,10 +223,6 @@ export class BlankComponent {
         const entityHtml = `
       <div>
         <div class="title-box"><i class="fab fa-entity "></i>Entity</div>
-        <div class="box">
-        <p>Enter entity name</p>
-        <input type="text" df-name>
-        </div>
       </div>
       `;
         this.editor.addNode(name, 1, 1, pos_x, pos_y, 'Entity', {}, entityHtml, false);
@@ -267,21 +231,9 @@ export class BlankComponent {
         const tableHtml = `
       <div>
         <div class="title-box"><i class="fab fa-table "></i>Table</div>
-        <div class="box">
-          <p>Enter table name</p>
-        <input type="text" df-name>
-        </div>
-        <div class="box">
-          <p>Enter partition key</p>
-        <input type="text" df-pk>
-        </div>
-        <div class="box">
-          <p>Enter sort key</p>
-        <input type="text" df-sk>
-        </div>
       </div>
       `;
-        this.editor.addNode('IoT', 0, 0, pos_x, pos_y, 'Table', {}, tableHtml, false);
+        this.editor.addNode('IoT', 1, 0, pos_x, pos_y, 'Table', {}, tableHtml, false);
         break;
       default:
     }
