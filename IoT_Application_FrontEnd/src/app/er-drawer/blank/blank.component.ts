@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GeneratorService } from 'src/app/Services/Generator/generator.service';
-import { DialogContentComponent } from '../dialog-content/dialog-content.component';
+import { DialogContentComponent } from '../mat_dialog/dialog-content/dialog-content.component';
 import { ImportServiceService } from 'src/app/Services/Import_Json/import-service.service';
 import Drawflow from 'drawflow';
-import { elementAt } from 'rxjs';
+import { DialogEntityComponent } from '../mat_dialog/dialog-entity/dialog-entity.component';
+import { DialogTableComponent } from '../mat_dialog/dialog-table/dialog-table.component';
 
 @Component({
   selector: 'app-blank',
@@ -277,12 +278,36 @@ export class BlankComponent {
  */
   addNode(nodeName: string, posX: number, posY: number, nodeType: string) {
     const output = nodeType === 'Table' ? 0 : 1
-    this.editor.addNode(nodeName, 1, output, posX, posY, nodeType, {},
+    const node_id = this.editor.addNode(nodeName, 1, output, posX, posY, nodeType, {},
       `
       <div>
         <div class="title-box"><i class="fab fa-${nodeType}"></i>${nodeName}</div>
       </div>
     `, false);
+    this.dblClickNode(node_id, nodeType);
+  }
+
+  /**
+   * Attaches a double-click event listener to a specific node based on its type.
+   * @param node_id id of the node to which the double-click event listener is attached.
+   * @param nodeType type of the node.
+   */
+  dblClickNode(node_id: any, nodeType: string) {
+    if (nodeType === 'Entity') {
+      document.querySelector(`#node-${node_id}.drawflow-node.${nodeType}`)?.addEventListener('dblclick', () => {
+        console.log('Doppio click sul nodo entity');
+        this.dialog.open(DialogEntityComponent, {
+          data: {}
+        });
+      });
+    } else if (nodeType === 'Table') {
+      document.querySelector(`#node-${node_id}.drawflow-node.${nodeType}`)?.addEventListener('dblclick', () => {
+        console.log('Doppio click sul nodo table');
+        this.dialog.open(DialogTableComponent, {
+          data: {}
+        });
+      });
+    }
   }
 
   /**
@@ -367,10 +392,8 @@ export class BlankComponent {
  */
   addLinksBetweenEntityToDrawflow(data: any) {
     data.links.forEach((link: any) => {
-      const first_entity = link.first_entity;
-      const second_entity = link.second_entity;
-      const first_entity_id = data.entities.find((entity: any) => entity.name === first_entity)?.entity_id;
-      const second_entity_id = data.entities.find((entity: any) => entity.name === second_entity)?.entity_id;
+      const first_entity_id = data.entities.find((entity: any) => entity.name === link.first_entity)?.entity_id;
+      const second_entity_id = data.entities.find((entity: any) => entity.name === link.second_entity)?.entity_id;
 
       if (first_entity_id && second_entity_id) {
         //Sostituire 1 e 2 

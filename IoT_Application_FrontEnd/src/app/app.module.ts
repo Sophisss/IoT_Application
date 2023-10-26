@@ -15,7 +15,10 @@ import { BlankComponent } from './er-drawer/blank/blank.component';
 import { SidenavComponent } from './er-drawer/sidenav/sidenav.component';
 import { EntityComponent } from './er-drawer/components/entity/entity.component';
 import { TableComponent } from './er-drawer/components/table/table.component';
-import { DialogContentComponent } from './er-drawer/dialog-content/dialog-content.component';
+import { DialogContentComponent } from './er-drawer/mat_dialog/dialog-content/dialog-content.component';
+import { DialogEntityComponent } from './er-drawer/mat_dialog/dialog-entity/dialog-entity.component';
+import { DialogTableComponent } from './er-drawer/mat_dialog/dialog-table/dialog-table.component';
+import { DialogLinkComponent } from './er-drawer/mat_dialog/dialog-link/dialog-link.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,9 @@ import { DialogContentComponent } from './er-drawer/dialog-content/dialog-conten
     EntityComponent,
     TableComponent,
     DialogContentComponent,
+    DialogEntityComponent,
+    DialogTableComponent,
+    DialogLinkComponent,
   ],
   imports: [
     BrowserModule,
