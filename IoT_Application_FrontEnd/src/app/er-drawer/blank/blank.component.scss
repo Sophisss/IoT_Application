@@ -8,7 +8,6 @@
   display: flex;
 }
 
-
 mat-drawer {
   background-color: #fff;
   width: 200px;
@@ -31,14 +30,13 @@ mat-drawer-container {
   border-radius: 4px;
   cursor: pointer;
   z-index: 5;
-
 }
 
 .btn-import {
   float: right;
   position: absolute;
   top: 10px;
-  right: 150px;
+  right: 85px;
   color: white;
   font-weight: bold;
   border: 1px solid #0f172a;
@@ -47,6 +45,10 @@ mat-drawer-container {
   border-radius: 4px;
   cursor: pointer;
   z-index: 5;
+
+  .input{
+    display: none;
+  }
 }
 
 .btn-export {
@@ -68,7 +70,7 @@ mat-drawer-container {
   float: right;
   position: absolute;
   top: 10px;
-  right: 85px;
+  right: 160px;
   color: white;
   font-weight: bold;
   border: 1px solid #0f172a;
@@ -78,9 +80,11 @@ mat-drawer-container {
   cursor: pointer;
   z-index: 5;
 }
+
 .swal-wide {
   width: 80% !important;
 }
+
 
 ::ng-deep {
   .drawflow-node input,
@@ -232,7 +236,7 @@ mat-drawer-container {
   .drawflow .connection .main-path.selected {
     stroke: #43b993;
   }
-  
+
   .drawflow .connection .point {
     visibility: hidden;
     cursor: move;
@@ -266,11 +270,11 @@ mat-drawer-container {
     border-radius: 50%;
     font-family: monospace;
     cursor: pointer;
+    top: 15px;
   }
 
   .drawflow > .drawflow-delete {
     margin-left: -15px;
-    margin-top: 15px;
   }
 
   .parent-node .drawflow-delete {
@@ -283,26 +287,24 @@ mat-drawer-container {
     width: calc(100vw - 240px);
     height: calc(100% - 50px);
     top: 40px;
-    background:  #ffffff;
+    background: #ffffff;
     background-size: 25px 25px;
     background-image: linear-gradient(to right, #f1f1f1 1px, transparent 1px),
       linear-gradient(to bottom, #f1f1f1 1px, transparent 1px);
-    --viewInputTable : hidden;
-    --viewInputEntity : hidden;
+    --viewInputTable: hidden;
+    --viewInputEntity: hidden;
     --viewOutputHover: visible;
-    }
-
-    
+  }
 
   @media only screen and (max-width: 768px) {
     .col {
       width: 50px;
     }
-  
+
     .col .drag-drawflow span {
       display: none;
     }
-  
+
     #drawflow {
       width: calc(100vw - 51px);
     }
@@ -310,7 +312,7 @@ mat-drawer-container {
 
   @keyframes dashdraw {
     0% {
-        stroke-dashoffset: 10
-      }
+      stroke-dashoffset: 10;
     }
+  }
 }

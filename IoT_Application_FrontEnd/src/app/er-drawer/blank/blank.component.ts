@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
-import Drawflow from 'drawflow';
+import { MatDialog } from '@angular/material/dialog';
 import { GeneratorService } from 'src/app/Services/Generator/generator.service';
+import { DialogContentComponent } from '../dialog-content/dialog-content.component';
+import { ImportServiceService } from 'src/app/Services/Import_Json/import-service.service';
+import Drawflow from 'drawflow';
+import { elementAt } from 'rxjs';
 
 @Component({
   selector: 'app-blank',
@@ -16,6 +20,9 @@ export class BlankComponent {
    */
   editor!: Drawflow;
 
+  /**
+   * HTML element representing the Drawflow area.
+   */
   drawflowElement!: HTMLElement;
 
   /**
@@ -23,14 +30,20 @@ export class BlankComponent {
    */
   selectedNode: any = {};
 
+  //Utility variables 
+
   sideBarOpen = true;
 
   /**
    * Constructor for this Component.
    * @param generatorService service to generate JSON configuration.
+   * @param importService service to import JSON.
+   * @param dialog the dialog service for handling user interactions.
    */
   constructor(
-    private generatorService: GeneratorService
+    private generatorService: GeneratorService,
+    private importService: ImportServiceService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -53,11 +66,18 @@ export class BlankComponent {
   initDrawFlow() {
     this.drawflowElement = <HTMLElement>document.getElementById('drawflow');
     this.editor = new Drawflow(this.drawflowElement);
+    this.configureEditor();
+    this.editor.start();
+  }
+
+  /**
+   * This method configures the main options of the Drawflow editor.
+   */
+  configureEditor() {
     this.editor.reroute = true;
     this.editor.draggable_inputs = true;
     this.editor.line_path = 1;
     this.editor.editor_mode = 'edit';
-    this.editor.start();
   }
 
   /**
@@ -77,67 +97,66 @@ export class BlankComponent {
   addEditorEvents() {
     this.editor.on('nodeCreated', (id: any) => {
       console.log(this.editor.getNodeFromId(id))
-      this.addObjectRelativeClassNode(id)
+      this.addObjectRelativeClassNode(id);
     });
 
     this.editor.on('nodeRemoved', (id: number) => {
       console.log('Node removed ' + id);
-      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
+      this.setEditorProperties({ viewOutputHover: 'visible' });
       this.removeNode(id);
     });
 
     this.editor.on('connectionCreated', (connection) => {
       console.log('Connection created: ' + connection);
-      this.drawflowElement.style.setProperty('--viewInputTable', "hidden");
-      this.drawflowElement.style.setProperty('--viewInputEntity', "hidden");
-      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
-      this.addLabelText(document.querySelector(".connection"), "Prova");
+      this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
+      //this.addLabelText(document.querySelector(".connection"), "Prova");
       this.addLink(connection)
     })
 
     this.editor.on('connectionRemoved', (connection: any) => {
       console.log('Connection removed ', connection);
-      this.drawflowElement.style.setProperty('--viewInputEntity', "hidden");
-      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
+      this.setEditorProperties({ viewOutputHover: 'visible', viewInputEntity: 'hidden' });
       this.removeLink(connection)
     });
 
     this.editor.on('connectionCancel', (connection: any) => {
       console.log('Connection cancel ', connection);
-      this.drawflowElement.style.setProperty('--viewInputTable', "hidden");
-      this.drawflowElement.style.setProperty('--viewInputEntity', "hidden");
-      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
+      this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
     });
 
     this.editor.on('nodeSelected', (id: any) => {
-      this.drawflowElement.style.setProperty('--viewOutputHover', "hidden");
-      console.log("nodeSelected")
+      this.setEditorProperties({ viewOutputHover: 'hidden' });
       this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
     });
 
     this.editor.on('contextmenu', (event: any) => {
-      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
-      console.log("contextmenu: " + event)
+      this.setEditorProperties({ viewOutputHover: 'visible' });
     });
 
     this.editor.on('click', (event: any) => {
-      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
-      console.log("click: " + event);
+      this.setEditorProperties({ viewOutputHover: 'visible' });
     });
 
     this.editor.on('nodeMoved', (event: any) => {
-      console.log("nodeMoved: " + event);
-      this.drawflowElement.style.setProperty('--viewOutputHover', "visible");
+      this.setEditorProperties({ viewOutputHover: 'visible' });
     });
 
     this.editor.on('connectionStart', (event: any) => {
       console.log("connectionStart: ", event)
-      this.drawflowElement.style.setProperty('--viewInputEntity', "visible");
-      this.drawflowElement.style.setProperty('--viewOutputHover', "hidden");
+      this.setEditorProperties({ viewOutputHover: 'hidden', viewInputEntity: 'visible' });
       this.checkNodeConnection(event);
     });
   }
 
+  /**
+   * This method sets the editor's custom CSS properties.
+   * @param properties object containing custom CSS properties.
+   */
+  setEditorProperties(properties: any) {
+    Object.keys(properties).forEach(property => {
+      this.drawflowElement.style.setProperty(`--${property}`, properties[property]);
+    });
+  }
 
   /**
    * Checks whether an entity is connected to a table and if so, 
@@ -146,36 +165,21 @@ export class BlankComponent {
    */
   checkNodeConnection(event: any) {
     const node = this.editor.getNodeFromId(event.output_id);
-    const outputs = node.outputs;
-    let entityConnectedToTable = false;
-
-    for (const outputKey in outputs) {
-      if (outputs.hasOwnProperty(outputKey)) {
-        outputs[outputKey].connections.forEach((connection) => {
-          const nodeConnection = this.editor.getNodeFromId(connection.node);
-
-          if (nodeConnection.class === 'Table') {
-            entityConnectedToTable = true;
-          }
-        });
-      }
-    }
-    if (entityConnectedToTable) {
-      this.drawflowElement.style.setProperty('--viewInputTable', "hidden");
-    } else {
-      this.drawflowElement.style.setProperty('--viewInputTable', "visible");
-    }
+    const entityConnectedToTable = Object.values(node.outputs)
+      .some(output =>
+        output.connections.some(connection =>
+          this.editor.getNodeFromId(connection.node).class === 'Table'
+        ));
+    this.drawflowElement.style.setProperty('--viewInputTable', entityConnectedToTable ? 'hidden' : 'visible');
   }
-
 
   /**
    * Adds a connection between two nodes in the Drawflow editor and saves this connection.
    * @param connection object representing the connection between nodes.
    */
   addLink(connection: any) {
-    const first = this.editor.getNodeFromId(connection.output_id);
-    const second = this.editor.getNodeFromId(connection.input_id);
-    this.generatorService.saveLink(first.id, second.id, second.class)
+    const result = this.getNode(connection);
+    this.generatorService.saveLink(result.first.id, result.second.id, result.second.class)
   }
 
   /**
@@ -184,11 +188,20 @@ export class BlankComponent {
    * @param connection object representing the connection to remove.
    */
   removeLink(connection: any) {
-    const first = this.editor.getNodeFromId(connection.output_id);
-    const second = this.editor.getNodeFromId(connection.input_id);
-    this.generatorService.removeLinkConfiguration(first.id, second.id, second.class)
+    const result = this.getNode(connection);
+    this.generatorService.removeLinkConfiguration(result.first.id, result.second.id, result.second.class)
   }
 
+  /**
+   * Retrieves two nodes based on output and input IDs from the Drawflow editor.
+   * @param event An object containing output_id and input_id for the nodes.
+   * @returns An object with the first and second nodes.
+  */
+  getNode(event: any) {
+    const first = this.editor.getNodeFromId(event.output_id);
+    const second = this.editor.getNodeFromId(event.input_id);
+    return { first, second };
+  }
 
   /**
    * This method adds an object associated with a Drawflow editor node,
@@ -240,35 +253,54 @@ export class BlankComponent {
    * @param pos_y the y coordinate of the node position.
    */
   addNodeToDrawFlow(name: string, pos_x: number, pos_y: number) {
-    pos_x =
-      pos_x * (this.editor.precanvas.clientWidth / (this.editor.precanvas.clientWidth * this.editor.zoom)) -
-      this.editor.precanvas.getBoundingClientRect().x *
-      (this.editor.precanvas.clientWidth / (this.editor.precanvas.clientWidth * this.editor.zoom));
-
-    pos_y =
-      pos_y * (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom)) -
-      this.editor.precanvas.getBoundingClientRect().y *
-      (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom));
+    const position = this.getCoordinates(pos_x, pos_y);
+    pos_x = position.pos_x;
+    pos_y = position.pos_y;
 
     switch (name) {
       case 'entity':
-        const entityHtml = `
-        <div>
-            <i class="fab fa-entity "></i>Entity
-        </div>
-      `;
-        this.editor.addNode(name, 1, 1, pos_x, pos_y, 'Entity', {}, entityHtml, false);
+        this.addNode('Entity', pos_x, pos_y, 'Entity');
         break;
       case 'table':
-        const tableHtml = `
-        <div>
-           <i class="fab fa-table "></i>Table
-        </div>
-      `;
-        this.editor.addNode('IoT', 1, 0, pos_x, pos_y, 'Table', {}, tableHtml, false);
+        this.addNode('IoT', pos_x, pos_y, 'Table');
         break;
       default:
     }
+  }
+
+  /**
+ * Adds a node to the Drawflow editor with the specified parameters.
+ * @param nodeName Name of the node.
+ * @param posX X-coordinate position.
+ * @param posY Y-coordinate position.
+ * @param nodeType Type of the node.
+ */
+  addNode(nodeName: string, posX: number, posY: number, nodeType: string) {
+    const output = nodeType === 'Table' ? 0 : 1
+    this.editor.addNode(nodeName, 1, output, posX, posY, nodeType, {},
+      `
+      <div>
+        <div class="title-box"><i class="fab fa-${nodeType}"></i>${nodeName}</div>
+      </div>
+    `, false);
+  }
+
+  /**
+   * Calculate the coordinates relative to the Drawflow editor canvas.
+   * @param pos_x x coordinate to convert.
+   * @param pos_y y coordinate to convert.
+   * @returns object containing the calculated coordinates.
+   */
+  getCoordinates(pos_x: number, pos_y: number) {
+    pos_x = pos_x * (this.editor.precanvas.clientWidth / (this.editor.precanvas.clientWidth * this.editor.zoom)) -
+      this.editor.precanvas.getBoundingClientRect().x *
+      (this.editor.precanvas.clientWidth / (this.editor.precanvas.clientWidth * this.editor.zoom));
+
+    pos_y = pos_y * (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom)) -
+      this.editor.precanvas.getBoundingClientRect().y *
+      (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom));
+
+    return { pos_x, pos_y }
   }
 
   /**
@@ -281,10 +313,86 @@ export class BlankComponent {
   }
 
   /**
-   * This method import a configuration.
+   * This method handles the import of a JSON file via the specified event.
+   * @param event file input event that contains the selected file.
    */
   import(event: Event) {
-    console.log("import")
+    this.importService.onFileSelected(event)
+      .then((jsonContent) => {
+        this.convertToDrawflowFormat(jsonContent);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
+  /**
+   * This method adds entities, tables and links to the Drawflow diagram.
+   * @param inputData json data to convert.
+   */
+  convertToDrawflowFormat(inputData: any): any {
+    this.addEntityToDrawflow(inputData);
+    this.addTableToDrawflow(inputData);
+    this.addLinksBetweenEntityToDrawflow(inputData);
+    this.addLinkTableEntityToDrawflow(inputData);
+  }
+
+  /**
+   * Adds entities to the Drawflow diagram based on the provided data.
+   * @param data data containing entity information.
+   */
+  addEntityToDrawflow(data: any) {
+    data.entities.forEach((entity: any) => {
+      const nodeId = entity.entity_id;
+      const nodeName = entity.name;
+      this.addNode(nodeName, 100 * nodeId, 100 * nodeId, 'Entity');
+    });
+  }
+
+  /**
+   * Adds tables to the Drawflow diagram based on the provided data.
+   * @param data data containing table information.
+   */
+  addTableToDrawflow(data: any) {
+    data.awsConfig.dynamo.tables.forEach((table: any) => {
+      const nodeId = table.table_id;
+      const nodeName = table.tableName;
+      this.addNode(nodeName, 100 * nodeId, 100 * nodeId, 'Table');
+    });
+  }
+
+  /**
+ * This method adds connections between nodes in Drawflow based on the provided link data.
+ * @param data data containing links information.
+ */
+  addLinksBetweenEntityToDrawflow(data: any) {
+    data.links.forEach((link: any) => {
+      const first_entity = link.first_entity;
+      const second_entity = link.second_entity;
+      const first_entity_id = data.entities.find((entity: any) => entity.name === first_entity)?.entity_id;
+      const second_entity_id = data.entities.find((entity: any) => entity.name === second_entity)?.entity_id;
+
+      if (first_entity_id && second_entity_id) {
+        //Sostituire 1 e 2 
+        this.editor.addConnection(1, 2, 'output_1', 'input_1');
+      }
+    });
+  }
+
+  /**
+   * This method adds links between entities and tables based on the 'table' field of the entities.
+   * @param data data containing information.
+   */
+  addLinkTableEntityToDrawflow(data: any) {
+    data.entities.forEach((entity: any) => {
+      const table_name = entity.table;
+      if (table_name) {
+        const table_id = data.awsConfig.dynamo.tables.find((table: any) => table.tableName === table_name)?.table_id;
+        if (table_id) {
+          this.editor.addConnection(entity.entity_id, table_id, 'output_1', 'input_1');
+        }
+      }
+    });
   }
 
   /**
@@ -293,33 +401,38 @@ export class BlankComponent {
    */
   export() {
     this.generatorService.export()
-    console.log("Export")
   }
 
+  /**
+   * This method opens a dialog to view the configured JSON.
+   */
   viewJson() {
-    console.log("View json")
+    const json = this.generatorService.saveConfiguration();
+    const jsonString = JSON.stringify(json, null, 2);
+    this.dialog.open(DialogContentComponent, {
+      data: { json: jsonString }
+    });
   }
 
   /**
    * This method clears all contents from the Drawflow editor.
    */
   clearModuleSelected() {
-    this.generatorService.clear();
+    //TODO rivedi
     this.editor.clear();
+    this.generatorService.clear();
   }
 
-  addLabelText(bgPath: any, labelText: any) {
-        const newid = [bgPath.classList].join().replace(/\s/g, '');
-        bgPath.childNodes[0].id = newid; 
-        let textElem = document.createElementNS(bgPath.namespaceURI, "text");
-        let textElemPath = document.createElementNS(bgPath.namespaceURI, "textPath");
-        textElemPath.setAttribute("href", `#${newid}`);
-        textElemPath.setAttribute("text-anchor", "left");
-        textElemPath.classList.add("label-text");
-        textElemPath.textContent = labelText;
-        textElem.appendChild(textElemPath); 
-        bgPath.appendChild(textElem);
-    }
+  // addLabelText(bgPath: any, labelText: any) {
+  //   const newid = [bgPath.classList].join().replace(/\s/g, '');
+  //   bgPath.childNodes[0].id = newid;
+  //   let textElem = document.createElementNS(bgPath.namespaceURI, "text");
+  //   let textElemPath = document.createElementNS(bgPath.namespaceURI, "textPath");
+  //   textElemPath.setAttribute("href", `#${newid}`);
+  //   textElemPath.setAttribute("text-anchor", "left");
+  //   textElemPath.classList.add("label-text");
+  //   textElemPath.textContent = labelText;
+  //   textElem.appendChild(textElemPath);
+  //   bgPath.appendChild(textElem);
+  // }
 }
-
-

@@ -15,6 +15,7 @@ import { BlankComponent } from './er-drawer/blank/blank.component';
 import { SidenavComponent } from './er-drawer/sidenav/sidenav.component';
 import { EntityComponent } from './er-drawer/components/entity/entity.component';
 import { TableComponent } from './er-drawer/components/table/table.component';
+import { DialogContentComponent } from './er-drawer/dialog-content/dialog-content.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { TableComponent } from './er-drawer/components/table/table.component';
     SidenavComponent,
     EntityComponent,
     TableComponent,
+    DialogContentComponent,
   ],
   imports: [
     BrowserModule,
