@@ -10,7 +10,7 @@ export class DialogEntityComponent {
 
   constructor(
     private dialogRef: MatDialogRef<DialogEntityComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {}) 
+    @Inject(MAT_DIALOG_DATA) public data: { name: string, type: string }) 
     { }
 
     onNoClick(): void {

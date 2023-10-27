@@ -5,6 +5,7 @@ import {AppComponent} from './app.component';
 import {MaterialModule} from './material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {ReactiveFormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {StructureComponent} from './pages/Structure/structure.component';
 import {FooterComponent} from './componentsHome/footer/footer.component';
@@ -19,6 +20,7 @@ import { DialogContentComponent } from './er-drawer/mat_dialog/dialog-content/di
 import { DialogEntityComponent } from './er-drawer/mat_dialog/dialog-entity/dialog-entity.component';
 import { DialogTableComponent } from './er-drawer/mat_dialog/dialog-table/dialog-table.component';
 import { DialogLinkComponent } from './er-drawer/mat_dialog/dialog-link/dialog-link.component';
+import { DialogExportComponent } from './er-drawer/mat_dialog/dialog-export/dialog-export.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { DialogLinkComponent } from './er-drawer/mat_dialog/dialog-link/dialog-l
     DialogEntityComponent,
     DialogTableComponent,
     DialogLinkComponent,
+    DialogExportComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import { DialogLinkComponent } from './er-drawer/mat_dialog/dialog-link/dialog-l
     MaterialModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    FormsModule,
     HttpClientModule,
     DragDropModule
   ],

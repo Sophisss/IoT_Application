@@ -3,9 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { GeneratorService } from 'src/app/Services/Generator/generator.service';
 import { DialogContentComponent } from '../mat_dialog/dialog-content/dialog-content.component';
 import { ImportServiceService } from 'src/app/Services/Import_Json/import-service.service';
-import Drawflow from 'drawflow';
 import { DialogEntityComponent } from '../mat_dialog/dialog-entity/dialog-entity.component';
 import { DialogTableComponent } from '../mat_dialog/dialog-table/dialog-table.component';
+import Drawflow from 'drawflow';
+import { DialogExportComponent } from '../mat_dialog/dialog-export/dialog-export.component';
 
 @Component({
   selector: 'app-blank',
@@ -34,6 +35,8 @@ export class BlankComponent {
   //Utility variables 
 
   sideBarOpen = true;
+
+  fileName!: string;
 
   /**
    * Constructor for this Component.
@@ -297,7 +300,10 @@ export class BlankComponent {
       document.querySelector(`#node-${node_id}.drawflow-node.${nodeType}`)?.addEventListener('dblclick', () => {
         console.log('Doppio click sul nodo entity');
         this.dialog.open(DialogEntityComponent, {
-          data: {}
+          data: {
+            name: "device",
+            type: "string"
+          }
         });
       });
     } else if (nodeType === 'Table') {
@@ -423,7 +429,16 @@ export class BlankComponent {
    * and generate a configuration.
    */
   export() {
-    this.generatorService.export()
+    const dialogRef = this.dialog.open(DialogExportComponent, {
+      data: {file: this.fileName},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.fileName = result;
+      if(this.fileName){
+        this.generatorService.export(this.fileName);
+      }
+    });
   }
 
   /**

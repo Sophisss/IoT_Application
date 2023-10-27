@@ -28,14 +28,15 @@ export class JsonDownloadService {
 
   /**
    * Download data as JSON file.
+   * @param fileName file name to save.
    */
-  downloadJson() {
+  downloadJson(fileName: string) {
     const jsonData = this.getData();
     
     if(jsonData) {
       const jsonStr = JSON.stringify(jsonData, null, 2);
       const blob = new Blob([jsonStr], {type: 'application/json'});
-      saveAs(blob, "structure.json");
+      saveAs(blob, `${fileName}.json`);
 
     }else {
       alert('No JSON data available.');

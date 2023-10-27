@@ -228,8 +228,9 @@ export class GeneratorService {
 
   /**
    * This method allows you to export the configuration.
+   * @param fileName file name to save.
    */
-  export() {
-    this.jsonDownloadService.downloadJson()
+  export(fileName: string) {
+    this.jsonDownloadService.downloadJson(fileName);
   }
 }
