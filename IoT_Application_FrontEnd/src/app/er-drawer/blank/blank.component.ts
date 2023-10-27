@@ -100,7 +100,7 @@ export class BlankComponent {
    */
   addEditorEvents() {
     this.editor.on('nodeCreated', (id: any) => {
-      console.log(this.editor.getNodeFromId(id))
+      console.log(this.editor.getNodeFromId(id));
       this.addObjectRelativeClassNode(id);
     });
 
@@ -111,7 +111,11 @@ export class BlankComponent {
     });
 
     this.editor.on('connectionCreated', (connection) => {
-      console.log('Connection created: ' + connection);
+      console.log('Connection created: ', connection);
+      const inputElement = this.changeStyleInput(connection);
+      if (inputElement) {
+        inputElement.style.removeProperty('visibility');
+      }
       this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
       //this.addLabelText(document.querySelector(".connection"), "Prova");
       this.addLink(connection)
@@ -146,10 +150,20 @@ export class BlankComponent {
     });
 
     this.editor.on('connectionStart', (event: any) => {
-      console.log("connectionStart: ", event)
+      console.log("connectionStart: ", event);
+      const inputElement = this.changeStyleInput(event);
+      if (inputElement) {
+        inputElement.style.visibility = 'hidden';
+      }
       this.setEditorProperties({ viewOutputHover: 'hidden', viewInputEntity: 'visible' });
       this.checkNodeConnection(event);
     });
+  }
+
+
+  changeStyleInput(event: any) {
+    const elemento = document.getElementById(`node-${event.output_id}`);
+    return elemento?.querySelector(".inputs .input.input_1") as HTMLElement;
   }
 
   /**
@@ -296,25 +310,23 @@ export class BlankComponent {
    * @param nodeType type of the node.
    */
   dblClickNode(node_id: any, nodeType: string) {
-    if (nodeType === 'Entity') {
-      document.querySelector(`#node-${node_id}.drawflow-node.${nodeType}`)?.addEventListener('dblclick', () => {
-        console.log('Doppio click sul nodo entity');
+    document.querySelector(`#node-${node_id}.drawflow-node.${nodeType}`)?.addEventListener('dblclick', () => {
+      if (nodeType === 'Entity') {
         this.dialog.open(DialogEntityComponent, {
           data: {
             name: "device",
             type: "string"
           }
         });
-      });
-    } else if (nodeType === 'Table') {
-      document.querySelector(`#node-${node_id}.drawflow-node.${nodeType}`)?.addEventListener('dblclick', () => {
+      } else if (nodeType === 'Table') {
         console.log('Doppio click sul nodo table');
         this.dialog.open(DialogTableComponent, {
           data: {}
         });
-      });
-    }
+      }
+    });
   }
+
 
   /**
    * Calculate the coordinates relative to the Drawflow editor canvas.
@@ -393,9 +405,9 @@ export class BlankComponent {
   }
 
   /**
- * This method adds connections between nodes in Drawflow based on the provided link data.
- * @param data data containing links information.
- */
+  * This method adds connections between nodes in Drawflow based on the provided link data.
+  * @param data data containing links information.
+  */
   addLinksBetweenEntityToDrawflow(data: any) {
     data.links.forEach((link: any) => {
       const first_entity_id = data.entities.find((entity: any) => entity.name === link.first_entity)?.entity_id;
@@ -430,12 +442,12 @@ export class BlankComponent {
    */
   export() {
     const dialogRef = this.dialog.open(DialogExportComponent, {
-      data: {file: this.fileName},
+      data: { file: this.fileName },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       this.fileName = result;
-      if(this.fileName){
+      if (this.fileName) {
         this.generatorService.export(this.fileName);
       }
     });
