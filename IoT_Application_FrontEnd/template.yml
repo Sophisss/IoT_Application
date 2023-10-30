@@ -1,17 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Template for describing resources related to application deployment
 
-Parameters:
-
-  Project:
-    Type: String
-    Description: Project name
-
 Resources:
-
-  S3Bucket:
-    Type: 'AWS::S3::Bucket'
-    DeletionPolicy: Retain
-
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
     Properties:
       BucketName: devq.iot.iot-platform
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
