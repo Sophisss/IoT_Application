@@ -1,3 +1,23 @@
+# Deploy CloudFormation resources on AWS S3
+
+**IMPORTANT: The resources have already been deployed so these steps are to be performed only if the stack 
+and bucket have been deleted.**
+
+To deploy the resources the steps are:
+1) Execute on CLI the command `sam build`
+2) Execute on CLI the command `sam deploy --stack-name devq-iot-platform --template-file .aws-sam/build/template.yaml --parameter-overrides Project=IoT_Application --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND`
+3) Go on 'AWS Console > S3 > devq-iot-platform > Autorizzazioni > Proprietà dell'oggetto' and enable ACL
+4) Execute on CLI the command `npm run aws-publicaaccessblock`
+5) Execute on CLI the command `sam build --template full.yml`
+6) Execute on CLI the command `sam deploy --stack-name devq-iot-platform --template-file .aws-sam/build/template.yaml --parameter-overrides Project=IoT_Application --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND`
+
+# Deploy Angular resources on AWS S3
+
+**IMPORTANT: Perform this every time there is a change in the code.**
+
+1) Execute on CLI the command `npm run aws-deploy`
+2) (Optional) To show the URL of the hosted website, execute on CLI the command `aws cloudformation describe-stacks --stack-name devq-iot-platform --query 'Stacks[0].Outputs[0].OutputValue' --output text`
+
 # IoTApplicationFrontEnd
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.5.
