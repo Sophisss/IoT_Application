@@ -6,10 +6,17 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: devq.iot.iot-platform
+
       AccessControl: PublicRead
+
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
+
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+
 
   MyBucketPolicy:
     Type: AWS::S3::BucketPolicy

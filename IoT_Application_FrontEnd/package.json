@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "aws-deploy": "aws s3 sync dist/iot-application-front-end/ s3://devq.iot.iot-platform",
+    "aws-template-deploy": "sam build && sam deploy --stack-name devq-iot-platform --template-file .aws-sam/build/template.yaml --parameter-overrides Project=IoT_Application --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND",
     "aws-publicaccessblock": "aws s3api put-public-access-block --bucket devq.iot.iot-platform --public-access-block-configuration BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false",
     "aws-objectownership": "aws s3api put-object-acl --bucket devq.iot.iot-platform --key index.html --acl public-read"
   },
