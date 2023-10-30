@@ -69,7 +69,6 @@ export class GeneratorService {
     this.saveConfiguration();
   }
 
-
   /**
    * This method create a new table,
    * adds it to the configuration, and updates the final JSON.
@@ -124,14 +123,13 @@ export class GeneratorService {
    * @returns json of the entities.
    */
   createEntityJson() {
-    const jsonEntities = this.configuration.entities.map(entity => ({
+    return this.configuration.entities.map(entity => ({
       name: entity.name,
       table: entity.table,
       entity_id: entity.id,
       fields: this.createFields(entity),
       primary_key: []
     }));
-    return jsonEntities
   }
 
   /**
@@ -139,12 +137,11 @@ export class GeneratorService {
    * @returns json of the links.
    */
   createLinkJson() {
-    const jsonLink = this.configuration.links.map(link => ({
+    return this.configuration.links.map(link => ({
       first_entity: link.first_entity.name,
       second_entity: link.second_entity.name,
       fields: this.createFields(link)
     }));
-    return jsonLink
   }
 
   /**
@@ -152,13 +149,12 @@ export class GeneratorService {
    * @returns json of the tables.
    */
   createTableJson() {
-    const jsonTable = this.configuration.tables.map(table => ({
+    return this.configuration.tables.map(table => ({
       tableName: table.name,
       table_id: table.id,
       partitionKey: table.partition_key,
       sortKey: table.sort_Key
     }))
-    return jsonTable
   }
 
   /**
@@ -167,12 +163,11 @@ export class GeneratorService {
    * @returns json of the fields.
    */
   createFields(object: Entity | Link) {
-    const fields = object.fields.map(field => ({
+    return object.fields.map(field => ({
       name: field.name,
       type: field.type,
       required: field.required
     }))
-    return fields
   }
 
   /**
@@ -203,10 +198,7 @@ export class GeneratorService {
   removeLinkConfiguration(first_entity: number, second_entity: number, node_class: string) {
     if (node_class === 'Table') {
       const entity = this.configuration.entities.find(entity => entity.id === first_entity);
-
-      if(entity){
-        entity.resetTable();
-      }
+      if (entity) { entity.resetTable(); }
     } else {
       const elementIndex = this.configuration.links.findIndex(link =>
         link.first_entity.id === first_entity && link.second_entity.id === second_entity);
