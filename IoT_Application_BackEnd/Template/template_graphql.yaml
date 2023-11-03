@@ -42,30 +42,29 @@ Resources:
     Properties:
       Auth:
         Type: API_KEY  #IAM
-      ApiKeys:
-        MyApiKey: { } # da togliere poi
       DataSources:
         Lambda:
           LambdaDataSource:
-            Name: !Sub "${Project}-LambdaDataSource"
+            Name: !Sub "${Project}_LambdaDataSource"
             Description: Lambda DataSource
             FunctionArn: !GetAtt GetDevice.Arn
-      SchemaUri: ../src/graphql_schema/schema.graphql
       Functions:
         lambdaInvoker:
+          CodeUri: ../src/graphql_schema/invoker.js
+          DataSource: LambdaDataSource
+          Description: Lambda invoker function
           Runtime:
             Name: APPSYNC_JS
             Version: 1.0.0
-          DataSource: LambdaDataSource
       Resolvers:
         Query:
           getDevice:
+            Pipeline:
+              - lambdaInvoker
             Runtime:
               Name: APPSYNC_JS
               Version: 1.0.0
-            Pipeline:
-              - lambdaInvoker
-
+      SchemaUri: ../src/graphql_schema/schema.graphql
 
   # region Lambda functions roles and policies
 
@@ -102,3 +101,9 @@ Resources:
         - !Ref LambdaExecutionRole
 
   # endregion
+
+Outputs:
+  APIEndpoint:
+    Description: AppSync GraphQL API endpoint
+    Value: !GetAtt GraphQLAPI.GraphQLUrl
+
