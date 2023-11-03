@@ -1,0 +1,25 @@
+schema {
+    query: Query
+}
+
+type Device {
+    primary_key: ID!
+    sort_key: String
+    thing_name: String
+    description: String
+    status: String
+    device_type: String
+}
+
+input DeviceInput {
+  primary_key: ID!
+  sort_key: String
+  name: String
+  description: String
+  status: String
+  device_type: String
+}
+
+type Query {
+    getDevice(primary_key: ID!): Device
+}
