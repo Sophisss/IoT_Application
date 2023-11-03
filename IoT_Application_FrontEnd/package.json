@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "aws-deploy": "aws s3 sync dist/iot-application-front-end/ s3://devq.iot.iot-platform"
+    "aws-sync": "ng build && aws s3 sync dist/iot-application-front-end/ s3://devq.iot.iot-platform",
+    "aws-deploy": "sam build --template template.yml && sam deploy --stack-name devq-iot-platform --template-file .aws-sam/build/template.yaml --parameter-overrides Project=IoT_Application --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND && ng build && aws s3 sync dist/iot-application-front-end/ s3://devq.iot.iot-platform",
+    "aws-tmp1": "sam build && sam deploy --stack-name devq-iot-platform --template-file .aws-sam/build/template.yaml --parameter-overrides Project=IoT_Application --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
   },
   "private": true,
   "dependencies": {

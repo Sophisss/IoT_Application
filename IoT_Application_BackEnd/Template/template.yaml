@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Test template
+Description: Template to define an API Gateway
 
 # region parameters
 
@@ -40,24 +40,6 @@ Resources:
         AllowMethods: "'*'"
         AllowHeaders: "'Content-Type'"
         AllowOrigin: "'*'"
-
-
-  TestAPI:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub "${Project}-TestAPI"
-      Description: Test API
-      CodeUri: ../src/Controller/
-      Handler: testController.handler
-      Tags:
-        Name: !Sub "${Project}-TestAPI"
-      Events:
-        TestAPI:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApplicationApiGateway
-            Path: /test
-            Method: POST
 
     # endregion
 

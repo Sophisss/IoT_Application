@@ -1,17 +1,38 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Template for describing resources related to application deployment
 
-Parameters:
-
-  Project:
-    Type: String
-    Description: Project name
-
 Resources:
-
-  S3Bucket:
-    Type: 'AWS::S3::Bucket'
-    DeletionPolicy: Retain
-
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
     Properties:
       BucketName: devq.iot.iot-platform
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  MyBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref MyS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${MyS3Bucket}/*"
+
+Outputs:
+  WebsiteURL:
+    Description: URL for the static website hosted on S3
+    Value:
+      Fn::GetAtt:
+        - MyS3Bucket
+        - WebsiteURL
