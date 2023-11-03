@@ -14,7 +14,7 @@ type Device {
 input DeviceInput {
   primary_key: ID!
   sort_key: String
-  name: String
+  thing_name: String
   description: String
   status: String
   device_type: String
