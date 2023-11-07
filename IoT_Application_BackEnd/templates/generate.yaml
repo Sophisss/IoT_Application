@@ -44,8 +44,11 @@ Resources:
     Properties:
       FunctionName: !Sub "${Project}-GetS3FolderUrl"
       Description: Test function to get S3 folder url
+      CodeUri: src/Controller
       Handler: generate.lambda_handler
       Role:
+
+
         Fn::ImportValue: !Sub "${Project}-LambdaExecutionRoleArn"
       Environment:
         Variables:

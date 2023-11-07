@@ -34,10 +34,11 @@ Resources:
     Properties:
       FunctionName: !Sub "${Project}-GetDevice"
       Description: Get device by id from DynamoDB table
-      CodeUri: ../src/Controller/
+      CodeUri: src/Controller
       Handler: controller.getDevice
       Role:
         Fn::ImportValue: !Sub "${Project}-LambdaExecutionRoleArn"
+
 
   GraphQLAPI:
     Type: AWS::Serverless::GraphQLApi
@@ -52,7 +53,7 @@ Resources:
             FunctionArn: !GetAtt GetDevice.Arn
       Functions:
         lambdaInvoker:
-          CodeUri: ../src/Resolver_configuration/invoker.js
+          CodeUri: src/invoker.js
           DataSource: LambdaDataSource
           Description: Lambda invoker function
           Runtime:
@@ -66,10 +67,12 @@ Resources:
             Runtime:
               Name: APPSYNC_JS
               Version: 1.0.0
-      SchemaUri: ../src/graphql_schema/schema.graphql
+      SchemaUri: src/schema.graphql
 
 Outputs:
   APIEndpoint:
     Description: AppSync GraphQL API endpoint
     Value: !GetAtt GraphQLAPI.GraphQLUrl
+
+
 
