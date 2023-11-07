@@ -77,7 +77,7 @@ export class BlankComponent {
    * This method initializes the Drawflow editor and configures its settings.
    */
   initDrawFlow() {
-    this.drawflowElement = <HTMLElement>document.getElementById('drawflow');
+    this.drawflowElement = document.getElementById('drawflow') as HTMLElement;
     this.editor = new Drawflow(this.drawflowElement);
     this.configureEditor();
     this.editor.start();
@@ -108,59 +108,88 @@ export class BlankComponent {
    * inside the editor.
    */
   addEditorEvents() {
-    this.editor.on('nodeCreated', (id: number) => {
-      console.log(this.editor.getNodeFromId(id));
-      this.addObjectRelativeClassNode(id);
-    });
+    this.editor.on('nodeCreated', (id: number) => { this.addObjectRelativeClassNode(id) });
 
-    this.editor.on('nodeRemoved', (id: number) => {
-      this.setEditorProperties({ viewOutputHover: 'visible' });
-      this.removeNode(id);
-    });
+    this.editor.on('nodeRemoved', (id: number) => { this.handleNodeRemoved(id) });
 
-    this.editor.on('nodeSelected', (id: number) => {
-      this.setEditorProperties({ viewOutputHover: 'hidden' });
-      this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
-    });
+    this.editor.on('nodeSelected', (id: number) => { this.handleNodeSelected(id) });
 
-    this.editor.on('nodeMoved', (event) => {
-      this.setEditorProperties({ viewOutputHover: 'visible' });
-    });
+    this.editor.on('nodeMoved', () => { this.setEditorProperties({ viewOutputHover: 'visible' }) });
 
     this.editor.on('connectionStart', (event) => {
       console.log("connectionStart: ", event);
-      const element = document.getElementById(`node-${event.output_id}`);
-      this.getNodeInput(element).style.visibility = 'hidden';
-      this.setEditorProperties({ viewOutputHover: 'hidden', viewInputEntity: 'visible' });
-      this.checkNodeConnection(event);
+      this.handleConnectionStart(event);
     });
 
     this.editor.on('connectionCreated', (connection) => {
       console.log('Connection created: ', connection);
-      if (this.currentInputElement) { this.currentInputElement.style.removeProperty('visibility'); }
-      this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
-      //this.addLabelText(document.querySelector(".connection"), "Prova");
-      this.addLink(connection);
+      this.handleConnectionCreated(connection);
     });
 
-    this.editor.on('connectionRemoved', (connection) => {
-      console.log('Connection removed ', connection);
-      this.setEditorProperties({ viewOutputHover: 'visible', viewInputEntity: 'hidden' });
-      this.removeLink(connection);
-    });
+    this.editor.on('connectionRemoved', (connection) => { this.handleConnectionRemoved(connection) });
 
-    this.editor.on('connectionCancel', (connection) => {
-      if (this.currentInputElement) { this.currentInputElement.style.removeProperty('visibility'); }
-      this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
-    });
+    this.editor.on('connectionCancel', () => { this.handleConnectionCancel() });
 
-    this.editor.on('contextmenu', (event) => {
-      this.setEditorProperties({ viewOutputHover: 'visible' });
-    });
+    this.editor.on('contextmenu', () => { this.setEditorProperties({ viewOutputHover: 'visible' }) });
 
-    this.editor.on('click', (event) => {
-      this.setEditorProperties({ viewOutputHover: 'visible' });
-    });
+    this.editor.on('click', () => { this.setEditorProperties({ viewOutputHover: 'visible' }) });
+  }
+
+  /**
+   * This method handles the removal of a node.
+   * @param id unique identifier of the removed node.
+   */
+  private handleNodeRemoved(id: number) {
+    this.setEditorProperties({ viewOutputHover: 'visible' });
+    this.removeNode(id);
+  }
+
+  /**
+   * This method handles the selection of a node.
+   * @param id unique identifier of the selected node.
+   */
+  private handleNodeSelected(id: number) {
+    this.setEditorProperties({ viewOutputHover: 'hidden' });
+    this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
+  }
+
+  /**
+   * This method handles the start of a connection event.
+   * @param event connection start event to be handled.
+   */
+  private handleConnectionStart(event: ConnectionStartEvent) {
+    const element = document.getElementById(`node-${event.output_id}`);
+    this.getNodeInput(element).style.visibility = 'hidden';
+    this.setEditorProperties({ viewOutputHover: 'hidden', viewInputEntity: 'visible' });
+    this.checkNodeConnection(event);
+  }
+
+  /**
+   * This method handles the event when a connection is created.
+   * @param connection connection event to be handled.
+   */
+  private handleConnectionCreated(connection: ConnectionEvent) {
+    if (this.currentInputElement) { this.currentInputElement.style.removeProperty('visibility'); }
+    this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
+    this.addLabelText(document.querySelector(".connection"), "Prova");
+    this.addLink(connection);
+  }
+
+  /**
+   * This method handles the event when a connection is cancelled.
+   */
+  private handleConnectionCancel() {
+    if (this.currentInputElement) { this.currentInputElement.style.removeProperty('visibility'); }
+    this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
+  }
+
+  /**
+   * This method handles the event when a connection is removed.
+   * @param connection connection event to be handled.
+   */
+  private handleConnectionRemoved(connection: ConnectionEvent) {
+    this.setEditorProperties({ viewOutputHover: 'visible', viewInputEntity: 'hidden' });
+    this.removeLink(connection);
   }
 
   /**
@@ -203,8 +232,7 @@ export class BlankComponent {
     const entityConnectedToTable = Object.values(node.outputs)
       .some(output =>
         output.connections.some(connection =>
-          this.editor.getNodeFromId(connection.node).class === 'Table'
-        ));
+          this.editor.getNodeFromId(connection.node).class === 'Table'));
     this.drawflowElement.style.setProperty('--viewInputTable', entityConnectedToTable ? 'hidden' : 'visible');
   }
 
@@ -243,9 +271,7 @@ export class BlankComponent {
    * @returns An object with the first and second nodes.
   */
   getNode(event: ConnectionEvent) {
-    const first = this.editor.getNodeFromId(event.output_id);
-    const second = this.editor.getNodeFromId(event.input_id);
-    return { first, second };
+    return { first: this.editor.getNodeFromId(event.output_id), second: this.editor.getNodeFromId(event.input_id) };
   }
 
   /**
@@ -255,11 +281,13 @@ export class BlankComponent {
    */
   addObjectRelativeClassNode(id: number | string) {
     const node = this.editor.getNodeFromId(id)
-    if (node.class == 'Entity') {
-      this.generatorService.saveEntity(node.id, node.name)
-    }
-    else if (node.class == 'Table') {
-      this.generatorService.saveTable(node.id, node.name)
+    switch (node.class) {
+      case 'Entity':
+        this.generatorService.saveEntity(node.id, node.name);
+        break;
+      case 'Table':
+        this.generatorService.saveTable(node.id, node.name);
+        break;
     }
   }
 
@@ -299,15 +327,13 @@ export class BlankComponent {
    */
   addNodeToDrawFlow(name: string, pos_x: number, pos_y: number) {
     const position = this.getCoordinates(pos_x, pos_y);
-    pos_x = position.pos_x;
-    pos_y = position.pos_y;
 
     switch (name) {
       case 'entity':
-        this.addNode('Entity', pos_x, pos_y, 'Entity');
+        this.addNode('Entity', position.pos_x, position.pos_y, 'Entity');
         break;
       case 'table':
-        this.addNode('IoT', pos_x, pos_y, 'Table');
+        this.addNode('IoT', position.pos_x, position.pos_y, 'Table');
         break;
       default:
     }
@@ -338,22 +364,23 @@ export class BlankComponent {
    */
   dblClickNode(node_id: string | number, nodeType: string) {
     document.querySelector(`#node-${node_id}.drawflow-node.${nodeType}`)?.addEventListener('dblclick', () => {
-      if (nodeType === 'Entity') {
-        this.dialog.open(DialogEntityComponent, {
-          data: {
-            name: "device",
-            type: "string"
-          }
-        });
-      } else if (nodeType === 'Table') {
-        console.log('Doppio click sul nodo table');
-        this.dialog.open(DialogTableComponent, {
-          data: {}
-        });
+      switch (nodeType) {
+        case 'Entity':
+          this.dialog.open(DialogEntityComponent, {
+            data: {
+              name: "device",
+              type: "string"
+            }
+          });
+          break;
+        case 'Table':
+          this.dialog.open(DialogTableComponent, {
+            data: {}
+          });
+          break;
       }
     });
   }
-
 
   /**
    * This method calculate the coordinates relative to the Drawflow editor canvas.
@@ -413,9 +440,7 @@ export class BlankComponent {
    */
   addEntityToDrawflow(data: { entities: any[]; }) {
     data.entities.forEach((entity) => {
-      const nodeId = entity.entity_id;
-      const nodeName = entity.name;
-      this.addNode(nodeName, 100 * nodeId, 100 * nodeId, 'Entity');
+      this.addNode(entity.name, 100 * entity.entity_id, 100 * entity.entity_id, 'Entity');
     });
   }
 
@@ -425,9 +450,7 @@ export class BlankComponent {
    */
   addTableToDrawflow(data: { awsConfig: { dynamo: { tables: any[]; }; }; }) {
     data.awsConfig.dynamo.tables.forEach((table) => {
-      const nodeId = table.table_id;
-      const nodeName = table.tableName;
-      this.addNode(nodeName, 100 * nodeId, 100 * nodeId, 'Table');
+      this.addNode(table.tableName, 100 * table.table_id, 100 * table.table_id, 'Table');
     });
   }
 
@@ -453,12 +476,9 @@ export class BlankComponent {
    */
   addLinkTableEntityToDrawflow(data: { entities: any[]; awsConfig: { dynamo: { tables: any[]; }; }; }) {
     data.entities.forEach((entity) => {
-      const table_name = entity.table;
-      if (table_name) {
-        const table_id = data.awsConfig.dynamo.tables.find((table) => table.tableName === table_name)?.table_id;
-        if (table_id) {
-          this.editor.addConnection(entity.entity_id, table_id, 'output_1', 'input_1');
-        }
+      if (entity.table) {
+        const table_id = data.awsConfig.dynamo.tables.find((table) => table.tableName === entity.table)?.table_id;
+        this.editor.addConnection(entity.entity_id, table_id, 'output_1', 'input_1');
       }
     });
   }
@@ -500,16 +520,16 @@ export class BlankComponent {
     this.generatorService.clear();
   }
 
-  // addLabelText(bgPath: any, labelText: any) {
-  //   const newid = [bgPath.classList].join().replace(/\s/g, '');
-  //   bgPath.childNodes[0].id = newid;
-  //   let textElem = document.createElementNS(bgPath.namespaceURI, "text");
-  //   let textElemPath = document.createElementNS(bgPath.namespaceURI, "textPath");
-  //   textElemPath.setAttribute("href", `#${newid}`);
-  //   textElemPath.setAttribute("text-anchor", "left");
-  //   textElemPath.classList.add("label-text");
-  //   textElemPath.textContent = labelText;
-  //   textElem.appendChild(textElemPath);
-  //   bgPath.appendChild(textElem);
-  // }
+  addLabelText(bgPath: any, labelText: string) {
+    const newid = [bgPath.classList].join().replace(/\s/g, '');
+    bgPath.childNodes[0].id = newid;
+    let textElem = document.createElementNS(bgPath.namespaceURI, "text");
+    let textElemPath = document.createElementNS(bgPath.namespaceURI, "textPath");
+    textElemPath.setAttribute("href", `#${newid}`);
+    textElemPath.setAttribute("text-anchor", "left");
+    textElemPath.classList.add("label-text");
+    textElemPath.textContent = labelText;
+    textElem.appendChild(textElemPath);
+    bgPath.appendChild(textElem);
+  }
 }

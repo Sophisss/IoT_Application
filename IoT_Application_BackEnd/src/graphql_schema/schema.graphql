@@ -1,0 +1,37 @@
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+
+type Device {
+    primary_key: ID!
+    sort_key: String
+    thing_name: String
+    description: String
+    status: String
+    device_type: String
+}
+
+input DeviceInput {
+  primary_key: ID!
+  sort_key: String
+  thing_name: String
+  description: String
+  status: String
+  device_type: String
+}
+
+type Query {
+    getDevice(primary_key: ID!): Device
+}
+
+type Mutation {
+    createDevice(input: DeviceInput!): Device
+}
+
+type Subscription {
+    onCreateDevice: Device
+        @aws_subscribe(mutations: ["createDevice"])
+}
+

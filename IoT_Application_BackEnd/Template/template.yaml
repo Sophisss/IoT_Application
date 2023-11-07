@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Test template
+Description: Template to define an API Gateway
 
 # region parameters
 
@@ -9,6 +9,10 @@ Parameters:
   Project:
     Type: String
     Description: Project name
+
+  S3Bucket:
+    Type: String
+    Description: Bucket name
 
 # endregion
 
@@ -24,6 +28,7 @@ Globals:
       Variables:
         AWS_ACCOUNT_ID: !Ref AWS::AccountId
         DYNAMO_REGION: !Ref AWS::Region
+        S3_BUCKET: !Ref S3Bucket
 
 # endregion
 
@@ -41,25 +46,48 @@ Resources:
         AllowHeaders: "'Content-Type'"
         AllowOrigin: "'*'"
 
+  # region Lambda functions roles and policies
 
-  TestAPI:
-    Type: AWS::Serverless::Function
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
     Properties:
-      FunctionName: !Sub "${Project}-TestAPI"
-      Description: Test API
-      CodeUri: ../src/Controller/
-      Handler: testController.handler
-      Tags:
-        Name: !Sub "${Project}-TestAPI"
-      Events:
-        TestAPI:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApplicationApiGateway
-            Path: /test
-            Method: POST
+      Path: "/"
+      RoleName: !Sub "${Project}-LambdaExecutionRole"
+      AssumeRolePolicyDocument: !Sub "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+      MaxSessionDuration: 3600
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
 
-    # endregion
+  # Policy attached to Lambda functions runs
+
+  LambdaExecutionPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub "${Project}-LambdaExecutionPolicy"
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - "dynamodb:PutItem"
+              - "dynamodb:DeleteItem"
+              - "dynamodb:Scan"
+              - "dynamodb:Query"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:GetItem"
+            Resource:
+              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/IoT"
+          - Effect: Allow
+            Action:
+              - "s3:PutObject*"
+              - "s3:GetObject*"
+              - "s3:DeleteObject"
+            Resource:
+              - !Sub "arn:aws:s3:::${S3Bucket}/*"
+      Roles:
+        - !Ref LambdaExecutionRole
+
+  # endregion
 
 Outputs:
 
@@ -68,3 +96,9 @@ Outputs:
     Value: !Sub 'https://${ApplicationApiGateway}.execute-api.${AWS::Region}.amazonaws.com/v2/'
     Export:
       Name: !Sub "${Project}-ApiGatewayId"
+
+  LambdaExecutionRole:
+    Description: The ARN of the lambda execution role
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: !Sub "${Project}-LambdaExecutionRoleArn"
