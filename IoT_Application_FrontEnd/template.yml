@@ -1,11 +1,21 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Template for describing resources related to application deployment
 
+Parameters:
+  BucketName:
+    Type: String
+    Description: Name of the S3 bucket to create
+    Default: devq.iot.iot-platform
+  IdForDomain:
+    Type: String
+    Description: Id of the domain for the CloudFront distribution
+    Default: S3-iot-platform.devq.it
+
 Resources:
   MyS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: devq.iot.iot-platform
+      BucketName: !Ref BucketName
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: error.html
@@ -29,10 +39,27 @@ Resources:
               - s3:GetObject
             Resource: !Sub "arn:aws:s3:::${MyS3Bucket}/*"
 
+  MyCloudFrontDistributionForRootDomain:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          TargetOriginId: !Ref IdForDomain
+          ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+            DomainName: !Sub '${MyS3Bucket}.s3-website.${AWS::Region}.amazonaws.com'
+            Id: !Ref IdForDomain
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+
 Outputs:
-  WebsiteURL:
-    Description: URL for the static website hosted on S3
-    Value:
-      Fn::GetAtt:
-        - MyS3Bucket
-        - WebsiteURL
+  outputCloudFrontDistributionForRootDomainId:
+    Description: CloudFront distribution ID
+    Value: !Ref MyCloudFrontDistributionForRootDomain
+  outputCloudFrontDistributionDomainNameForRootDomain:
+    Description: CloudFront distribution domain name
+    Value: !GetAtt MyCloudFrontDistributionForRootDomain.DomainName
