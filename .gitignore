@@ -11,3 +11,11 @@ IoT_Application_BackEnd/.idea/
 IoT_Application_BackEnd/samconfig.toml
 =======
 >>>>>>> e6437c64897c5d8e11fb31c96a3f30f75eb49fb3
+
+.idea/IoT_Application.iml
+
+.idea/misc.xml
+
+.idea/
+
+IoT_Application_BackEnd/.aws-sam/
