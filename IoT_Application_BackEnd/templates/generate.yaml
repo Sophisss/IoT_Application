@@ -50,6 +50,7 @@ Resources:
         AllowHeaders: "'Content-Type'"
         AllowOrigin: "'*'"
 
+
   GetS3FolderUrl:
     Type: AWS::Serverless::Function
     Properties:
@@ -146,4 +147,5 @@ Outputs:
     Value: !Sub 'https://${ApplicationApiGateway}.execute-api.${AWS::Region}.amazonaws.com/v2/'
     Export:
       Name: !Sub "${Project}-ApiGatewayId"
+
 
