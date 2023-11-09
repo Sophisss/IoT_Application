@@ -1,0 +1,184 @@
+{
+  "entities": [
+    {
+      "name": "device",
+      "fields": [
+        {
+          "name": "device_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "datatype",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "thingName",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 100
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "maxLength": 256
+        },
+        {
+          "name": "deviceType",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "allowedValues": [
+            "active",
+            "inactive"
+          ]
+        },
+        {
+          "name": "owner",
+          "type": "string",
+          "required": false,
+          "maxLength": 100
+        }
+      ],
+      "primaryKey": {
+        "first_half": "device_id",
+        "second_half": "datatype"
+      }
+    },
+    {
+      "name": "building",
+      "fields": [
+        {
+          "name": "building_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "datatype",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "required": false,
+          "maxLength": 100
+        },
+        {
+          "name": "floors",
+          "type": "integer",
+          "required": true,
+          "minimum": 1,
+          "maximum": 100
+        }
+      ],
+      "primaryKey": {
+        "first_half": "building_id",
+        "second_half": "datatype"
+      }
+    },
+    {
+      "name": "user",
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "datatype",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "required": true,
+          "minLength": 5,
+          "maxLength": 256
+        }
+      ],
+      "primaryKey": {
+        "first_half": "user_id",
+        "second_half": "datatype"
+      }
+    }
+  ],
+  "links": [
+    {
+      "first_entity": "Device",
+      "first_numerosity": "1",
+      "second_entity": "Building",
+      "second_numerosity": "1",
+      "fields": [
+        {
+          "name": "device_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "building_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "linkTime",
+          "type": "string",
+          "required": false,
+          "maxLength": 256
+        }
+      ]
+    },
+    {
+      "first_entity": "Device",
+      "second_entity": "User",
+      "fields": [
+        {
+          "name": "device_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "user_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "linkTime",
+          "type": "string",
+          "required": false,
+          "maxLength": 256
+        }
+      ]
+    }
+  ]
+}

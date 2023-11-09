@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Template
+
+# region parameters
+
+Parameters:
+  Project:
+    Type: String
+    Description: Name of the project
+
+# endregion
+
+# region globals
+
+Globals:
+  Function:
+    Timeout: 10
+    Runtime: python3.9
+    CodeUri: ../src/
+    MemorySize: 256
+    Environment:
+      Variables:
+        AWS_ACCOUNT_ID: !Ref AWS::AccountId
+        DYNAMO_REGION: !Ref AWS::Region
+
+# endregion
+Resources:
+  IoTApplicationUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: IoTApplicationUserPoolName
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+          TemporaryPasswordValidityDays: 14
+      LambdaConfig: {}
+      AutoVerifiedAttributes:
+      - email
+      UsernameAttributes:
+      - email
+      UserpoolTags:
+        Project: '!Ref Project'
+  IoTApplicationIdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      IdentityPoolName: IdentityPool
+      AllowUnauthenticatedIdentities: false
+      CognitoIdentityProviders:
+      - ProviderName: '!Ref UserPool'
+      ServerSideTokenCheck: false

@@ -6,5 +6,8 @@ IoT_Application_FrontEnd/.aws-sam/
 IoT_Application_FrontEnd/.vscode/
 
 IoT_Application_BackEnd/.idea/
+<<<<<<< HEAD
 
 IoT_Application_BackEnd/samconfig.toml
+=======
+>>>>>>> e6437c64897c5d8e11fb31c96a3f30f75eb49fb3
