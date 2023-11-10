@@ -1,0 +1,201 @@
+{
+  "projectName": "Prova",
+  "entities": [
+    {
+      "name": "Device",
+      "fields": [
+        {
+          "name": "device_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "thingName",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 100
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "maxLength": 256
+        },
+        {
+          "name": "deviceType",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "allowedValues": [
+            "active",
+            "inactive"
+          ]
+        }
+      ],
+      "primary_key": [
+        "device_id"
+      ],
+      "API": [
+        {
+          "name": "createDevice",
+          "type": "PUT"
+        },
+        {
+          "name": "deleteDevice",
+          "type": "DELETE"
+        },
+        {
+          "name": "updateDevice",
+          "type": "POST",
+          "parameters": [
+            "thingName",
+            "deviceType"
+          ]
+        },
+        {
+          "name": "getDeviceById",
+          "type": "GET"
+        },
+        {
+          "name": "getDevices",
+          "type": "GET"
+        }
+      ]
+    },
+    {
+      "name": "Building",
+      "table": "IoT",
+      "fields": [
+        {
+          "name": "building_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "required": false,
+          "maxLength": 100
+        },
+        {
+          "name": "floors",
+          "type": "integer",
+          "required": true,
+          "minimum": 1,
+          "maximum": 100
+        }
+      ],
+      "primary_key": [
+        "building_id"
+      ],
+      "API": [
+        {
+          "name": "createBuilding",
+          "type": "PUT"
+        },
+        {
+          "name": "deleteBuilding",
+          "type": "DELETE"
+        },
+        {
+          "name": "updateBuilding",
+          "type": "POST",
+          "parameters": [
+            "thingName",
+            "deviceType"
+          ]
+        },
+        {
+          "name": "getBuildingById",
+          "type": "GET"
+        },
+        {
+          "name": "getBuildings",
+          "type": "GET"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "first_entity": "Device",
+      "second_entity": "Building",
+      "numerosity": "...",
+      "table": "IoT",
+      "fields": [],
+      "primary_key": [
+        "device_id",
+        "building_id"
+      ],
+      "API": [
+        {
+          "name": "createLinkDeviceBuilding",
+          "type": "PUT"
+        },
+        {
+          "name": "deleteLinkDeviceBuilding",
+          "type": "DELETE"
+        },
+        {
+          "name": "updateLinkDeviceBuilding",
+          "type": "POST",
+          "parameters": [
+            "..."
+          ]
+        },
+        {
+          "name": "get..",
+          "type": "GET"
+        }
+      ]
+    }
+  ],
+  "awsConfig": {
+    "dynamo": {
+      "tables": [
+        {
+          "tableName": "IoT",
+          "partition_key": "PK",
+          "sort_key": "SK"
+        }
+      ]
+    },
+    "authentication": {
+      "cognito": {
+        "UserPool": {
+          "resource_name": "IoTApplicationUserPool",
+          "UserPoolName": "IoTApplicationUserPoolName",
+          "policy": {
+            "PasswordPolicy": {
+              "MinimumLength": 8,
+              "RequireUppercase": true,
+              "RequireLowercase": true,
+              "RequireNumbers": true,
+              "RequireSymbols": false,
+              "TemporaryPasswordValidityDays": 14
+            }
+          }
+        },
+        "IdentityPool": {
+          "resource_name": "IoTApplicationIdentityPool",
+          "IdentityPoolName": "IdentityPool"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "single_entity_storage_keyword": "registry",
+    "id_separator": ":"
+  }
+}

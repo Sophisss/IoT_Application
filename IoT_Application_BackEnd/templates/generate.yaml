@@ -18,6 +18,7 @@ Parameters:
   S3Folder:
     Type: String
     Description: S3 folder name
+    Default: code_generated
 
 # endregion
 
@@ -26,7 +27,7 @@ Parameters:
 Globals:
   Function:
     Timeout: 10
-    Runtime: python3.9
+    Runtime: python3.11
     CodeUri: ../src/
     MemorySize: 256
     Environment:
@@ -50,51 +51,27 @@ Resources:
         AllowHeaders: "'Content-Type'"
         AllowOrigin: "'*'"
 
-
-  GetS3FolderUrl:
+  DownloadZipCode:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub "${Project}-GetS3FolderUrl"
-      Description: Test function to get S3 folder url
+      FunctionName: !Sub "${Project}-DownloadZipCode"
+      Description: Function to download zip file
       CodeUri: ../src/Controller/
-      Handler: generate.create_presigned_url
+      Handler: download_code.download_zip_code
       Role: !GetAtt LambdaExecutionRole.Arn
       Environment:
         Variables:
           BUCKET_NAME: !Ref S3Bucket
           FOLDER_NAME: !Ref S3Folder
       Tags:
-        Name: !Sub "${Project}-GetS3FolderUrl"
+        Name: !Sub "${Project}-DownloadZipCode"
       Events:
-        GetS3FolderUrl:
+        DownloadZipCode:
           Type: Api
           Properties:
             RestApiId: !Ref ApplicationApiGateway
-            Path: /get_s3_folder_url
+            Path: /download
             Method: GET
-
-
-  PutFileToS3:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub "${Project}-PutFileToS3"
-      Description: Test function to put file to S3
-      CodeUri: ../src/Controller/
-      Handler: generate.putFileToS3
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref S3Bucket
-          FOLDER_NAME: !Ref S3Folder
-      Tags:
-        Name: !Sub "${Project}-PutFileToS3"
-      Events:
-        PutFileToS3:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApplicationApiGateway
-            Path: /put_file_to_s3
-            Method: PUT
 
 
   # region Lambda functions roles and policies
@@ -135,6 +112,15 @@ Resources:
               - "s3:DeleteObject"
             Resource:
               - !Sub "arn:aws:s3:::${S3Bucket}/*"
+          - Effect: Allow
+            Action:
+              - "s3:ListBucket"
+            Resource:
+              - !Sub "arn:aws:s3:::${S3Bucket}"
+            Condition:
+              StringLike:
+                s3:prefix:
+                  - !Sub "${S3Folder}"
       Roles:
         - !Ref LambdaExecutionRole
 
@@ -147,5 +133,4 @@ Outputs:
     Value: !Sub 'https://${ApplicationApiGateway}.execute-api.${AWS::Region}.amazonaws.com/v2/'
     Export:
       Name: !Sub "${Project}-ApiGatewayId"
-
 
