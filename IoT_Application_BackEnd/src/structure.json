@@ -166,8 +166,19 @@
       "tables": [
         {
           "tableName": "IoT",
-          "partition_key": "PK",
-          "sort_key": "SK"
+          "partition_key": {
+            "name": "PK",
+            "type": "String"
+          },
+          "sort_key": {
+            "name": "SK",
+            "type": "String"
+          },
+          "GSI": {
+            "index_name": "GSI1",
+            "partition_key": "SK",
+            "sort_key": "PK"
+          }
         }
       ]
     },

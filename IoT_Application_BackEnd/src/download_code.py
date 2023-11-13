@@ -3,7 +3,9 @@ import os
 import zipfile
 from io import BytesIO
 import boto3
-import generate_code
+
+import generate_code_api
+import generate_code_cognito
 
 # Initialize the S3 client and resource
 s3_client = boto3.client('s3')
@@ -69,11 +71,16 @@ def generate_zip_url(bucket_name, folder_name):
                 'body': json.dumps({'message': 'Error during zip file generation', 'error': str(error)})}
 
 
+# Function to generate the code from the templates.
+def generate_code(bucket_name, folder_name):
+    return generate_code_api.generate_template_api(bucket_name, folder_name)
+
+
 # Lambda function to orchestrate the process.
 def download_zip_code(event, context):
     bucket_name = os.environ['BUCKET_NAME']
     folder_name = os.environ['FOLDER_NAME']
-    file_name = 'prova.yaml'
+    file_name = 'api.yaml'  # TODO: rivedi
 
     # Create folder
     response_folder = create_folder(bucket_name, folder_name)
@@ -86,7 +93,7 @@ def download_zip_code(event, context):
         return response_put
 
     # Generate templates
-    response_generate = generate_code.generate_templates(file_name, bucket_name, folder_name)
+    response_generate = generate_code(bucket_name, folder_name)
     if response_generate['statusCode'] != 200:
         return response_generate
 

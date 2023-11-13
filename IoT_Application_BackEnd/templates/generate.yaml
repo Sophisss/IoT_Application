@@ -56,7 +56,7 @@ Resources:
     Properties:
       FunctionName: !Sub "${Project}-DownloadZipCode"
       Description: Function to download zip file
-      CodeUri: ../src/Controller/
+      CodeUri: ../src/
       Handler: download_code.download_zip_code
       Role: !GetAtt LambdaExecutionRole.Arn
       Environment:
@@ -133,4 +133,13 @@ Outputs:
     Value: !Sub 'https://${ApplicationApiGateway}.execute-api.${AWS::Region}.amazonaws.com/v2/'
     Export:
       Name: !Sub "${Project}-ApiGatewayId"
+
+
+  LambdaExecutionRole:
+    Description: The ARN of the lambda execution role
+    Value: !GetAtt LambdaExecutionRole.Arn
+    Export:
+      Name: !Sub "${Project}-LambdaExecutionRoleArn"
+
+
 
