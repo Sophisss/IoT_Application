@@ -153,10 +153,6 @@
           "parameters": [
             "..."
           ]
-        },
-        {
-          "name": "get..",
-          "type": "GET"
         }
       ]
     }

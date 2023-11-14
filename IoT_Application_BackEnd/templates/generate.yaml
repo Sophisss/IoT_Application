@@ -57,7 +57,7 @@ Resources:
       FunctionName: !Sub "${Project}-DownloadZipCode"
       Description: Function to download zip file
       CodeUri: ../src/
-      Handler: download_code.download_zip_code
+      Handler: download_code_sevice.download_zip_code
       Role: !GetAtt LambdaExecutionRole.Arn
       Environment:
         Variables:

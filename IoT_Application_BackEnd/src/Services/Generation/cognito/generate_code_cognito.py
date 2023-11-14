@@ -2,7 +2,7 @@ import json
 import os
 import boto3
 from ruamel.yaml import YAML
-import utilities
+import utility_methods
 
 # Initialize the S3 client.
 s3_client = boto3.client('s3')
@@ -107,5 +107,5 @@ def add_identity_pool(json_data, template):
 def generate_template_cognito(bucket_name, folder_name):
     yaml = YAML()
     file_name = 'permissions.yaml'
-    utilities.add_intestation_yaml_template(yaml, file_name, bucket_name, folder_name)
+    utilities.add_header_yaml_template(yaml, file_name, bucket_name, folder_name)
     return add_to_resources_template_cognito(yaml, file_name, bucket_name, folder_name)
