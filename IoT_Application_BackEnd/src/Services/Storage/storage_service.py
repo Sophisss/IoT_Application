@@ -5,6 +5,10 @@ import os
 
 
 def get_bucket_name():
+    """
+    This function retrieve the bucket name from environment variables.
+    :return: Bucket name.
+    """
     return os.environ['BUCKET_NAME']
 
 
@@ -16,13 +20,20 @@ def get_s3_client():
     return boto3.client('s3')
 
 
-def put_object_to_s3(codes: list[str]):
-    key = 'code_generated/api.py'
-    for code in codes:
-        get_s3_client().put_object(Bucket=get_bucket_name(), Key=key, Body=code)
+def put_object_to_s3(codes: dict):
+    """
+    This function upload a codes generated to S3 bucket.
+    :param codes: the codes generated to upload.
+    """
+    for key, value in codes.items():
+        key_path = f'code_generated/{key}'
+        get_s3_client().put_object(Bucket=get_bucket_name(), Key=key_path, Body=value)
 
 
 def create_zip():
+    """
+    This function create a zip file from a list of objects.
+    """
     bucket_name = get_bucket_name()
     with BytesIO() as archive:
         with zipfile.ZipFile(archive, 'w') as zip_file:
