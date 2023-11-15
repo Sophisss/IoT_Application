@@ -33,7 +33,6 @@ def create_template_header():
         "Globals": add_globals_template()
     }
 
-
 def add_parameters_template():
     """
     This function add the parameters to the CloudFormation template.

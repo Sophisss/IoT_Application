@@ -18,8 +18,8 @@ def download_zip_code(event, context):
     folder_name = os.environ['FOLDER_NAME']
     file_name = 'api.py'  # TODO: rivedi
 
-    utilities.check_response(create_folder(bucket_name, folder_name))
-    utilities.check_response(put_file(bucket_name, folder_name, file_name))
+    # utilities.check_response(create_folder(bucket_name, folder_name))
+    # utilities.check_response(put_file(bucket_name, folder_name, file_name))
     generate_code(bucket_name, folder_name)
     create_zip(bucket_name, folder_name, zip_key='code.zip')
     return {"body": json.dumps({"url": create_url(bucket_name, zip_key='code.zip')})}
@@ -57,7 +57,11 @@ def generate_code(bucket_name, folder_name):
     :param folder_name: S3 folder name.
     :return: Response.
     """
-    generate_lambda_code(bucket_name, folder_name)
+    dict = {
+        "name": "test"
+    }
+    utilities.get_s3_client().put_object(Bucket=bucket_name, Key=f'{folder_name}/config.yaml', Body=str(dict))
+    # generate_lambda_code(bucket_name, folder_name)
     # generate_template_api(bucket_name, folder_name)
     # generate_template_cognito(bucket_name, folder_name)
 

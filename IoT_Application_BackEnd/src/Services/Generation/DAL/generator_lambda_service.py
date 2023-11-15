@@ -1,6 +1,4 @@
-from template_lambdas import *
-from utility_methods import read_json, put_s3_object
-import os
+from Services.Generation.DAL.lambdas_template import *
 
 
 def generation_configuration(data):
@@ -98,11 +96,7 @@ def generate_method_delete_link(api_name, partition_key, sort_key):
     return template_method_for_delete_link.format(name_method=api_name, partition_key=partition_key, sort_key=sort_key)
 
 
-def generate_lambda_code(bucket_name, folder_name):
-    data = read_json()
-    file_name = 'api.py'
-    key = os.path.join(folder_name, file_name)
-
-    put_s3_object(bucket_name, key, file_result_template.format(configuration_dynamo=generation_configuration(data),
-                                                                lambdas=generation_lambdas_handler(data),
-                                                                lambdas_link=generation_lambdas_handler_link(data)))
+def generate_lambda_code(data: dict) -> str:
+    return file_result_template.format(configuration_dynamo=generation_configuration(data),
+                                       lambdas=generation_lambdas_handler(data),
+                                       lambdas_link=generation_lambdas_handler_link(data))
