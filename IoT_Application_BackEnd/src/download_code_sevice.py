@@ -1,9 +1,10 @@
 import json
 import os
 import zipfile
-import generate_code_api
 import utility_methods as utilities
 from io import BytesIO
+from generate_code_api import generate_template_api
+from generazione_lambda import generate_lambda_code
 
 
 def download_zip_code(event, context):
@@ -15,7 +16,7 @@ def download_zip_code(event, context):
     """
     bucket_name = os.environ['BUCKET_NAME']
     folder_name = os.environ['FOLDER_NAME']
-    file_name = 'api.yaml'  # TODO: rivedi
+    file_name = 'api.py'  # TODO: rivedi
 
     utilities.check_response(create_folder(bucket_name, folder_name))
     utilities.check_response(put_file(bucket_name, folder_name, file_name))
@@ -31,7 +32,7 @@ def create_folder(bucket_name, folder_name):
     :param folder_name: S3 folder name.
     :return: Response.
     """
-    response = utilities.get_s3_client().put_object(Bucket=bucket_name, Key=f'{folder_name}/')
+    response = utilities.put_s3_object(bucket_name, f'{folder_name}/')
     return utilities.handle_response(response, 'Folder created successfully')
 
 
@@ -45,7 +46,7 @@ def put_file(bucket_name, folder_name, file_name):  # TODO: chiedere a massi per
     """
     key = os.path.join(folder_name, file_name)
     with BytesIO(b'') as empty_file:
-        response = utilities.get_s3_client().put_object(Bucket=bucket_name, Key=key, Body=empty_file.read())
+        response = utilities.put_s3_object(bucket_name, key, archive=empty_file.read())
     return utilities.handle_response(response, 'File uploaded successfully')
 
 
@@ -56,7 +57,9 @@ def generate_code(bucket_name, folder_name):
     :param folder_name: S3 folder name.
     :return: Response.
     """
-    return generate_code_api.generate_template_api(bucket_name, folder_name)
+    generate_lambda_code(bucket_name, folder_name)
+    # generate_template_api(bucket_name, folder_name)
+    # generate_template_cognito(bucket_name, folder_name)
 
 
 def create_zip(bucket_name, folder_name, zip_key=None):
@@ -94,9 +97,8 @@ def create_url(bucket_name, zip_key=None):
     :param zip_key: S3 object key.
     :return: Presigned URL.
     """
-    presigned_url = utilities.get_s3_client().generate_presigned_url(
+    return utilities.get_s3_client().generate_presigned_url(
         ClientMethod='get_object',
         Params={'Bucket': bucket_name,
                 'Key': zip_key},
         ExpiresIn=3600)
-    return presigned_url

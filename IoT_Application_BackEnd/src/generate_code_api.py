@@ -17,7 +17,7 @@ def generate_template_api(bucket_name, folder_name):
     yaml.indent(offset=2, sequence=4, mapping=2)
     file_name = 'api.yaml'
     add_header_yaml_template(yaml, file_name, bucket_name, folder_name)
-    return add_to_resources_template_api(yaml, file_name, bucket_name, folder_name)
+    add_to_resources_template_api(yaml, file_name, bucket_name, folder_name)
 
 
 def add_to_resources_template_api(yaml, file_name, bucket_name, folder_name):
@@ -33,7 +33,7 @@ def add_to_resources_template_api(yaml, file_name, bucket_name, folder_name):
     template = yaml.load(utilities.get_s3_object(bucket_name, key)['Body'].read().decode('utf-8'))
     add_resources_to_template(template)
 
-    response = utilities.put_s3_object(bucket_name, key, utilities.create_archive(yaml, template))
+    response = utilities.put_s3_object(bucket_name, key, archive=utilities.create_archive(yaml, template))
     return utilities.handle_response(response, 'File updated successfully')
 
 

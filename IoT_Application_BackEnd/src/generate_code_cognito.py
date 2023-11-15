@@ -137,7 +137,3 @@ def add_properties_identity_pool_template(json_data):
         ],
         "ServerSideTokenCheck": False
     }
-
-
-
-

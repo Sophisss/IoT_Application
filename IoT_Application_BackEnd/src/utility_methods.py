@@ -58,8 +58,7 @@ def check_response(response):
     :param response: API response.
     :return: Response.
     """
-    if response['statusCode'] != 200:
-        return response
+    return response if response['statusCode'] != 200 else None
 
 
 def get_s3_object(bucket_name, key):
@@ -72,7 +71,7 @@ def get_s3_object(bucket_name, key):
     return get_s3_client().get_object(Bucket=bucket_name, Key=key)
 
 
-def put_s3_object(bucket_name, key, archive):
+def put_s3_object(bucket_name, key, archive=None):
     """
     This function put an object in S3 bucket.
     :param bucket_name: S3 bucket name.
@@ -80,20 +79,8 @@ def put_s3_object(bucket_name, key, archive):
     :param archive: Archive.
     :return: S3 object content.
     """
-    return get_s3_client().put_object(Bucket=bucket_name, Key=key, Body=archive.read())
-
-
-def put_s3_object2(bucket_name, key, yaml, template):
-    """
-    This function put an object in S3 bucket.
-    :param bucket_name: S3 bucket name.
-    :param key: S3 object key.
-    :param yaml: YAML object.
-    :param template: CloudFormation template.
-    :return: S3 object content.
-    """
-    archive = create_archive(yaml, template)
-    return get_s3_client().put_object(Bucket=bucket_name, Key=key, Body=archive.read())
+    return get_s3_client().put_object(Bucket=bucket_name, Key=key) if archive is None else get_s3_client().put_object(
+        Bucket=bucket_name, Key=key, Body=archive)
 
 
 def create_archive(yaml, template):
