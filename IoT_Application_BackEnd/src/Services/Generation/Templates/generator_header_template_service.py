@@ -1,5 +1,9 @@
 def generate_header_template():
-    return f"""AWSTemplateFormatVersion: 2010-09-09
+    """
+    This function generate the header of the CloudFormation template.
+    :return: the header of the CloudFormation template.
+    """
+    return f"""AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: AWS CloudFormation Template
 Parameters: {add_parameters_template()}
