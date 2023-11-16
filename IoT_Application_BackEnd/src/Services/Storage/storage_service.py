@@ -26,18 +26,17 @@ def put_object_to_s3(codes: dict):
     :param codes: the codes generated to upload.
     """
     for key, value in codes.items():
-        key_path = f'code_generated/{key}'
-        get_s3_client().put_object(Bucket=get_bucket_name(), Key=key_path, Body=value)
+        get_s3_client().put_object(Bucket=get_bucket_name(), Key=key, Body=value)
 
 
-def create_zip():
+def create_zip(keys):
     """
     This function create a zip file from a list of objects.
     """
     bucket_name = get_bucket_name()
     with BytesIO() as archive:
         with zipfile.ZipFile(archive, 'w') as zip_file:
-            for obj in list_objects(bucket_name, 'code_generated'):
+            for obj in list_objects(bucket_name, keys):
                 file_body = get_s3_object(bucket_name, obj['Key'])['Body'].read()
                 zip_file.writestr(obj['Key'], file_body)
 
@@ -45,7 +44,7 @@ def create_zip():
         get_s3_client().upload_fileobj(archive, bucket_name, 'code.zip')
 
 
-def get_s3_object(bucket_name, key):
+def get_s3_object(bucket_name: str, key) -> dict:
     """
     This function retrieve the content of an S3 object.
     :param bucket_name: S3 bucket name.
@@ -55,15 +54,20 @@ def get_s3_object(bucket_name, key):
     return get_s3_client().get_object(Bucket=bucket_name, Key=key)
 
 
-def list_objects(bucket_name, folder_name):
+def list_objects(bucket_name: str, keys) -> list:
     """
     This function list all the objects in a folder.
     :param bucket_name: S3 bucket name.
-    :param folder_name: S3 folder name.
+    :param keys: List of folders.
     :return: List of objects.
     """
-    objects = get_s3_client().list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
-    return objects.get('Contents', [])
+    objects = []
+    for folder_name in keys:
+        response = get_s3_client().list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
+        if 'Contents' in response:
+            objects.extend(response['Contents'])
+
+    return objects
 
 
 def create_url(zip_key='code.zip'):

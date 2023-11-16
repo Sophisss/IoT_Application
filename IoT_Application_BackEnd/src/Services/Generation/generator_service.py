@@ -1,5 +1,5 @@
 from Services.Generation.DAL.generator_lambda_service import generate_lambda_code
-from Services.Generation.Templates.api.generate_lambda_template import generate_lambda_template
+from Services.Generation.Templates.api.generate_api_template import generate_api_template
 from Services.Generation.Templates.cognito.generate_cognito_template_service import generate_cognito_template
 
 
@@ -10,7 +10,7 @@ def generate_code(json: dict) -> dict:
     :return: the code generated.
     """
     codes_generated = {
-        "cognito.yaml": generate_cognito_template(json['awsConfig']['authentication']['cognito']),
-        "api.yaml": generate_lambda_template(json),
-        "lambda.py": generate_lambda_code(json)}
+        "template/cognito.yaml": generate_cognito_template(json['awsConfig']['authentication']['cognito']),
+        "template/api.yaml": generate_api_template(json),
+        "src/lambda.py": generate_lambda_code(json)}
     return codes_generated

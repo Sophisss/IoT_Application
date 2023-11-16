@@ -1,4 +1,4 @@
-from utility_methods import generate_resource_name
+from Services.Generation.utility_methods import generate_resource_name
 
 
 def add_graphql_api_template(json_data, template):

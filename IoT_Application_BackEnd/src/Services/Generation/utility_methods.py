@@ -17,7 +17,7 @@ def read_json():
     This function read the JSON file and returns its content.
     :return: JSON file content.
     """
-    with open('structure.json', 'r') as opened_file:
+    with open('../../old_code/structure.json', 'r') as opened_file:
         return json.loads(opened_file.read())
 
 
