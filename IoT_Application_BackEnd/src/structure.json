@@ -112,8 +112,8 @@
           "name": "updateBuilding",
           "type": "POST",
           "parameters": [
-            "thingName",
-            "deviceType"
+            "location",
+            "floors"
           ]
         },
         {
@@ -129,14 +129,14 @@
   ],
   "links": [
     {
-      "first_entity": "Device",
-      "second_entity": "Building",
-      "numerosity": "...",
+      "first_entity": "Building",
+      "second_entity": "Device",
+      "numerosity": "one-to-many",
       "table": "IoT",
       "fields": [],
       "primary_key": [
-        "device_id",
-        "building_id"
+        "building_id",
+        "device_id"
       ],
       "API": [
         {
@@ -149,10 +149,7 @@
         },
         {
           "name": "updateLinkDeviceBuilding",
-          "type": "POST",
-          "parameters": [
-            "..."
-          ]
+          "type": "POST"
         }
       ]
     }
@@ -171,7 +168,7 @@
             "type": "String"
           },
           "GSI": {
-            "index_name": "GSI1",
+            "index_name": "SK-PK",
             "partition_key": "SK",
             "sort_key": "PK"
           }

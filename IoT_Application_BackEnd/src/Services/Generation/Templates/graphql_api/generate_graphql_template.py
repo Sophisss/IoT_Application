@@ -2,24 +2,26 @@ from Services.Generation.utility_methods import generate_resource_name
 
 
 def generate_graphql_template(json: dict) -> str:
+    """
+    This function generates the GraphQL API template.
+    :param json: The JSON file containing the API information.
+    :return: The GraphQL API template.
+    """
     return f"""
   GraphQLAPI:
     Type: AWS::Serverless::GraphQLApi
-    Properties: {generate_properties(json)}
+    Properties: {add_properties_graphql_api_template(json)}
     """
 
 
-def generate_properties(resources: dict):
-    properties = generate_properties_graphql()
-    datasource = generate_datasource()
-    functions = generate_functions()
-    resolvers = generate_resolver()
-    query = add_query()
-    mutation = add_mutation()
-    return add_properties_graphql_api_template(resources, datasource, functions, resolvers, properties, query, mutation)
+def add_properties_graphql_api_template(resources: dict) -> str:
+    """
+    This function adds the properties to the GraphQL API template.
+    :param resources: The resources to add to the GraphQL API template.
+    :return: The properties for the GraphQL API template.
+    """
+    properties, datasource, functions, resolvers, query, mutation = generate_properties()
 
-
-def add_properties_graphql_api_template(resources: dict, datasource: str, functions: str, resolvers: str, properties: str, query, mutation) -> str:
     returns = []
     for resource in resources:
         resource_name = generate_resource_name(resource)
@@ -32,21 +34,49 @@ def add_properties_graphql_api_template(resources: dict, datasource: str, functi
     return "".join(returns)
 
 
+def generate_properties() -> tuple[str, str, str, str, str, str]:
+    """
+    This function generates the properties for the GraphQL API template.
+    :return: The properties for the GraphQL API template.
+    """
+    properties = generate_properties_graphql()
+    datasource = generate_datasource()
+    functions = generate_functions()
+    resolvers = generate_resolver()
+    query = add_query()
+    mutation = add_mutation()
+    return properties, datasource, functions, resolvers, query, mutation
+
+
 def generate_properties_graphql() -> str:
+    """
+    This function generates the properties for the GraphQL API template.
+    :return: The properties for the GraphQL API template.
+    """
     return """
-      SchemaUri: src/schema.graphql
+      SchemaUri: ../src/schema.graphql
       Auth:
-        Type: API_KEY"""
+        Type: API_KEY
+      ApiKeys:
+        MyApiKey: { }"""
 
 
 def generate_datasource():
+    """
+    This function generates the data sources for the GraphQL API template.
+    :return: The data sources for the GraphQL API template.
+    """
     return """
       DataSources:
         Lambda:"""
 
 
-
 def add_datasource(resource_name: str) -> str:
+    """
+    This function adds a data source to the GraphQL API template.
+    :param resource_name: The name of the resource.
+    :return: The data source for the GraphQL API template.
+    """
     return f"""
           Lambda{resource_name}:
             Name: !Sub "${{Project}}_Lambda{resource_name}"
@@ -55,14 +85,23 @@ def add_datasource(resource_name: str) -> str:
 
 
 def generate_functions():
+    """
+    This function generates the functions for the GraphQL API template.
+    :return: The functions for the GraphQL API template.
+    """
     return """
       Functions:"""
 
 
 def add_functions(resource_name: str) -> str:
+    """
+    This function adds a function to the GraphQL API template.
+    :param resource_name: The name of the resource.
+    :return: The function for the GraphQL API template.
+    """
     return f"""
         lambdaInvoker{resource_name}:
-          CodeUri: src/invoker.js
+          CodeUri: ../src/invoker.js
           DataSource: Lambda{resource_name}
           Description: Lambda invoker function
           Runtime:
@@ -71,11 +110,23 @@ def add_functions(resource_name: str) -> str:
 
 
 def generate_resolver() -> str:
+    """
+    This function generates the resolvers for the GraphQL API template.
+    :return: The resolvers for the GraphQL API template.
+    """
     return """
       Resolvers:"""
 
 
 def add_resolver(resource: dict, resource_name: str, query: str, mutation: str) -> tuple[str, str]:
+    """
+    This function adds a resolver to the GraphQL API template.
+    :param resource: The resource to add to the GraphQL API template.
+    :param resource_name: The name of the resource.
+    :param query: The query for the GraphQL API template.
+    :param mutation: The mutation for the GraphQL API template.
+    :return: The query and mutation for the GraphQL API template.
+    """
     for api in resource["API"]:
         if api["type"] == "GET":
             query += add_body_resolver(api["name"], resource_name)
@@ -86,16 +137,30 @@ def add_resolver(resource: dict, resource_name: str, query: str, mutation: str) 
 
 
 def add_query() -> str:
+    """
+    This function adds a query to the GraphQL API template.
+    :return: The query for the GraphQL API template.
+    """
     return """
         Query:"""
 
 
 def add_mutation() -> str:
+    """
+    This function adds a mutation to the GraphQL API template.
+    :return: The mutation for the GraphQL API template.
+    """
     return """
         Mutation:"""
 
 
 def add_body_resolver(method: str, resource_name: str) -> str:
+    """
+    This function adds a body resolver to the GraphQL API template.
+    :param method: The method to add to the GraphQL API template.
+    :param resource_name: The name of the resource.
+    :return: The body resolver for the GraphQL API template.
+    """
     return f"""
           {method}:
             Pipeline:

@@ -26,7 +26,7 @@ def generate_properties_table(resource: dict) -> str:
     properties = f"""
       TableName: {resource['tableName']}
       AttributeDefinitions: {generate_attributes_table(resource)}
-      KeySchema:{generate_key_schema_table(resource, is_primary_key=True)}
+      KeySchema:{generate_key_schema_table(resource)}
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5"""
@@ -48,25 +48,21 @@ def generate_attributes_table(resource: dict) -> str:
     attribute_mappings = {"String": "S", "Number": "N", "Binary": "B"}
     return f"""
         - AttributeName: {resource['partition_key']['name']}
-        - AttributeName: {resource['partition_key']['name']}
           AttributeType: {attribute_mappings[resource['partition_key']['type']]}
         - AttributeName: {resource['sort_key']['name']}
           AttributeType: {attribute_mappings[resource['sort_key']['type']]}"""
 
 
-def generate_key_schema_table(resource: dict, is_primary_key: bool) -> str:
+def generate_key_schema_table(resource: dict) -> str:
     """
     This function generates the DynamoDB table key schema.
     :param resource: the resource.
-    :param is_primary_key: Flag indicating whether it's a primary key or not.
     :return: the DynamoDB table key schema.
     """
-    key_name = resource['partition_key']['name'] if is_primary_key else resource['GSI']['partition_key']
-    sort_key_name = resource['sort_key']['name'] if is_primary_key else resource['GSI']['sort_key']
     return f"""
-        - AttributeName: {key_name}
+        - AttributeName: {resource['partition_key']['name']}
           KeyType: HASH
-        - AttributeName: {sort_key_name}
+        - AttributeName: {resource['sort_key']['name']}
           KeyType: RANGE"""
 
 
@@ -78,9 +74,22 @@ def generate_gsi_table(resource: dict) -> str:
     """
     return f"""
         - IndexName: {resource['GSI']['index_name']}
-          KeySchema:  {generate_key_schema_table(resource, is_primary_key=False)}
+          KeySchema:  {generate_key_schema_gsi(resource)}
           Projection:
             ProjectionType: ALL
           ProvisionedThroughput:
             ReadCapacityUnits: 5
             WriteCapacityUnits: 5"""
+
+
+def generate_key_schema_gsi(resource: dict) -> str:
+    """
+    This function generates the DynamoDB table GSI key schema.
+    :param resource: the resource.
+    :return: the DynamoDB table GSI key schema.
+    """
+    return f"""
+            - AttributeName: {resource['GSI']['partition_key']}
+              KeyType: HASH
+            - AttributeName: {resource['GSI']['sort_key']}
+              KeyType: RANGE"""
