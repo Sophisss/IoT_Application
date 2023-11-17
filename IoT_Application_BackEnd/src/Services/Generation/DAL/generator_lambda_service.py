@@ -10,7 +10,8 @@ def generation_configuration(data):
                                                                      single_entity_storage_keyword=table_parameters[
                                                                          'single_entity_storage_keyword'],
                                                                      sort_key=table['sort_key']['name'],
-                                                                     partition_key=table['partition_key']['name']
+                                                                     partition_key=table['partition_key']['name'],
+                                                                     GSI_name=table['GSI']['index_name']
                                                                      ))
     return ''.join(result_configuration)
 
@@ -42,11 +43,21 @@ def generate_all_methods(entity, data):
 def generate_method_get(api, primary_key, name, data):
     option = []
     for link in data['links']:
-        if name == link['first_entity']:
-            option = option_template_for_link.format(primary_key=primary_key,
-                                                     name_entity=name, second_entity=link['second_entity'])
+        if name == link['first_entity'] and link['numerosity'] == 'one-to-many':
+            option = option_template_for_get_first_entity_with_link.format(partition_key=link['primary_key'][0],
+                                                                           sort_key=link['primary_key'][1],
+                                                                           name_entity=name,
+                                                                           second_entity=link['second_entity'])
+        elif name == link['second_entity'] and link['numerosity'] == 'one-to-many':
+            option = option_template_for_get_second_entity_link.format(partition_key=link['primary_key'][1],
+                                                                       sort_key=link['primary_key'][0],
+                                                                       name_entity=name,
+                                                                       first_entity=link['first_entity'])
+
     return template_method_for_get.format(name_method=api["name"], primary_key=primary_key,
-                                          name_entity=name, option=option if option else '')
+                                          name_entity=name,
+                                          option=option if option else option_template_for_get_without_link.format(
+                                              primary_key=primary_key))
 
 
 def generate_method_delete(api, primary_key, name):
@@ -100,3 +111,4 @@ def generate_lambda_code(data: dict) -> str:
     return file_result_template.format(configuration_dynamo=generation_configuration(data),
                                        lambdas=generation_lambdas_handler(data),
                                        lambdas_link=generation_lambdas_handler_link(data))
+

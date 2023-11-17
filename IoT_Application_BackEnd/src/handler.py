@@ -14,6 +14,6 @@ def download_zip_code(event, context):
     json_data = json.loads(event['body'])
     code_generated = generate_code(json_data)
     put_object_to_s3(code_generated)
-    create_zip()
+    create_zip(code_generated.keys())
     url = create_url()
     return {"body": json.dumps({"url": url})}
