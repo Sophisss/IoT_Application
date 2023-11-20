@@ -13,7 +13,7 @@ Parameters:
   S3Bucket:
     Type: String
     Description: S3 bucket name
-    Default: sofi
+    Default: devq.iot.iot-platform
 
   S3FirstFolder:
     Type: String
