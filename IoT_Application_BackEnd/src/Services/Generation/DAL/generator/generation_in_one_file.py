@@ -3,6 +3,11 @@ from Services.Generation.DAL.generator.generator_lambdas_for_links import genera
 
 
 def generation_one_file(json):
+    """
+    This function generates the DAL file for the lambda function.
+    :param json: The json file.
+    :return: The DAL file.
+    """
     return f"""
 {generator_api_for_entities(json)}
 {generator_lambdas_for_links(json)}

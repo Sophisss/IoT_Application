@@ -139,7 +139,7 @@ def add_resolver(resource: dict, resource_name: str, query: str, mutation: str) 
     :return: The query and mutation for the GraphQL API template.
     """
     for api in resource["API"]:
-        if api["type"] == "GET":
+        if api["type"] == "GET" or api["type"] == "GET_ALL":
             query += add_body_resolver(api["name"], resource_name)
         else:
             mutation += add_body_resolver(api["name"], resource_name)

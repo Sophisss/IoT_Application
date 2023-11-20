@@ -162,7 +162,7 @@ def generate_q_m_entity(entity):
             operation_code = """\n  {name}(\n   {parameters}\n  ): {returns}\n""".format(name=api['name'],
                                                                                          parameters=parameters,
                                                                                          returns=entity["name"])
-        if api['type'] == 'GET':
+        if api['type'] in ['GET', 'GET_ALL']:
             if parameters.strip():
                 queries_entities.append(operation_code)
         elif api['type'] in ['POST', 'DELETE', 'PUT']:

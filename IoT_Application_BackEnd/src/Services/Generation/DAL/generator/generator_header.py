@@ -1,4 +1,9 @@
 def generator_header_api(json):
+    """
+    This function generates the header file for the lambda function.
+    :param json: The json file.
+    :return: The header file.
+    """
     table = json['awsConfig']['dynamo']['tables'][0]
     parameters = json['parameters']
     return f"""

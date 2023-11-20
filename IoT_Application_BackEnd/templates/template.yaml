@@ -110,6 +110,7 @@ Resources:
               - "dynamodb:GetItem"
             Resource:
               - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/IoT"
+              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/IoT/index/SK-PK"
           - Effect: Allow
             Action:
               - "s3:PutObject*"

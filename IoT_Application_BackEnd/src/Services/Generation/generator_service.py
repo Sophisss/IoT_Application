@@ -1,4 +1,7 @@
-from Services.Generation.DAL.generator_lambda_service import generate_lambda_code
+from Services.Generation.DAL.generator.generation_dbmanager import generator_dbmanager
+from Services.Generation.DAL.generator.generation_exception import generator_exception
+from Services.Generation.DAL.generator.generation_in_one_file import generation_one_file
+from Services.Generation.DAL.generator.generation_invoker import generator_invoker
 from Services.Generation.Schema_GraphQL.generator_schema import generate_graphql_schema
 from Services.Generation.Templates.api.generate_api_template import generate_api_template
 from Services.Generation.Templates.cognito.generate_cognito_template_service import generate_cognito_template
@@ -14,5 +17,8 @@ def generate_code(json: dict) -> dict:
         "template/cognito.yaml": generate_cognito_template(json['awsConfig']['authentication']['cognito']),
         "template/api.yaml": generate_api_template(json),
         "src/schema.graphql": generate_graphql_schema(json),
-        "src/lambda.py": generate_lambda_code(json)}
+        "src/invoker.js": generator_invoker(),
+        "src/lambda.py": generation_one_file(json),
+        "src/DynamoClass.py": generator_dbmanager(),
+        "src/ExceptionClasses.py": generator_exception()}
     return codes_generated
