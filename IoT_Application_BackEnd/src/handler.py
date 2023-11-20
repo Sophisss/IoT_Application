@@ -1,6 +1,6 @@
 import json
 from Services.Generation.generator_service import generate_code
-from Services.Storage.storage_service import put_object_to_s3, create_zip, create_url
+from Services.Storage.storage_response import StorageResponse
 
 
 def download_zip_code(event, context):
@@ -11,9 +11,9 @@ def download_zip_code(event, context):
     :param context: context information about the execution environment.
     :return: a response containing the URL of the generated zip file.
     """
+    storage = StorageResponse()
     json_data = json.loads(event['body'])
     code_generated = generate_code(json_data)
-    put_object_to_s3(code_generated)
-    create_zip(code_generated.keys())
-    url = create_url()
-    return {"body": json.dumps({"url": url})}
+    storage.put_object_to_s3(code_generated)
+    storage.create_zip(code_generated.keys())
+    return storage.create_url()
