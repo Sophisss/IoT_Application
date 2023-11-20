@@ -1,5 +1,5 @@
 from Services.Generation.DAL.generator_lambda_service import generate_lambda_code
-from Services.Generation.Schema_graphQL.generator_schema import generate_graphql_schema
+from Services.Generation.Schema_GraphQL.generator_schema import generate_graphql_schema
 from Services.Generation.Templates.api.generate_api_template import generate_api_template
 from Services.Generation.Templates.cognito.generate_cognito_template_service import generate_cognito_template
 

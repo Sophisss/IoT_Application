@@ -1,8 +1,9 @@
+import json
 import os
 import zipfile
 import boto3
-import http_status_code
 from io import BytesIO
+from Services.Storage import http_status_code
 from Services.Storage.base_aws_service import BaseAWSService
 
 
@@ -82,14 +83,15 @@ class StorageResponse(BaseAWSService):
         return self.__handle_response(response, "S3 object retrieved successfully")
 
     def __create_zip(self, keys):
+
         bucket_name = self.get_bucket_name()
         with BytesIO() as archive:
             with zipfile.ZipFile(archive, 'w') as zip_file:
                 for obj in self.__list_objects(keys):
-                    response = self.__get_s3_object(obj['Key'])['Body'].read()
+                    response = self.__get_s3_object(obj['Key'])
 
                     if response['statusCode'] == 200:
-                        file_body = response['body']['data']
+                        file_body = response['body']['data']['Body'].read()
                     else:
                         raise Exception(response['body']['error'])
 
@@ -105,15 +107,15 @@ class StorageResponse(BaseAWSService):
         :return: List of objects.
         """
         objects = []
-        for folder_name in keys:
-            try:
+        try:
+            for folder_name in keys:
                 response = self.get_s3_client().list_objects_v2(Bucket=self.get_bucket_name(), Prefix=folder_name)
                 if 'Contents' in response:
                     objects.extend(response['Contents'])
 
-                return objects
-            except Exception as error:
-                return http_status_code.internal_server_error(json_body={"error": error})
+            return objects
+        except Exception as error:
+            return http_status_code.internal_server_error(json_body={"error": error})
 
     def __create_url(self, zip_key='code.zip'):
         url = self.get_s3_client().generate_presigned_url(
@@ -123,6 +125,6 @@ class StorageResponse(BaseAWSService):
             ExpiresIn=3600)
 
         if url:
-            return http_status_code.ok(json_body={"url": url})
+            return http_status_code.ok(json_body=json.dumps({"url": url}))
         else:
             return http_status_code.internal_server_error(json_body={"error": "Error creating url"})
