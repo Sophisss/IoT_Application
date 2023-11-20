@@ -1,7 +1,7 @@
-from Services.Generation.Templates.cognito.generate_identity_pool_template import generate_identity_pool
-from Services.Generation.Templates.cognito.generate_role_template import generate_role_template
-from Services.Generation.Templates.cognito.generate_user_pool_template import generate_user_pool
+from Services.Generation.Templates.cognito.resources.generate_client_template import generate_client
+from Services.Generation.Templates.cognito.resources.generate_user_pool_template import generate_user_pool
 from Services.Generation.Templates.header.generator_header_template_service import generate_header_template
+from Services.Generation.Templates.outputs.userpool.generate_userpool_outputs import generate_user_pool_outputs
 
 
 def generate_cognito_template(json: dict) -> str:
@@ -12,6 +12,9 @@ def generate_cognito_template(json: dict) -> str:
     """
     return f"""{generate_header_template()}
 {generate_resources(json)}
+
+Outputs: 
+{generate_user_pool_outputs()}
     """
 
 
@@ -23,6 +26,5 @@ def generate_resources(json: dict) -> str:
     """
     return f"""Resources:
     {generate_user_pool(json['UserPool'])}
-    {generate_identity_pool(json['IdentityPool'])}
-    {generate_role_template()}
+    {generate_client()}
     """

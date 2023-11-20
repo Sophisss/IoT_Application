@@ -20,7 +20,7 @@ def generate_user_pool_properties(json: dict) -> str:
     return f""" 
       UserPoolName: !Sub "${{Project}}-{json["UserPoolName"]}"
       Policies: {generate_user_pool_policies(json['policy'])}
-      LambdaConfig: 
+      LambdaConfig: {{}}
       AutoVerifiedAttributes:
         - "email"
       UsernameAttributes:
