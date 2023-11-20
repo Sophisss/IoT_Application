@@ -55,23 +55,24 @@ def generate_fields_for_entity(entity) -> str:
          entity['fields']])
 
 
+# QUI .lower()
 def generate_link_fields_for_entity(entity, list_link) -> str:
     link_fields = []
     for link in list_link:
         if entity['name'] == link['first_entity'] and link['numerosity'] == 'one-to-many':
-            link_fields.append('{name}:[{name_type}]\n'.format(name=link['second_entity'].lower(),
+            link_fields.append('{name}:[{name_type}]\n'.format(name=link['second_entity'],
                                                                name_type=link['second_entity']))
         elif entity['name'] == link['first_entity'] and link['numerosity'] == 'many-to-one':
-            link_fields.append('{name}:{name_type}\n'.format(name=link['second_entity'].lower(),
+            link_fields.append('{name}:{name_type}\n'.format(name=link['second_entity'],
                                                              name_type=link['second_entity']))
         elif entity['name'] == link['second_entity'] and link['numerosity'] == 'one-to-many':
-            link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'].lower(),
+            link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'],
                                                              name_type=link['first_entity']))
         elif entity['name'] == link['second_entity'] and link['numerosity'] == 'many-to-one':
-            link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'].lower(),
+            link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'],
                                                              name_type=link['first_entity']))
         else:
-            link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'].lower(),
+            link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'],
                                                              name_type=link['second_entity']))
     return ''.join(link_fields)
 
@@ -118,9 +119,14 @@ def generate_q_m_link(link):
     mutations_link = []
     for api in link['API']:
         parameters = generate_parameters_queries_link(api, link)
-        operation_code = """\n  {name}(\n   {parameters}\n  ): {returns}\n""".format(name=api['name'],
-                                                                                     parameters=parameters,
-                                                                                     returns='[String]')
+        if api['type'] == 'PUT':
+            operation_code = """\n  {name}(\n   {parameters}\n  ): {returns}\n""".format(name=api['name'],
+                                                                                         parameters=parameters,
+                                                                                         returns='String')
+        else:
+            operation_code = """\n  {name}(\n   {parameters}\n  ): {returns}\n""".format(name=api['name'],
+                                                                                         parameters=parameters,
+                                                                                         returns='[String]')
         if api['type'] == 'GET':
             if parameters.strip():
                 queries_link.append(operation_code)
@@ -146,9 +152,16 @@ def generate_q_m_entity(entity):
     mutations_entities = []
     for api in entity['API']:
         parameters = generate_parameters(entity, api)
-        operation_code = """\n  {name}(\n   {parameters}\n  ): {returns}\n""".format(name=api['name'],
-                                                                                     parameters=parameters,
-                                                                                     returns=entity["name"])
+        if api['type'] == 'PUT':
+            operation_code = """\n  {name}(\n   {parameters}\n  ): {returns}\n""".format(name=api['name'],
+                                                                                         parameters=parameters,
+                                                                                         returns='String')
+        elif api['type'] == 'GET_ALL':
+            operation_code = """\n  {name}: {returns}\n""".format(name=api["name"], returns=f"[{entity['name']}]")
+        else:
+            operation_code = """\n  {name}(\n   {parameters}\n  ): {returns}\n""".format(name=api['name'],
+                                                                                         parameters=parameters,
+                                                                                         returns=entity["name"])
         if api['type'] == 'GET':
             if parameters.strip():
                 queries_entities.append(operation_code)
