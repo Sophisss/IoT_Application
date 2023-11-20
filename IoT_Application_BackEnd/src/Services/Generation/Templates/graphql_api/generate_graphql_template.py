@@ -53,12 +53,23 @@ def generate_properties_graphql() -> str:
     This function generates the properties for the GraphQL API template.
     :return: The properties for the GraphQL API template.
     """
-    return """
+    return f"""
       SchemaUri: ../src/schema.graphql
       Auth:
-        Type: API_KEY
-      ApiKeys:
-        MyApiKey: { }"""
+        Type: AMAZON_COGNITO_USER_POOLS
+        UserPool: {generate_user_pool()}"""
+
+
+def generate_user_pool() -> str:
+    """
+    This function generates the user pool for the GraphQL API template.
+    :return: The user pool for the GraphQL API template.
+    """
+    return """
+          AwsRegion: !Ref AWS::Region
+          DefaultAction: ALLOW
+          UserPoolId: 
+            Fn::ImportValue: !Sub "${Project}-IoTApplicationUserPoolId" """
 
 
 def generate_datasource():

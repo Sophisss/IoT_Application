@@ -29,7 +29,8 @@ def generate_properties_lambda(resource_name: str) -> str:
      FunctionName: !Sub "${{Project}}-{resource_name}"
      CodeUri: ../src/
      Handler: lambda.lambda_handler_{resource_name}
-     Role: !GetAtt LambdaExecutionRole.Arn
+     Role:
+       Fn::ImportValue: !Sub "${{Project}}-LambdaExecutionRoleArn"
      Tags:
         Name: !Sub "${{Project}}-{resource_name}"
         """
