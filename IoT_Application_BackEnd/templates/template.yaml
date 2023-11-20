@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Template to define an API Gateway
+Description: Template with resources for IoT platform
 
 # region parameters
 
@@ -12,7 +12,19 @@ Parameters:
 
   S3Bucket:
     Type: String
-    Description: Bucket name
+    Description: S3 bucket name
+    Default: sofi
+
+  S3FirstFolder:
+    Type: String
+    Description: S3 first folder name
+    Default: template
+
+  S3SecondFolder:
+    Type: String
+    Description: S3 second folder name
+    Default: src
+
 
 # endregion
 
@@ -21,14 +33,13 @@ Parameters:
 Globals:
   Function:
     Timeout: 10
-    Runtime: python3.9
+    Runtime: python3.11
     CodeUri: ../src/
     MemorySize: 256
     Environment:
       Variables:
         AWS_ACCOUNT_ID: !Ref AWS::AccountId
         DYNAMO_REGION: !Ref AWS::Region
-        S3_BUCKET: !Ref S3Bucket
 
 # endregion
 
@@ -46,34 +57,27 @@ Resources:
         AllowHeaders: "'Content-Type'"
         AllowOrigin: "'*'"
 
-
-  IoTTable:
-    Type: AWS::DynamoDB::Table
+  DownloadZipCode:
+    Type: AWS::Serverless::Function
     Properties:
-      TableName: IoT
-      AttributeDefinitions:
-        - AttributeName: PK
-          AttributeType: S
-        - AttributeName: SK
-          AttributeType: S
-      KeySchema:
-        - AttributeName: PK
-          KeyType: HASH
-        - AttributeName: SK
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-      GlobalSecondaryIndexes:
-        - IndexName: SK-index
-          KeySchema:
-            - AttributeName: SK
-              KeyType: HASH
-          Projection:
-            ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 5
-            WriteCapacityUnits: 5
+      FunctionName: !Sub "${Project}-DownloadZipCode"
+      Description: Function to download zip file
+      CodeUri: ../src/
+      Handler: handler.download_zip_code
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref S3Bucket
+      Tags:
+        Name: !Sub "${Project}-DownloadZipCode"
+      Events:
+        DownloadZipCode:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApplicationApiGateway
+            Path: /download
+            Method: GET
+
 
   # region Lambda functions roles and policies
 
@@ -113,6 +117,16 @@ Resources:
               - "s3:DeleteObject"
             Resource:
               - !Sub "arn:aws:s3:::${S3Bucket}/*"
+          - Effect: Allow
+            Action:
+              - "s3:ListBucket"
+            Resource:
+              - !Sub "arn:aws:s3:::${S3Bucket}"
+            Condition:
+              StringLike:
+                s3:prefix:
+                  - !Sub "${S3FirstFolder}/*"
+                  - !Sub "${S3SecondFolder}/*"
       Roles:
         - !Ref LambdaExecutionRole
 
@@ -126,8 +140,12 @@ Outputs:
     Export:
       Name: !Sub "${Project}-ApiGatewayId"
 
+
   LambdaExecutionRole:
     Description: The ARN of the lambda execution role
     Value: !GetAtt LambdaExecutionRole.Arn
     Export:
       Name: !Sub "${Project}-LambdaExecutionRoleArn"
+
+
+
