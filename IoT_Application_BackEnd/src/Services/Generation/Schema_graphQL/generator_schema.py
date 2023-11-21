@@ -69,8 +69,8 @@ def generate_link_fields_for_entity(entity, list_link) -> str:
             link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'],
                                                              name_type=link['first_entity']))
         elif entity['name'] == link['second_entity'] and link['numerosity'] == 'many-to-one':
-            link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'],
-                                                             name_type=link['first_entity']))
+            link_fields.append('{name}:[{name_type}]\n'.format(name=link['first_entity'],
+                                                               name_type=link['first_entity']))
         else:
             link_fields.append('{name}:{name_type}\n'.format(name=link['first_entity'],
                                                              name_type=link['second_entity']))
