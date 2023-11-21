@@ -52,7 +52,7 @@ def generate_create_entity():
             self._sort_key_table: self._single_entity_storage_keyword
         }}
         event_arguments.update(arguments)
-        return self._table.put_item(Item=event_arguments)"""
+        return self._table.put_item(Item=event_arguments), id_entity"""
 
 
 def generate_create_link():
