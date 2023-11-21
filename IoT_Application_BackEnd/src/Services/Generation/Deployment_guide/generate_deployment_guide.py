@@ -4,8 +4,17 @@ def generate_deployment_guide():
     :return: The deployment guide for the project.
     """
     return f"""
+{generate_deployment_introduction()}
 {generate_deployment_guide_api_template()}
 {generate_deployment_guide_cognito_template()}
+    """
+
+
+def generate_deployment_introduction():
+    return """
+# DEPLOYMENT GUIDE
+
+This guide will help you deploy the project to AWS.
     """
 
 
