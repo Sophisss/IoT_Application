@@ -44,7 +44,7 @@ native per Android/IOS, preferite rispetto a delle piattaforme multipiattaforma 
 React native, etc.) che non garantiscono gli standard di personalizzazione e customizzazione
 richieste tipicamente dai clienti. Questo codice costituirà una base da cui partire per la
 realizzazione delle applicazioni mobili destinate al cliente e agli utenti.
-Nel contesto del group project si tratterà di un’app mobile di esempio per valutare il corretto
+Questa app mobile di esempio servirà per valutare il corretto
 funzionamento delle risorse generate dall’applicativo di configurazione nella loro interezza:
 codice generato, risorse cloud e codice delle app.
 - Un file in formato Markdown utilizzabile dal cliente e contenente una guida passo passo per
