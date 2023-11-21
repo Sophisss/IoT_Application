@@ -15,13 +15,13 @@ def generate_request():
     :return: The request function.
     """
     return """
-export function request(ctx) {{
-    const {{source, args}} = ctx;
-    return {{
+export function request(ctx) {
+    const {source, args} = ctx;
+    return {
         operation: "Invoke",
-        payload: {{field: ctx.info.fieldName, arguments: args, source, projection: ctx.info.selectionSetList}},
-    }};
-}}"""
+        payload: {field: ctx.info.fieldName, arguments: args, source, projection: ctx.info.selectionSetList},
+    };
+}"""
 
 
 def generate_response():
@@ -30,11 +30,11 @@ def generate_response():
     :return: The response function.
     """
     return """
-export function response(ctx) {{
-    const {{result}} = ctx
+export function response(ctx) {
+    const {result} = ctx
     const errors = ctx.result?.errors;
-    if (errors !== undefined){{
+    if (errors !== undefined){
         return util.error(errors.message,errors.type)
-    }}
+    }
     return result;
-}}"""
+}"""

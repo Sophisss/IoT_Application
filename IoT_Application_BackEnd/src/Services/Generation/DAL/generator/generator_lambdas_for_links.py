@@ -23,11 +23,11 @@ def generator_exception_handling():
     This function generates the exception handling.
     :return: The exception handling.
     """
-    return f"""
+    return """
     except (IdAlreadyExistsError, ItemNotPresentError, EntitiesNotPresentError) as err:
-        return {{'errors': {{'message': err.message,
-                           'type': err.type}}
-                }}
+        return {'errors': {'message': err.message,
+                           'type': err.type}
+                }
     else:
         return response
 """
