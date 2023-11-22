@@ -1,3 +1,6 @@
+from Services.Generation.utility_methods import generate_resource_name
+
+
 def generate_create_entities_functions(entities: dict) -> str:
     """
     This function generates the code for the create entities functions.
@@ -17,7 +20,7 @@ def __generate_create_entity(entity: dict) -> str:
     :param entity: The entity that needs to be created.
     :return: The code for the create entity function.
     """
-    entity_name = entity['name']
+    entity_name = generate_resource_name(entity)
     entity_id = f"{entity_name.lower()}.{entity['primary_key'][0]}"
     return f"""
     def create_{entity_name.lower()}(self, arguments: dict) -> tuple:

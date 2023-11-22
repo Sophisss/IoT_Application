@@ -1,3 +1,6 @@
+from Services.Generation.utility_methods import generate_resource_name
+
+
 def generate_create_links_functions(links: dict) -> str:
     """
     This method generates the create links functions.
@@ -23,7 +26,7 @@ def __generate_create_link(link: dict) -> str:
     second_entity_id = link['primary_key'][1]
     return f"""
     def create_link_{first_entity.lower()}_{second_entity.lower()}(self, arguments: dict) -> dict:
-        link = {first_entity}{second_entity}(**arguments)
+        link = {generate_resource_name(link)}(**arguments)
         return self.__put_link(link, "{first_entity}", "{second_entity}", link.{first_entity_id}, link.{second_entity_id})
     """
 

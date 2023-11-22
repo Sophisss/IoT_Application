@@ -3,6 +3,7 @@ from Services.Generation.DAL.DynamoClass.generate_create_links_functions import 
 from Services.Generation.DAL.DynamoClass.generate_delete_functions import generate_delete_functions
 from Services.Generation.DAL.DynamoClass.generate_get_functions import generate_get_functions
 from Services.Generation.DAL.DynamoClass.generate_utility_functions import generate_utility_functions
+from Services.Generation.utility_methods import generate_resource_name
 
 
 def generate_dbmanager(json: dict) -> str:
@@ -37,7 +38,8 @@ def __generate_header_entities(entities: list) -> str:
     """
     returns = ""
     for entity in entities:
-        returns += f"from {entity['name']} import {entity['name']}\n"
+        entity_name = generate_resource_name(entity)
+        returns += f"from Model.{entity_name} import {entity_name}\n"
     return returns
 
 
@@ -49,8 +51,8 @@ def __generate_header_links(links: list) -> str:
     """
     returns = ""
     for link in links:
-        link_name = f"{link['first_entity']}{link['second_entity']}"
-        returns += f"from {link_name} import {link_name}\n"
+        link_name = generate_resource_name(link)
+        returns += f"from Model.{link_name} import {link_name}\n"
     return returns
 
 

@@ -1,3 +1,6 @@
+from Services.Generation.utility_methods import generate_resource_name
+
+
 def generate_delete_functions(json: dict) -> str:
     """
     This function generates the code for the delete functions.
@@ -40,7 +43,7 @@ def __generate_delete_entity_function(entity: dict) -> str:
     :param entity: The entity that needs to be deleted.
     :return: The code for the delete_entity function.
     """
-    entity_name = entity['name']
+    entity_name = generate_resource_name(entity)
     entity_id = entity['primary_key'][0]
     return f"""
     def delete_{entity_name.lower()}(self, {entity_id}: str) -> tuple[Optional[dict], str]:
