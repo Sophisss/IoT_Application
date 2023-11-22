@@ -54,7 +54,7 @@ def generate_properties_graphql() -> str:
     :return: The properties for the GraphQL API template.
     """
     return f"""
-      SchemaUri: ../src/schema.graphql
+      SchemaUri: ../src/graphql/schema.graphql
       Auth:
         Type: AMAZON_COGNITO_USER_POOLS
         UserPool: {generate_user_pool()}"""
@@ -112,7 +112,7 @@ def add_functions(resource_name: str) -> str:
     """
     return f"""
         lambdaInvoker{resource_name}:
-          CodeUri: ../src/invoker.js
+          CodeUri: ../src/graphql/invoker.js
           DataSource: Lambda{resource_name}
           Description: Lambda invoker function
           Runtime:

@@ -17,8 +17,8 @@ def generate_code(json: dict) -> dict:
     codes_generated = {
         "template/cognito.yaml": generate_cognito_template(json['awsConfig']['authentication']['cognito']),
         "template/api.yaml": generate_api_template(json),
-        "src/schema.graphql": generate_graphql_schema(json),
-        "src/invoker.js": generator_invoker(),
+        "src/graphql/schema.graphql": generate_graphql_schema(json),
+        "src/graphql/invoker.js": generator_invoker(),
         "src/lambda.py": generation_one_file(json),
         "src/DynamoClass.py": generate_dbmanager(json),
         "src/ExceptionClasses.py": generator_exception(),
