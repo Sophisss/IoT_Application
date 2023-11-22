@@ -1,4 +1,5 @@
 from Services.Generation.DAL.Model.generator_model import generate_header_model, generate_model_fields
+from Services.Generation.utility_methods import generate_resource_name
 
 
 def generate_model_link(link, json):
@@ -7,7 +8,7 @@ def generate_model_link(link, json):
     link['fields'].append(fields_partition_key)
     link['fields'].append(fields_sort_key)
     return f"""{generate_header_model()}
-class {link['first_entity']}{link['second_entity']}(BaseModel):
+class {generate_resource_name(link)}(BaseModel):
     {generate_model_fields(link['fields'])}
 """
 
