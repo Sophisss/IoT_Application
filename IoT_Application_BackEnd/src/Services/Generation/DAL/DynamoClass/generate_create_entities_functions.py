@@ -21,11 +21,11 @@ def __generate_create_entity(entity: dict) -> str:
     :return: The code for the create entity function.
     """
     entity_name = generate_resource_name(entity)
-    entity_id = f"{entity_name.lower()}.{entity['primary_key'][0]}"
+    entity_id = entity['primary_key'][0]
     return f"""
     def create_{entity_name.lower()}(self, arguments: dict) -> tuple:
         {entity_name.lower()} = {entity_name}(**arguments)
-        return self.__put_entity("{entity_name}", {entity_id}, {entity_name.lower()}), {entity_id}
+        return self.__put_entity("{entity_name}", "{entity_id}", {entity_name.lower()}), {entity_name.lower()}.{entity_id}
     """
 
 
@@ -35,12 +35,12 @@ def __generate_put_entity() -> str:
     :return: The code for the put entity function.
     """
     return """
-    def __put_entity(self, name: str, entity_id, entity) -> dict:
-        id_entity = self.create_id(name, entity_id)
-        if self.get_item(id_entity):
-            raise IdAlreadyExistsError(name, id_entity)
+    def __put_entity(self, name: str, entity_id: str, entity) -> dict:
+        id_entity_to_put = self.create_id(name, f'{name.lower().entity_id}')
+        if self.get_item(id_entity_to_put):
+            raise IdAlreadyExistsError(name, id_entity_to_put)
 
-        arguments_to_put = self.__remove_null_values(entity.model_dump(), [f'{name}_id'.lower()])
-        arguments_to_put.update(self.__create_arguments(id_entity))
+        arguments_to_put = self.__remove_null_values(entity.model_dump(), [f'{entity_id}'])
+        arguments_to_put.update(self.__create_arguments(id_entity_to_put))
         return self._table.put_item(Item=arguments_to_put)
         """

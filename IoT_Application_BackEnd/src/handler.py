@@ -1,6 +1,6 @@
 import json
 from Services.Generation.generator_service import generate_code
-from Services.Storage.storage_response import Storage
+from Services.Storage.storage_service import Storage
 
 
 def download_zip_code(event, context):

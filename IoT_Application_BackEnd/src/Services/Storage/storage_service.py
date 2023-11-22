@@ -14,7 +14,7 @@ class Storage(BaseAWSService):
     s3_client = None
 
     def __init__(self):
-        BaseAWSService.__init__(self, "StorageResponse")  # base class constructor
+        BaseAWSService.__init__(self, "StorageService")  # base class constructor
         self.s3_client = boto3.client('s3')
 
     def put_object_to_s3(self, codes: dict) -> dict:

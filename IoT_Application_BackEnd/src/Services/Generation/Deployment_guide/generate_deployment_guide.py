@@ -11,6 +11,10 @@ def generate_deployment_guide():
 
 
 def generate_deployment_introduction():
+    """
+    This function generates the introduction for the deployment guide.
+    :return: The introduction for the deployment guide.
+    """
     return """
 # DEPLOYMENT GUIDE
 
