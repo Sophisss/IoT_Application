@@ -23,6 +23,7 @@ def __generate_header(json: dict) -> str:
     :return: The header of the DynamoDBManager class.
     """
     return f"""import boto3
+from typing import Optional
 from boto3.dynamodb.conditions import Key
 from ExceptionClasses import IdAlreadyExistsError
 {__generate_header_entities(json['entities'])}

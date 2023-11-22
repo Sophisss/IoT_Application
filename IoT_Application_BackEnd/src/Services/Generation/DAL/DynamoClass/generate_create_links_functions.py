@@ -41,6 +41,8 @@ def __generate_put_link() -> str:
                    second_entity_id) -> dict:
         id_first_entity = self.create_id(name_first_entity, first_entity_id)
         id_second_entity = self.create_id(name_second_entity, second_entity_id)
+        if self.get_item(id_first_entity, id_second_entity):
+            raise IdAlreadyExistsError("Link")
         arguments_to_put = self.__remove_null_values(link.model_dump(), [f'{name_first_entity}_id'.lower(),
                                                                        f'{name_second_entity}_id'.lower()])
         arguments_to_put.update(self.__create_arguments(id_first_entity, id_second_entity))

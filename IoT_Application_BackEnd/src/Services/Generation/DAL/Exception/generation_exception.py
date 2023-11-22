@@ -15,8 +15,8 @@ def generate_id_already_exists_error():
     :return: The IdAlreadyExistsError class.
     """
     return """class IdAlreadyExistsError(Exception):
-    def __init__(self, name_entity, id_value):
-        self.message = f'{name_entity} with the same ID {id_value} already exists'
+    def __init__(self, name, id_value):
+        self.message = f'{name} with the same id already exists'
         self.type = "IdAlreadyExistsError"
         super().__init__(self.message)
     """

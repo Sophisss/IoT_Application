@@ -36,9 +36,9 @@ def __generate_put_entity() -> str:
     """
     return """
     def __put_entity(self, name: str, entity_id: str, entity) -> dict:
-        id_entity_to_put = self.create_id(name, f'{name.lower().entity_id}')
+        id_entity_to_put = self.create_id(name, f'{name.lower()}.{entity_id}')
         if self.get_item(id_entity_to_put):
-            raise IdAlreadyExistsError(name, id_entity_to_put)
+            raise IdAlreadyExistsError(name)
 
         arguments_to_put = self.__remove_null_values(entity.model_dump(), [f'{entity_id}'])
         arguments_to_put.update(self.__create_arguments(id_entity_to_put))
