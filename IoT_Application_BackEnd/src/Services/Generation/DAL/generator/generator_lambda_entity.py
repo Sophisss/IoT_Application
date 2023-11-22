@@ -29,7 +29,7 @@ def generator_name_lambda(name_entity):
 def generator_case_put(name_entity, api_name, partition_key):
     return f"""
             case '{api_name}':
-                response,id_entity = dynamodb_manager.create_entity('{name_entity}', '{partition_key}', event['arguments']['{name_entity}'])
+                response, id_entity = dynamodb_manager.create_{name_entity.lower()}(event['arguments']['{name_entity}'])
                 if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                     response = f"{name_entity} with id {{id_entity}} created"
 """
@@ -38,8 +38,7 @@ def generator_case_put(name_entity, api_name, partition_key):
 def generator_case_delete(name_entity, api_name, partition_key):
     return f"""
             case '{api_name}':
-                {partition_key} = dynamodb_manager.create_id_entity('{name_entity}', '{partition_key}', event['arguments'])
-                response = dynamodb_manager.delete_item({partition_key})
+                response, device_id = dynamodb_manager.delete_{name_entity.lower()}(event['arguments']['{partition_key})
                 if not response:
                     raise ItemNotPresentError('{name_entity}', {partition_key})
                 response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
