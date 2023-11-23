@@ -1,6 +1,6 @@
 def generate_utility_functions() -> str:
     return f"""{__generate_create_id()}
-{__generate_remove_null_values()}
+{__generate_remove_values()}
 {__generate_create_arguments()}
 {__generate_update_expression()}
 {__generate_create_expression_attribute_values()}
@@ -18,15 +18,15 @@ def __generate_create_id() -> str:
     """
 
 
-def __generate_remove_null_values() -> str:
+def __generate_remove_values() -> str:
     """
     This function generates the code for the remove_null_values function.
     :return: The code for the remove_null_values function.
     """
     return """
-    def __remove_null_values(self, dictionary: dict, keys_to_remove) -> dict:
+    def __remove_values(self, dictionary: dict, keys_to_remove) -> dict:
         return {
-            key: self.__remove_null_values(value, keys_to_remove) if isinstance(value, dict) else value
+            key: self.__remove_values(value, keys_to_remove) if isinstance(value, dict) else value
             for key, value in dictionary.items()
             if value is not None and key not in keys_to_remove
         }
