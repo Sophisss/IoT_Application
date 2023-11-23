@@ -16,7 +16,7 @@ def generator_lambda_link(link):
             result_link.append(
                 generator_case_get_link(api['name'], first_entity, second_entity, partition_key, sort_key))
         elif api['type'] == 'POST':
-            result_link.append(generator_case_update_link(api['name'], partition_key, sort_key, api['parameters']))
+            result_link.append(generator_case_update_link(api['name'], partition_key, sort_key))
     return ''.join(result_link)
 
 
@@ -57,8 +57,14 @@ def generator_case_get_link(api_name, first_entity, second_entity, partition_key
 """
 
 
-def generator_case_update_link(api_name, partition_key, sort_key, parameters):
+def generator_case_update_link(api_name, partition_key, sort_key):
     return f"""
-        case '{api_name}':  # TODO
-            response = 'ddd'
-"""
+            case '{api_name}:
+                response, {partition_key} = dynamodb_manager.update_device(event['arguments'])
+                if not response:
+                    raise ItemNotPresentError()
+                else:
+                    response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
+                    response['{sort_key}'] = response.pop(dynamodb_manager.get_sort_key_table())
+            """
+

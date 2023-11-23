@@ -13,6 +13,8 @@ def generator_lambda(entity, link):
             result_lambda.append(generator_case_get_all(entity_name, api['name'], primary_key))
         elif api['type'] == 'GET':
             result_lambda.append(generator_case_get(entity_name, api['name'], primary_key, link))
+        elif api['type'] == 'POST':
+            result_lambda.append(generator_case_post(entity_name, api['name'], primary_key))
     result_lambda.append(f"""
             case _:
                 response = 'error'
@@ -54,6 +56,17 @@ def generator_case_get_all(name_entity, api_name, partition_key):
                 for item in response:
                     item['{partition_key}'] = item.pop(dynamodb_manager.get_partition_key_table())
 """
+
+
+def generator_case_post(name_entity, api_name, partition_key):
+    return f"""
+            case '{api_name}:
+                response, {partition_key} = dynamodb_manager.update_device(event['arguments'])
+                if not response:
+                    raise ItemNotPresentError('{name_entity}', {partition_key})
+                else:
+                    response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
+            """
 
 
 def generator_case_get(name_entity, api_name, partition_key, links):
