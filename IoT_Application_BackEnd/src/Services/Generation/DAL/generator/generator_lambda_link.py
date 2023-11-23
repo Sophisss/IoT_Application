@@ -48,8 +48,8 @@ def generator_case_delete_link(api_name, first_entity, second_entity, partition_
 def generator_case_get_link(api_name, first_entity, second_entity, partition_key, sort_key):
     return f"""
         case '{api_name}':
-            {partition_key} = dynamodb_manager.create_id_entity('{first_entity}','{partition_key}', event['arguments'])
-            {sort_key} = dynamodb_manager.create_id_entity('{second_entity}','{sort_key}', event['arguments'])
+            {partition_key} = dynamodb_manager.create_id('{first_entity}',event['arguments']['{partition_key}'])
+            {sort_key} = dynamodb_manager.create_id('{second_entity}',event['arguments']['{sort_key}'])
             response = dynamodb_manager.get_item({partition_key}, {sort_key})
             response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
             response['{sort_key}'] = response.pop(dynamodb_manager.get_sort_key_table())

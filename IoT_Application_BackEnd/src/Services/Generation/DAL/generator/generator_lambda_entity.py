@@ -40,7 +40,7 @@ def generator_case_put(name_entity, api_name, partition_key):
 def generator_case_delete(name_entity, api_name, partition_key):
     return f"""
             case '{api_name}':
-                response = dynamodb_manager.delete_{name_entity.lower()}(event['arguments']['{partition_key}')]
+                response = dynamodb_manager.delete_{name_entity.lower()}(event['arguments']['{partition_key}'])
                 if not response:
                     raise ItemNotPresentError('{name_entity}')
                 response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
