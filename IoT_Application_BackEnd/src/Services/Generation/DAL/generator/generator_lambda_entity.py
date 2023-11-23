@@ -40,9 +40,9 @@ def generator_case_put(name_entity, api_name, partition_key):
 def generator_case_delete(name_entity, api_name, partition_key):
     return f"""
             case '{api_name}':
-                response, device_id = dynamodb_manager.delete_{name_entity.lower()}(event['arguments']['{partition_key})
+                response = dynamodb_manager.delete_{name_entity.lower()}(event['arguments']['{partition_key}')]
                 if not response:
-                    raise ItemNotPresentError('{name_entity}', {partition_key})
+                    raise ItemNotPresentError('{name_entity}')
                 response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
 """
 
@@ -60,10 +60,10 @@ def generator_case_get_all(name_entity, api_name, partition_key):
 
 def generator_case_post(name_entity, api_name, partition_key):
     return f"""
-            case '{api_name}:
-                response, {partition_key} = dynamodb_manager.update_device(event['arguments'])
+            case '{api_name}':
+                response = dynamodb_manager.update_device(event['arguments'])
                 if not response:
-                    raise ItemNotPresentError('{name_entity}', {partition_key})
+                    raise ItemNotPresentError('{name_entity}')
                 else:
                     response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
             """
@@ -72,10 +72,10 @@ def generator_case_post(name_entity, api_name, partition_key):
 def generator_case_get(name_entity, api_name, partition_key, links):
     result_get = [f"""
             case '{api_name}':
-                {partition_key} = dynamodb_manager.create_id_entity('{name_entity}', '{partition_key}', event['arguments'])
+                {partition_key} = dynamodb_manager.create_id('{name_entity}', event['arguments']['{partition_key}'])
                 response = dynamodb_manager.get_item({partition_key})
                 if not response:
-                    raise ItemNotPresentError('{name_entity}', {partition_key})
+                    raise ItemNotPresentError('{name_entity}')
                 response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
 """]
     for link in links:
