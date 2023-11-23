@@ -8,6 +8,7 @@ def generate_get_functions() -> str:
 {__generate_get_items_with_secondary_index()}
 {__generate_get_pk()}
 {__generate_get_sk()}
+{__generate_get_attr()}
     """
 
 
@@ -77,4 +78,16 @@ def __generate_get_sk() -> str:
     return """
     def get_sort_key_table(self) -> str:
         return self._sort_key_table
+    """
+
+
+def __generate_get_attr() -> str:
+    """
+    This function generates the code for the get_attr function.
+    :return: The code for the get_attr function.
+    """
+    return """
+    @staticmethod
+    def __getAttr(object, id_key: str):
+        return getattr(object, id_key)
     """

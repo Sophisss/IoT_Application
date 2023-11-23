@@ -2,6 +2,8 @@ def generate_utility_functions() -> str:
     return f"""{__generate_create_id()}
 {__generate_remove_null_values()}
 {__generate_create_arguments()}
+{__generate_update_expression()}
+{__generate_create_expression_attribute_values()}
     """
 
 
@@ -43,4 +45,28 @@ def __generate_create_arguments() -> str:
             self.get_partition_key_table(): id_first_entity,
             self.get_sort_key_table(): sort_key
         }
+    """
+
+
+def __generate_update_expression() -> str:
+    """
+    This function generates the code for the update_expression function.
+    :return: The code for the update_expression function.
+    """
+    return """
+    @staticmethod
+    def create_update_expression(arguments):
+        return 'SET ' + ', '.join([f'{key} = :{key}' for key in arguments.keys()])
+    """
+
+
+def __generate_create_expression_attribute_values() -> str:
+    """
+    This function generates the code for the create_expression_attribute_values function.
+    :return: The code for the create_expression_attribute_values function.
+    """
+    return """
+    @staticmethod
+    def create_expression_attribute_values(arguments):
+        return {f':{key}': value for key, value in arguments.items()}
     """

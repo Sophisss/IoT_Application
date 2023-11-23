@@ -15,7 +15,7 @@ def generate_id_already_exists_error():
     :return: The IdAlreadyExistsError class.
     """
     return """class IdAlreadyExistsError(Exception):
-    def __init__(self, name, id_value):
+    def __init__(self, name):
         self.message = f'{name} with the same id already exists'
         self.type = "IdAlreadyExistsError"
         super().__init__(self.message)
@@ -29,8 +29,8 @@ def generate_item_not_present_error():
     """
     return """
 class ItemNotPresentError(Exception):
-    def __init__(self, name_entity, id_value):
-        self.message = f'{name_entity} with the ID {id_value} is not in the database'
+    def __init__(self, name_entity):
+        self.message = f'{name_entity} with the id is not in the database'
         self.type = 'ItemNotPresentError'
         super().__init__(self.message)
     """

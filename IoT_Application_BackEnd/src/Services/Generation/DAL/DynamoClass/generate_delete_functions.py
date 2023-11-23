@@ -47,7 +47,7 @@ def __generate_delete_entity_function(entity: dict) -> str:
     entity_id = entity['primary_key'][0]
     return f"""
     def delete_{entity_name.lower()}(self, {entity_id}: str) -> tuple[Optional[dict], str]:
-        return self.__delete_item({entity_id}), {entity_id}
+        return self.__delete_item("{entity_name}", {entity_id}), {entity_id}
     """
 
 
@@ -57,13 +57,14 @@ def __generate_delete_link_function(link: dict) -> str:
     :param link: The link that needs to be deleted.
     :return: The code for the delete_link function.
     """
+    link_name = generate_resource_name(link)
     first_entity_name = link['first_entity']
     first_entity_id = link['primary_key'][0]
     second_entity_name = link['second_entity']
     second_entity_id = link['primary_key'][1]
     return f"""
     def delete_link_{first_entity_name.lower()}_{second_entity_name.lower()}(self, {first_entity_id}: str, {second_entity_id}: str):
-        return self.__delete_item({first_entity_id}, {second_entity_id})
+        return self.__delete_item("{link_name}", {first_entity_id}, {second_entity_id})
     """
 
 
@@ -73,9 +74,10 @@ def __generate_delete_item() -> str:
     :return: The code for the delete_item function.
     """
     return """
-    def __delete_item(self, partition_key: str, sort_key=None) -> Optional[dict]:
+    def __delete_item(self, name, partition_key: str, sort_key=None) -> Optional[dict]:
+        sk = self.create_id(name, sort_key) if sort_key is not None else sort_key
         response = self._table.delete_item(
-            Key=self.__create_arguments(partition_key, sort_key),
+            Key=self.__create_arguments(self.create_id(name, partition_key), sk),
             ReturnValues='ALL_OLD'
         )
         return response['Attributes'] if 'Attributes' in response else None

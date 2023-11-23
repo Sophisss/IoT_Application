@@ -2,6 +2,7 @@ from Services.Generation.DAL.DynamoClass.generate_create_entities_functions impo
 from Services.Generation.DAL.DynamoClass.generate_create_links_functions import generate_create_links_functions
 from Services.Generation.DAL.DynamoClass.generate_delete_functions import generate_delete_functions
 from Services.Generation.DAL.DynamoClass.generate_get_functions import generate_get_functions
+from Services.Generation.DAL.DynamoClass.generate_update_functions import generate_update_functions
 from Services.Generation.DAL.DynamoClass.generate_utility_functions import generate_utility_functions
 from Services.Generation.utility_methods import generate_resource_name
 
@@ -69,6 +70,7 @@ class DynamoDBManager:
 {generate_create_entities_functions(json['entities'])}
 {generate_create_links_functions(json['links'])}
 {generate_delete_functions(json)}
+{generate_update_functions(json)}
 {generate_get_functions()}
 {generate_utility_functions()}"""
 
