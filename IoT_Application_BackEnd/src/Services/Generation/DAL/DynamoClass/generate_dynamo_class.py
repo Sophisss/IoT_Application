@@ -1,5 +1,4 @@
-from Services.Generation.DAL.DynamoClass.generate_create_entities_functions import generate_create_entities_functions
-from Services.Generation.DAL.DynamoClass.generate_create_links_functions import generate_create_links_functions
+from Services.Generation.DAL.DynamoClass.generate_create_functions import generate_create_functions
 from Services.Generation.DAL.DynamoClass.generate_delete_functions import generate_delete_functions
 from Services.Generation.DAL.DynamoClass.generate_get_functions import generate_get_functions
 from Services.Generation.DAL.DynamoClass.generate_update_functions import generate_update_functions
@@ -67,8 +66,7 @@ def __generate_class(json: dict) -> str:
     return f"""
 class DynamoDBManager:
 {__generate_constructor()}
-{generate_create_entities_functions(json['entities'])}
-{generate_create_links_functions(json['links'])}
+{generate_create_functions(json)}
 {generate_delete_functions(json)}
 {generate_update_functions(json)}
 {generate_get_functions()}
