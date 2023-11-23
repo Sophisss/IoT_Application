@@ -46,8 +46,8 @@ def __generate_delete_entity_function(entity: dict) -> str:
     entity_name = generate_resource_name(entity)
     entity_id = entity['primary_key'][0]
     return f"""
-    def delete_{entity_name.lower()}(self, {entity_id}: str) -> tuple[Optional[dict], str]:
-        return self.__delete_item("{entity_name}", {entity_id}), {entity_id}
+    def delete_{entity_name.lower()}(self, {entity_id}: str) -> Optional[dict]:
+        return self.__delete_item("{entity_name}", {entity_id})
     """
 
 
