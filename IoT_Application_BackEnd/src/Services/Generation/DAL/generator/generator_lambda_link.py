@@ -59,12 +59,12 @@ def generator_case_get_link(api_name, first_entity, second_entity, partition_key
 
 def generator_case_update_link(api_name, partition_key, sort_key):
     return f"""
-            case '{api_name}:
-                response, {partition_key} = dynamodb_manager.update_device(event['arguments'])
-                if not response:
-                    raise ItemNotPresentError()
-                else:
-                    response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
-                    response['{sort_key}'] = response.pop(dynamodb_manager.get_sort_key_table())
-            """
+        case '{api_name}':
+            response = dynamodb_manager.update_device(event['arguments'])
+            if not response:
+                raise ItemNotPresentError('Link')
+            else:
+                response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
+                response['{sort_key}'] = response.pop(dynamodb_manager.get_sort_key_table())
+"""
 
