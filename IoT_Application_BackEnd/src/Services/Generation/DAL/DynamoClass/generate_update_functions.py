@@ -49,7 +49,7 @@ def __generate_update_entity_function(entity: dict) -> str:
     def update_{entity_name.lower()}(self, arguments: dict) -> Optional[dict]:
         {entity_id} = arguments.pop('{entity_id}')
         return self.__update_item("{entity_name}", arguments, {entity_id})
-    """
+        """
 
 
 def __generate_update_link_function(link: dict) -> str:
@@ -68,7 +68,7 @@ def __generate_update_link_function(link: dict) -> str:
         {first_entity_id} = arguments.pop('{first_entity_id}')
         {second_entity_id} = arguments.pop('{second_entity_id}')
         return self.__update_item("{link_name}", arguments, {first_entity_id}, {second_entity_id})
-    """
+        """
 
 
 def __generate_update_item() -> str:
@@ -76,8 +76,7 @@ def __generate_update_item() -> str:
     This function generates the update function for an item of a DynamoClass.
     :return: The update function for the item.
     """
-    return """
-    def __update_item(self, name, arguments, partition_key: str, sort_key=None):
+    return """    def __update_item(self, name, arguments, partition_key: str, sort_key=None):
         pk = self.create_id(name, partition_key)
         sk = self.create_id(name, sort_key) if sort_key is not None else sort_key
         if not self.get_item(pk, sk):
@@ -88,5 +87,4 @@ def __generate_update_item() -> str:
             ExpressionAttributeValues=self.create_expression_attribute_values(arguments),
             ReturnValues='ALL_NEW'
         )
-        return response['Attributes'] if 'Attributes' in response else None
-    """
+        return response['Attributes'] if 'Attributes' in response else None"""

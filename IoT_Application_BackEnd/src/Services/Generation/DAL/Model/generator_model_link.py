@@ -3,13 +3,11 @@ from Services.Generation.utility_methods import generate_resource_name
 
 
 def generate_model_link(link, json):
-    fields_partition_key = search_primary_key_field(json, link['first_entity'], link['primary_key'][0])
-    fields_sort_key = search_primary_key_field(json, link['second_entity'], link['primary_key'][1])
-    link['fields'].append(fields_partition_key)
-    link['fields'].append(fields_sort_key)
+    fields_link = [search_primary_key_field(json, link['first_entity'], link['primary_key'][0]),
+                   search_primary_key_field(json, link['second_entity'], link['primary_key'][1])] + list(link['fields'])
     return f"""{generate_header_model()}
 class {generate_resource_name(link)}(BaseModel):
-    {generate_model_fields(link['fields'])}
+    {generate_model_fields(fields_link)}
 """
 
 

@@ -26,8 +26,7 @@ def __generate_header(json: dict) -> str:
 from typing import Optional
 from boto3.dynamodb.conditions import Key
 from ExceptionClasses import IdAlreadyExistsError, ItemNotPresentError
-{__generate_header_entities(json['entities'])}
-{__generate_header_links(json['links'])}
+{__generate_header_entities(json['entities'])}{__generate_header_links(json['links'])}
     """
 
 
@@ -63,8 +62,7 @@ def __generate_class(json: dict) -> str:
     :param json: The json that contains the information.
     :return: The code for the DynamoDBManager class.
     """
-    return f"""
-class DynamoDBManager:
+    return f"""class DynamoDBManager:
 {__generate_constructor()}
 {generate_create_functions(json)}
 {generate_delete_functions(json)}
@@ -85,5 +83,4 @@ def __generate_constructor() -> str:
         self._partition_key_table = partition_key_table
         self._sort_key_table = sort_key_table
         self._single_entity_storage_keyword = single_entity_storage_keyword
-        self._GSI = gsi
-    """
+        self._GSI = gsi"""
