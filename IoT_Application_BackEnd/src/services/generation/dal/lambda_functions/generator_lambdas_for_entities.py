@@ -1,5 +1,5 @@
-from Services.Generation.DAL.generator.generator_header import generator_header_api
-from Services.Generation.DAL.generator.generator_lambda_entity import generator_lambda
+from services.generation.dal.lambda_functions.generate_header import generate_header_dal_api
+from services.generation.dal.lambda_functions.generator_lambda_entity import generator_lambda
 
 
 def generator_api_for_entities(json):
@@ -8,7 +8,7 @@ def generator_api_for_entities(json):
     :param json: The json with the entities.
     :return: The api for the entities.
     """
-    result = [generator_header_api(json)]
+    result = [generate_header_dal_api(json)]
     for entity in json['entities']:
         result.append(generator_lambda(entity, json['links']))
         result.append(generator_exception_handling())

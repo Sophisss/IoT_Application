@@ -1,4 +1,4 @@
-from Services.Generation.utility_methods import generate_resource_name
+from services.generation.utility_methods import generate_resource_name
 
 
 def generate_delete_functions(json: dict) -> str:
@@ -7,8 +7,7 @@ def generate_delete_functions(json: dict) -> str:
     :param json: The json that contains the information.
     :return: The code for the delete functions.
     """
-    return f"""{__generate_delete_entities_functions(json['entities'])}
-{__generate_delete_links_functions(json['links'])}
+    return f"""{__generate_delete_entities_functions(json['entities'])}{__generate_delete_links_functions(json['links'])}
 {__generate_delete_item()}
 {__generate_remove_associated_link()}
 {__generate_delete()}"""
@@ -105,7 +104,7 @@ def __generate_delete() -> str:
     :return: The code for the delete function.
     """
     return """    def __delete(self, key: dict):
-        return self._table.delete_item(
+        return self.configuration.table.delete_item(
             Key=key,
             ReturnValues='ALL_OLD'
         )"""

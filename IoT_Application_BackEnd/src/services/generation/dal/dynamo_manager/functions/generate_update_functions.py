@@ -1,4 +1,4 @@
-from Services.Generation.utility_methods import generate_resource_name
+from services.generation.utility_methods import generate_resource_name
 
 
 def generate_update_functions(json: dict) -> str:
@@ -7,8 +7,7 @@ def generate_update_functions(json: dict) -> str:
     :param json: The json containing the information about the DynamoClass.
     :return: The update functions.
     """
-    return f"""{__generate_update_entities_functions(json['entities'])}
-{__generate_update_links_functions(json['links'])}
+    return f"""{__generate_update_entities_functions(json['entities'])}{__generate_update_links_functions(json['links'])}
 {__generate_update_item()}
     """
 
@@ -75,7 +74,7 @@ def __generate_update_item() -> str:
         sk = self.create_id(name, sort_key) if sort_key is not None else sort_key
         if not self.get_item(pk, sk):
             raise ItemNotPresentError(name)
-        response = self._table.update_item(
+        response = self.configuration.table.update_item(
             Key=self.__create_arguments(pk, sk),
             UpdateExpression=self.create_update_expression(arguments),
             ExpressionAttributeValues=self.create_expression_attribute_values(arguments),

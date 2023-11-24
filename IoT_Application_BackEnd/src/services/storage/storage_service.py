@@ -5,8 +5,8 @@ import boto3
 from io import BytesIO
 from typing import Optional
 from botocore.exceptions import ClientError
-from Services.Storage import http_status_code
-from Services.Storage.base_aws_service import BaseAWSService
+from services.storage import http_status_code
+from services.storage.base_aws_service import BaseAWSService
 
 
 class Storage(BaseAWSService):

@@ -1,4 +1,4 @@
-from Services.Generation.utility_methods import generate_resource_name
+from services.generation.utility_methods import generate_resource_name
 
 
 def generate_lambda_template(json: dict) -> str:
@@ -30,11 +30,11 @@ def __generate_lambda_properties(resource_name: str) -> str:
     :return: properties for a Lambda function.
     """
     return f"""
-     FunctionName: !Sub "${{Project}}-{resource_name}"
+     FunctionName: !Sub "${{Project}}-{resource_name}Handler"
      CodeUri: ../src/
-     Handler: lambda.lambda_handler_{resource_name}
+     Handler: lambda.lambda_handler_{resource_name.lower()}
      Role:
        Fn::ImportValue: !Sub "${{Project}}-LambdaExecutionRoleArn"
      Tags:
-        Name: !Sub "${{Project}}-{resource_name}"
+        Name: !Sub "${{Project}}-{resource_name}Handler"
         """

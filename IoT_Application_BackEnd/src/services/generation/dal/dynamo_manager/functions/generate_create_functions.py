@@ -1,4 +1,4 @@
-from Services.Generation.utility_methods import generate_resource_name
+from services.generation.utility_methods import generate_resource_name
 
 
 def generate_create_functions(json: dict) -> str:
@@ -7,8 +7,7 @@ def generate_create_functions(json: dict) -> str:
     :param json: The json to generate the create functions for.
     :return: The functions as a string.
     """
-    return f"""{__generate_create_entities_functions(json['entities'])}
-{__generate_create_links_functions(json['links'])}
+    return f"""{__generate_create_entities_functions(json['entities'])}{__generate_create_links_functions(json['links'])}
 {__generate_put_item()}"""
 
 
@@ -39,8 +38,7 @@ def __generate_create_entity_function(entity: dict) -> str:
     entity_name = generate_resource_name(entity)
     entity_id = entity['primary_key'][0]
     return f"""
-    def create_{entity_name.lower()}(self, arguments: dict) -> tuple:
-        {entity_name.lower()} = {entity_name}(**arguments)
+    def create_{entity_name.lower()}(self, {entity_name.lower()}) -> tuple:
         return self.__put_item({entity_name.lower()}, "{entity_name}", "{entity_id}"), self.__getAttr({entity_name.lower()}, "{entity_id}")
         """
 
@@ -51,38 +49,20 @@ def __generate_create_link_function(link: dict) -> str:
     :param link: The link to generate the create function for.
     :return: The function generated.
     """
-    link_name = generate_resource_name(link)
     first_entity_name = link['first_entity']
     first_entity_id = link['primary_key'][0]
     second_entity_name = link['second_entity']
     second_entity_id = link['primary_key'][1]
     return f"""
-    def create_link_{first_entity_name.lower()}_{second_entity_name.lower()}(self, arguments: dict) -> dict:
+    def create_link_{first_entity_name.lower()}_{second_entity_name.lower()}(self, link) -> dict:
         return self.__put_item(
-            {link_name}(**arguments),
+            link,
             "{first_entity_name}",
             "{first_entity_id}",
             "{second_entity_name}",
             "{second_entity_id}"
         )
         """
-
-
-def __create_link_function() -> str:
-    """
-    This function is used to create a link function.
-    :return: The function.
-    """
-    return """
-    def create_link_{function_name}(self, arguments: dict) -> dict:
-        return self.__put_item(
-            {link_name}(**arguments),
-            "{first_entity}",
-            "{first_entity_id}",
-            "{second_entity}",
-            "{second_entity_id}"
-        )
-    """
 
 
 def __generate_put_item() -> str:
@@ -98,4 +78,4 @@ def __generate_put_item() -> str:
 
         arguments_to_put = self.__remove_values(item.model_dump(), [f'{first_entity_id_key}', f'{second_entity_id_key}'])
         arguments_to_put.update(self.__create_arguments(first_id_entity_to_put, second_id_entity_to_put))
-        return self._table.put_item(Item=arguments_to_put)"""
+        return self.configuration.table.put_item(Item=arguments_to_put)"""

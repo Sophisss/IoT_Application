@@ -1,4 +1,4 @@
-from Services.Generation.utility_methods import generate_resource_name
+from services.generation.utility_methods import generate_resource_name
 
 
 def generate_graphql_template(json: dict) -> str:

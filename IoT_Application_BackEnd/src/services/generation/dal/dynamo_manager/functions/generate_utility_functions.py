@@ -17,7 +17,7 @@ def __generate_create_id() -> str:
     :return: The code for the create_id function.
     """
     return """    def create_id(self, name: str, object_id: str) -> str:
-        return f"{name}{self._separator}{object_id}"
+        return f"{name}{self.configuration.separator}{object_id}"
     """
 
 
@@ -41,7 +41,7 @@ def __generate_create_arguments() -> str:
     :return: The code for the create_arguments function.
     """
     return """    def __create_arguments(self, id_first_entity: str, sort_key=None) -> dict:
-        sort_key = self._single_entity_storage_keyword if sort_key is None else sort_key
+        sort_key = self.configuration.single_entity_storage_keyword if sort_key is None else sort_key
         return {
             self.get_partition_key_table(): id_first_entity,
             self.get_sort_key_table(): sort_key

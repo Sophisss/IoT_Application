@@ -1,4 +1,4 @@
-from Services.Generation.DAL.Model.generator_model import generate_header_model, generate_model_fields
+from services.generation.dal.model.generator_model import generate_header_model, generate_model_fields
 
 
 def generate_model_entity(model_name, fields):

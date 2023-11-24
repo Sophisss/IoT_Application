@@ -29,7 +29,7 @@ def lambda_handler_{first_entity}{second_entity}(event, context,event_parse: Eve
 def generator_case_put_link(api_name, first_entity, second_entity):
     return f"""
         case '{api_name}':
-            response = dynamodb_manager.create_link_{first_entity.lower()}_{second_entity.lower()}(event_parse.arguments)
+            response = dynamodb_manager.create_link_{first_entity.lower()}_{second_entity.lower()}(**event_parse.arguments)
             if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                 response = f"Link created"
     """

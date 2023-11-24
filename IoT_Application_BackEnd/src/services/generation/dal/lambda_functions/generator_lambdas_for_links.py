@@ -1,4 +1,4 @@
-from Services.Generation.DAL.generator.generator_lambda_link import generator_lambda_link
+from services.generation.dal.lambda_functions.generator_lambda_link import generator_lambda_link
 
 
 def generator_lambdas_for_links(json):
