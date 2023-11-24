@@ -1,11 +1,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './old_stuff/pages/home/home.component';
-import {BlankComponent} from './old_stuff/er-drawer/blank/blank.component';
+import {HomepageComponent} from "./components/homepage/homepage.component";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'drawer', component: BlankComponent}
+  {path: '', title: "Homepage", component: HomepageComponent},
+
+  {path: '**', redirectTo: ''}
 ];
 
 @NgModule({

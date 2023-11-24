@@ -19,3 +19,5 @@ IoT_Application_BackEnd/samconfig.toml
 .idea/
 
 IoT_Application_BackEnd/.aws-sam/
+
+IoT_Application_FrontEnd/.editorconfig
