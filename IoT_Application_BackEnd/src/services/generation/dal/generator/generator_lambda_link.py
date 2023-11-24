@@ -21,15 +21,15 @@ def generator_lambda_link(link):
 
 
 def generator_header_lambda_link(first_entity, second_entity):
-    return f"""
-def lambda_handler_{first_entity}{second_entity}(event, context):
-    match event['field']:"""
+    return f"""@parse_event(Event)
+def lambda_handler_{first_entity}{second_entity}(event, context,event_parse: Event):
+     match event_parse.field:"""
 
 
 def generator_case_put_link(api_name, first_entity, second_entity):
     return f"""
         case '{api_name}':
-            response = dynamodb_manager.create_link_{first_entity.lower()}_{second_entity.lower()}(event['arguments'])
+            response = dynamodb_manager.create_link_{first_entity.lower()}_{second_entity.lower()}(event_parse.arguments)
             if response['ResponseMetadata']['HTTPStatusCode'] == 200:
                 response = f"Link created"
     """
@@ -38,7 +38,7 @@ def generator_case_put_link(api_name, first_entity, second_entity):
 def generator_case_delete_link(api_name, first_entity, second_entity, partition_key, sort_key):
     return f"""
         case '{api_name}':
-            response = dynamodb_manager.delete_link_{first_entity.lower()}_{second_entity.lower()}(event['arguments']['{partition_key}'], event['arguments']['{sort_key}'])
+            response = dynamodb_manager.delete_link_{first_entity.lower()}_{second_entity.lower()}(event_parse.arguments['{partition_key}'], event_parse.arguments['{sort_key}'])
             response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
             response['{sort_key}'] = response.pop(dynamodb_manager.get_sort_key_table())
             response = list(response.values())
@@ -48,7 +48,7 @@ def generator_case_delete_link(api_name, first_entity, second_entity, partition_
 def generator_case_get_link(api_name, first_entity, second_entity, partition_key, sort_key):
     return f"""
         case '{api_name}':
-            {partition_key} = dynamodb_manager.create_id('{first_entity}',event['arguments']['{partition_key}'])
+            {partition_key} = dynamodb_manager.create_id('{first_entity}',event_parse.arguments['{partition_key}'])
             {sort_key} = dynamodb_manager.create_id('{second_entity}',event['arguments']['{sort_key}'])
             response = dynamodb_manager.get_item({partition_key}, {sort_key})
             response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
@@ -60,7 +60,7 @@ def generator_case_get_link(api_name, first_entity, second_entity, partition_key
 def generator_case_update_link(api_name, partition_key, sort_key):
     return f"""
         case '{api_name}':
-            response = dynamodb_manager.update_device(event['arguments'])
+            response = dynamodb_manager.update_device(event_parse.arguments)
             if not response:
                 raise ItemNotPresentError('Link')
             else:
