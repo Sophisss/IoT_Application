@@ -23,24 +23,25 @@ def generator_lambda(entity, link):
 
 
 def generator_name_lambda(name_entity):
-    return f"""def lambda_handler_{name_entity}(event, context):
+    return f"""@parse_event(Event)
+def lambda_handler_{name_entity.lower()}(event, context,event_parse:Event):
     try:
-        match event['field']:"""
+        match event_parse.field:"""
 
 
 def generator_case_put(name_entity, api_name, partition_key):
     return f"""
             case '{api_name}':
-                response, id_entity = dynamodb_manager.create_{name_entity.lower()}(event['arguments']['{name_entity}'])
-                if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-                    response = f"{name_entity} with id {{id_entity}} created"
+                response, id_entity = dynamodb_manager.create_{name_entity.lower()}({name_entity}(event_parse.arguments['{name_entity}']))
+                response = f"{name_entity} with id {{id_entity}} created" if response['ResponseMetadata']['HTTPStatusCode'] == 200 else response
+
 """
 
 
 def generator_case_delete(name_entity, api_name, partition_key):
     return f"""
             case '{api_name}':
-                response = dynamodb_manager.delete_{name_entity.lower()}(event['arguments']['{partition_key}'])
+                response = dynamodb_manager.delete_{name_entity.lower()}(event_parse.arguments['{partition_key}'])
                 if not response:
                     raise ItemNotPresentError('{name_entity}')
                 response['{partition_key}'] = response.pop(dynamodb_manager.get_partition_key_table())
@@ -61,7 +62,7 @@ def generator_case_get_all(name_entity, api_name, partition_key):
 def generator_case_post(name_entity, api_name, partition_key):
     return f"""
             case '{api_name}':
-                response = dynamodb_manager.update_device(event['arguments'])
+                response = dynamodb_manager.update_device(event_parse.arguments)
                 if not response:
                     raise ItemNotPresentError('{name_entity}')
                 else:
@@ -72,7 +73,7 @@ def generator_case_post(name_entity, api_name, partition_key):
 def generator_case_get(name_entity, api_name, partition_key, links):
     result_get = [f"""
             case '{api_name}':
-                {partition_key} = dynamodb_manager.create_id('{name_entity}', event['arguments']['{partition_key}'])
+                {partition_key} = dynamodb_manager.create_id('{name_entity}', event_parse.arguments['{partition_key}'])
                 response = dynamodb_manager.get_item({partition_key})
                 if not response:
                     raise ItemNotPresentError('{name_entity}')
@@ -98,7 +99,7 @@ def generate_case_link(name_entity, link):
 
 def link_second_entity_one_to_many(first_entity, partition_key, sort_key):
     return f"""
-                if '{first_entity}' in event['projection']:
+                if '{first_entity}' in event_parse.projection:
                     res = dynamodb_manager.get_items_with_secondary_index('{first_entity}', {sort_key})
                     res = res[0][dynamodb_manager.get_partition_key_table()]
                     res = dynamodb_manager.get_item(res)
@@ -109,7 +110,7 @@ def link_second_entity_one_to_many(first_entity, partition_key, sort_key):
 
 def link_first_entity_one_to_many(second_entity, partition_key, sort_key):
     return f"""
-                if '{second_entity}' in event['projection']:
+                if '{second_entity}' in event_parse.projection:
                     res = dynamodb_manager.get_items({partition_key}, '{second_entity}')
                     items_result = []
                     for item in res:
@@ -122,7 +123,7 @@ def link_first_entity_one_to_many(second_entity, partition_key, sort_key):
 
 def link_second_entity_many_to_one(first_entity, partition_key, sort_key):
     return f"""
-                if '{first_entity}' in event['projection']:  
+                if '{first_entity}' in event_parse.projection:  
                     res = dynamodb_manager.get_items_with_secondary_index({sort_key}, '{first_entity}')
                     items_result = []
                     for item in res:
@@ -135,7 +136,7 @@ def link_second_entity_many_to_one(first_entity, partition_key, sort_key):
 
 def link_first_entity_many_to_one(second_entity, partition_key, sort_key):
     return f"""
-                if '{second_entity}' in event['projection']: 
+                if '{second_entity}' in event_parse.projection: 
                     res = dynamodb_manager.get_items({partition_key}, '{second_entity}')
                     res = res[0]
                     res['{sort_key} = item.pop(dynamodb_manager.get_sort_key_table())
