@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Configuration } from 'src/app/Models/Configuration';
-import { Entity } from 'src/app/Models/Entity';
-import { Link } from 'src/app/Models/Link';
-import { JsonDownloadService } from '../JSONdownload/json-download.service';
-import { Table } from 'src/app/Models/Table';
+import {Injectable} from '@angular/core';
+import {Configuration} from 'src/app/Models/Configuration';
+import {Entity} from 'src/app/Models/Entity';
+import {Link} from 'src/app/Models/Link';
+import {JsonDownloadService} from '../JSONdownload/json-download.service';
+import {Table} from 'src/app/Models/Table';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +19,14 @@ export class GeneratorService {
   configuration: Configuration = new Configuration;
 
   /**
-   * Constructor for this Component. 
+   * Constructor for this Component.
    * @param jsonDownloadService service to export JSON.
    */
-  constructor(private jsonDownloadService: JsonDownloadService) { }
+  constructor(private jsonDownloadService: JsonDownloadService) {
+  }
 
   /**
-   * This method creates a new entity, 
+   * This method creates a new entity,
    * adds it to the configuration, and updates the final JSON.
    * @param entity_id entity id.
    * @param entityName entity name.
@@ -37,9 +38,9 @@ export class GeneratorService {
   }
 
   /**
-   * This method creates a new link between two entities or 
-   * between entity and table. 
-   * Starting from their ids, extract the two object from the configuration, 
+   * This method creates a new link between two entities or
+   * between entity and table.
+   * Starting from their ids, extract the two object from the configuration,
    * add the link to the configuration and update the JSON.
    * @param first_id first object id.
    * @param second_id second object id.
@@ -83,18 +84,18 @@ export class GeneratorService {
 
   /**
    * saveAttributes() {
-    const nomeAttributo = this.form.value.nomeAttributo
-    const type = this.form.value.type
-    const isrequired = this.form.value.isrequired
-    const newField = new Field(nomeAttributo, type, isrequired)
-    this.entity.fields.push(newField)
-    this.resetForm()
-  }
+   const nomeAttributo = this.form.value.nomeAttributo
+   const type = this.form.value.type
+   const isrequired = this.form.value.isrequired
+   const newField = new Field(nomeAttributo, type, isrequired)
+   this.entity.fields.push(newField)
+   this.resetForm()
+   }
    */
 
   /**
-   * This method creates a new configuration, 
-   * with a basic structure, filling it from time to time 
+   * This method creates a new configuration,
+   * with a basic structure, filling it from time to time
    * based on the needs requested by the customer regarding entities, links...
    */
   saveConfiguration() {
@@ -171,7 +172,7 @@ export class GeneratorService {
   }
 
   /**
-   * This method remove an object (entity or table) from configuration 
+   * This method remove an object (entity or table) from configuration
    * and update JSON.
    * @param id object id to remove.
    * @param class_name indicates whether to remove an entity or a table.
@@ -198,7 +199,9 @@ export class GeneratorService {
   removeLinkConfiguration(first_entity: number, second_entity: number, node_class: string) {
     if (node_class === 'Table') {
       const entity = this.configuration.entities.find(entity => entity.id === first_entity);
-      if (entity) { entity.resetTable(); }
+      if (entity) {
+        entity.resetTable();
+      }
     } else {
       const elementIndex = this.configuration.links.findIndex(link =>
         link.first_entity.id === first_entity && link.second_entity.id === second_entity);
@@ -209,7 +212,7 @@ export class GeneratorService {
 
   /**
    * This method delete all configuration.
-   *   
+   *
    */
   clear() {
     this.configuration.entities = []

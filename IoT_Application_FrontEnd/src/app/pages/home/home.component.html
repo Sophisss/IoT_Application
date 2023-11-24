@@ -16,8 +16,8 @@
             </mat-form-field>
           </div>
           <div mat-dialog-actions>
-            <button mat-button (click)="onNoClick()">Chiudi</button>
-            <button mat-button cdkFocusInitial (click)="changeRoute('/drawer')">Conferma</button>
+            <button (click)="onNoClick()" mat-button>Chiudi</button>
+            <button (click)="changeRoute('/drawer')" cdkFocusInitial mat-button>Conferma</button>
           </div>
 
         </div>

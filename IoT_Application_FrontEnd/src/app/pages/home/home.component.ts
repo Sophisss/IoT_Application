@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import {Component} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,10 +12,11 @@ export class HomeComponent {
   openDialog = false
 
   constructor(private router: Router,
-    public dialog: MatDialog) { }
+              public dialog: MatDialog) {
+  }
 
-  
-  open (){
+
+  open() {
     this.openDialog = true
   }
 

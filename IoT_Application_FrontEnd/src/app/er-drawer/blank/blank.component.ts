@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { GeneratorService } from 'src/app/Services/Generator/generator.service';
-import { DialogContentComponent } from '../mat_dialog/dialog-content/dialog-content.component';
-import { ImportServiceService } from 'src/app/Services/Import_Json/import-service.service';
-import { DialogEntityComponent } from '../mat_dialog/dialog-entity/dialog-entity.component';
-import { DialogTableComponent } from '../mat_dialog/dialog-table/dialog-table.component';
-import { DialogExportComponent } from '../mat_dialog/dialog-export/dialog-export.component';
-import Drawflow, { ConnectionEvent, ConnectionStartEvent, DrawflowNode } from 'drawflow';
+import {Component} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {GeneratorService} from 'src/app/Services/Generator/generator.service';
+import {DialogContentComponent} from '../mat_dialog/dialog-content/dialog-content.component';
+import {ImportServiceService} from 'src/app/Services/Import_Json/import-service.service';
+import {DialogEntityComponent} from '../mat_dialog/dialog-entity/dialog-entity.component';
+import {DialogTableComponent} from '../mat_dialog/dialog-table/dialog-table.component';
+import {DialogExportComponent} from '../mat_dialog/dialog-export/dialog-export.component';
+import Drawflow, {ConnectionEvent, ConnectionStartEvent, DrawflowNode} from 'drawflow';
 
 @Component({
   selector: 'app-blank',
@@ -33,7 +33,7 @@ export class BlankComponent {
   selectedNode!: DrawflowNode;
 
   /**
-   * This variable represents the current HTML element associated 
+   * This variable represents the current HTML element associated
    * with the input in the Drawflow editor.
    */
   currentInputElement: HTMLElement | null = null;
@@ -43,7 +43,7 @@ export class BlankComponent {
    */
   fileName!: string;
 
-  //Utility variables 
+  //Utility variables
 
   sideBarOpen = true;
 
@@ -57,7 +57,8 @@ export class BlankComponent {
     private generatorService: GeneratorService,
     private importService: ImportServiceService,
     private dialog: MatDialog
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.initDrawingBoard();
@@ -108,13 +109,21 @@ export class BlankComponent {
    * inside the editor.
    */
   addEditorEvents() {
-    this.editor.on('nodeCreated', (id: number) => { this.addObjectRelativeClassNode(id) });
+    this.editor.on('nodeCreated', (id: number) => {
+      this.addObjectRelativeClassNode(id)
+    });
 
-    this.editor.on('nodeRemoved', (id: number) => { this.handleNodeRemoved(id) });
+    this.editor.on('nodeRemoved', (id: number) => {
+      this.handleNodeRemoved(id)
+    });
 
-    this.editor.on('nodeSelected', (id: number) => { this.handleNodeSelected(id) });
+    this.editor.on('nodeSelected', (id: number) => {
+      this.handleNodeSelected(id)
+    });
 
-    this.editor.on('nodeMoved', () => { this.setEditorProperties({ viewOutputHover: 'visible' }) });
+    this.editor.on('nodeMoved', () => {
+      this.setEditorProperties({viewOutputHover: 'visible'})
+    });
 
     this.editor.on('connectionStart', (event) => {
       console.log("connectionStart: ", event);
@@ -126,70 +135,21 @@ export class BlankComponent {
       this.handleConnectionCreated(connection);
     });
 
-    this.editor.on('connectionRemoved', (connection) => { this.handleConnectionRemoved(connection) });
+    this.editor.on('connectionRemoved', (connection) => {
+      this.handleConnectionRemoved(connection)
+    });
 
-    this.editor.on('connectionCancel', () => { this.handleConnectionCancel() });
+    this.editor.on('connectionCancel', () => {
+      this.handleConnectionCancel()
+    });
 
-    this.editor.on('contextmenu', () => { this.setEditorProperties({ viewOutputHover: 'visible' }) });
+    this.editor.on('contextmenu', () => {
+      this.setEditorProperties({viewOutputHover: 'visible'})
+    });
 
-    this.editor.on('click', () => { this.setEditorProperties({ viewOutputHover: 'visible' }) });
-  }
-
-  /**
-   * This method handles the removal of a node.
-   * @param id unique identifier of the removed node.
-   */
-  private handleNodeRemoved(id: number) {
-    this.setEditorProperties({ viewOutputHover: 'visible' });
-    this.removeNode(id);
-  }
-
-  /**
-   * This method handles the selection of a node.
-   * @param id unique identifier of the selected node.
-   */
-  private handleNodeSelected(id: number) {
-    this.setEditorProperties({ viewOutputHover: 'hidden' });
-    this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
-  }
-
-  /**
-   * This method handles the start of a connection event.
-   * @param event connection start event to be handled.
-   */
-  private handleConnectionStart(event: ConnectionStartEvent) {
-    const element = document.getElementById(`node-${event.output_id}`);
-    this.getNodeInput(element).style.visibility = 'hidden';
-    this.setEditorProperties({ viewOutputHover: 'hidden', viewInputEntity: 'visible' });
-    this.checkNodeConnection(event);
-  }
-
-  /**
-   * This method handles the event when a connection is created.
-   * @param connection connection event to be handled.
-   */
-  private handleConnectionCreated(connection: ConnectionEvent) {
-    if (this.currentInputElement) { this.currentInputElement.style.removeProperty('visibility'); }
-    this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
-    this.addLabelText(document.querySelector(".connection"), "Prova");
-    this.addLink(connection);
-  }
-
-  /**
-   * This method handles the event when a connection is cancelled.
-   */
-  private handleConnectionCancel() {
-    if (this.currentInputElement) { this.currentInputElement.style.removeProperty('visibility'); }
-    this.setEditorProperties({ viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden' });
-  }
-
-  /**
-   * This method handles the event when a connection is removed.
-   * @param connection connection event to be handled.
-   */
-  private handleConnectionRemoved(connection: ConnectionEvent) {
-    this.setEditorProperties({ viewOutputHover: 'visible', viewInputEntity: 'hidden' });
-    this.removeLink(connection);
+    this.editor.on('click', () => {
+      this.setEditorProperties({viewOutputHover: 'visible'})
+    });
   }
 
   /**
@@ -224,7 +184,7 @@ export class BlankComponent {
   }
 
   /**
-   * This method checks the connections of the outputs of a given node 
+   * This method checks the connections of the outputs of a given node
    * and updates the visibility of a related element.
    * @param node node for which connections are checked.
    */
@@ -236,16 +196,6 @@ export class BlankComponent {
     this.drawflowElement.style.setProperty('--viewInputTable', entityConnectedToTable ? 'hidden' : 'visible');
   }
 
-  // checkInputsConnections(node: DrawflowNode) {
-  //   const inputs = Object.values(node.inputs);
-  //   inputs.forEach(input => {
-  //     input.connections.forEach(connection => {
-  //       const connectedNode = document.getElementById(`node-${connection.node}`);
-  //       this.getNodeInput(connectedNode).style.visibility = 'hidden';
-  //     });
-  //   });
-  // }
-
   /**
    * This method adds a connection between two nodes in the Drawflow editor and saves this connection.
    * @param connection object representing the connection between nodes.
@@ -256,7 +206,7 @@ export class BlankComponent {
   }
 
   /**
-   * This method removes a connection between two entities from the Drawflow editor 
+   * This method removes a connection between two entities from the Drawflow editor
    * and removes the associated link.
    * @param connection object representing the connection to remove.
    */
@@ -269,9 +219,9 @@ export class BlankComponent {
    * This method retrieves two nodes based on output and input IDs from the Drawflow editor.
    * @param event An object containing output_id and input_id for the nodes.
    * @returns An object with the first and second nodes.
-  */
+   */
   getNode(event: ConnectionEvent) {
-    return { first: this.editor.getNodeFromId(event.output_id), second: this.editor.getNodeFromId(event.input_id) };
+    return {first: this.editor.getNodeFromId(event.output_id), second: this.editor.getNodeFromId(event.input_id)};
   }
 
   /**
@@ -308,6 +258,16 @@ export class BlankComponent {
     ev.dataTransfer.setData('node', ev.target.getAttribute('data-node'));
   }
 
+  // checkInputsConnections(node: DrawflowNode) {
+  //   const inputs = Object.values(node.inputs);
+  //   inputs.forEach(input => {
+  //     input.connections.forEach(connection => {
+  //       const connectedNode = document.getElementById(`node-${connection.node}`);
+  //       this.getNodeInput(connectedNode).style.visibility = 'hidden';
+  //     });
+  //   });
+  // }
+
   /**
    * This method handles the drop event when an object is dropped in a specific area.
    * @param ev drop event to handle.
@@ -319,7 +279,7 @@ export class BlankComponent {
   }
 
   /**
-   * This method adds a new node to the Drawflow editor 
+   * This method adds a new node to the Drawflow editor
    * based on specific parameters such as position.
    * @param name name that identifies which object to add.
    * @param pos_x the x coordinate of the node position.
@@ -340,12 +300,12 @@ export class BlankComponent {
   }
 
   /**
- * This method adds a node to the Drawflow editor with the specified parameters.
- * @param nodeName Name of the node.
- * @param posX X-coordinate position.
- * @param posY Y-coordinate position.
- * @param nodeType Type of the node.
- */
+   * This method adds a node to the Drawflow editor with the specified parameters.
+   * @param nodeName Name of the node.
+   * @param posX X-coordinate position.
+   * @param posY Y-coordinate position.
+   * @param nodeType Type of the node.
+   */
   addNode(nodeName: string, posX: number, posY: number, nodeType: string) {
     const output = nodeType === 'Table' ? 0 : 1
     const node_id = this.editor.addNode(nodeName, 1, output, posX, posY, nodeType, {},
@@ -397,14 +357,14 @@ export class BlankComponent {
       this.editor.precanvas.getBoundingClientRect().y *
       (this.editor.precanvas.clientHeight / (this.editor.precanvas.clientHeight * this.editor.zoom));
 
-    return { pos_x, pos_y }
+    return {pos_x, pos_y}
   }
 
   /**
-  * This method removes a node from the Drawflow editor 
-  * and calls the generator service to remove the associated object.
-  * @param id node id to remove.
-  */
+   * This method removes a node from the Drawflow editor
+   * and calls the generator service to remove the associated object.
+   * @param id node id to remove.
+   */
   removeNode(id: number) {
     this.generatorService.removeObject(id, this.selectedNode.class)
   }
@@ -455,16 +415,16 @@ export class BlankComponent {
   }
 
   /**
-  * This method adds connections between nodes in Drawflow based on the provided link data.
-  * @param data data containing links information.
-  */
+   * This method adds connections between nodes in Drawflow based on the provided link data.
+   * @param data data containing links information.
+   */
   addLinksBetweenEntityToDrawflow(data: { links: any[]; entities: any[]; }) {
     data.links.forEach((link) => {
       const first_entity_id = data.entities.find((entity) => entity.name === link.first_entity)?.entity_id;
       const second_entity_id = data.entities.find((entity) => entity.name === link.second_entity)?.entity_id;
 
       if (first_entity_id && second_entity_id) {
-        //Sostituire 1 e 2 
+        //Sostituire 1 e 2
         this.editor.addConnection(1, 2, 'output_1', 'input_1');
       }
     });
@@ -489,7 +449,7 @@ export class BlankComponent {
    */
   export() {
     const dialogRef = this.dialog.open(DialogExportComponent, {
-      data: { file: this.fileName },
+      data: {file: this.fileName},
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -507,7 +467,7 @@ export class BlankComponent {
     const json = this.generatorService.saveConfiguration();
     const jsonString = JSON.stringify(json, null, 2);
     this.dialog.open(DialogContentComponent, {
-      data: { json: jsonString }
+      data: {json: jsonString}
     });
   }
 
@@ -531,5 +491,66 @@ export class BlankComponent {
     textElemPath.textContent = labelText;
     textElem.appendChild(textElemPath);
     bgPath.appendChild(textElem);
+  }
+
+  /**
+   * This method handles the removal of a node.
+   * @param id unique identifier of the removed node.
+   */
+  private handleNodeRemoved(id: number) {
+    this.setEditorProperties({viewOutputHover: 'visible'});
+    this.removeNode(id);
+  }
+
+  /**
+   * This method handles the selection of a node.
+   * @param id unique identifier of the selected node.
+   */
+  private handleNodeSelected(id: number) {
+    this.setEditorProperties({viewOutputHover: 'hidden'});
+    this.selectedNode = this.editor.drawflow.drawflow.Home.data[`${id}`];
+  }
+
+  /**
+   * This method handles the start of a connection event.
+   * @param event connection start event to be handled.
+   */
+  private handleConnectionStart(event: ConnectionStartEvent) {
+    const element = document.getElementById(`node-${event.output_id}`);
+    this.getNodeInput(element).style.visibility = 'hidden';
+    this.setEditorProperties({viewOutputHover: 'hidden', viewInputEntity: 'visible'});
+    this.checkNodeConnection(event);
+  }
+
+  /**
+   * This method handles the event when a connection is created.
+   * @param connection connection event to be handled.
+   */
+  private handleConnectionCreated(connection: ConnectionEvent) {
+    if (this.currentInputElement) {
+      this.currentInputElement.style.removeProperty('visibility');
+    }
+    this.setEditorProperties({viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden'});
+    this.addLabelText(document.querySelector(".connection"), "Prova");
+    this.addLink(connection);
+  }
+
+  /**
+   * This method handles the event when a connection is cancelled.
+   */
+  private handleConnectionCancel() {
+    if (this.currentInputElement) {
+      this.currentInputElement.style.removeProperty('visibility');
+    }
+    this.setEditorProperties({viewOutputHover: 'visible', viewInputTable: 'hidden', viewInputEntity: 'hidden'});
+  }
+
+  /**
+   * This method handles the event when a connection is removed.
+   * @param connection connection event to be handled.
+   */
+  private handleConnectionRemoved(connection: ConnectionEvent) {
+    this.setEditorProperties({viewOutputHover: 'visible', viewInputEntity: 'hidden'});
+    this.removeLink(connection);
   }
 }

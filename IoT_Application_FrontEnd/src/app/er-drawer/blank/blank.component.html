@@ -1,16 +1,16 @@
 <div class="wrapper">
   <mat-drawer-container>
-    <mat-drawer mode="side" [opened]="sideBarOpen">
+    <mat-drawer [opened]="sideBarOpen" mode="side">
       <app-sidenav></app-sidenav>
     </mat-drawer>
   </mat-drawer-container>
-  <div id="drawflow" (drop)="drop($event)" (dragover)="allowDrop($event)">
+  <div (dragover)="allowDrop($event)" (drop)="drop($event)" id="drawflow">
     <div class="btn-import">
       <label for="fileInput">Import</label>
-      <input class="input" type="file" id="fileInput" (change)="import($event)">
+      <input (change)="import($event)" class="input" id="fileInput" type="file">
     </div>
-    <div class="btn-view" (click)="viewJson()">View JSON</div>
-    <div class="btn-export" (click)="export()">Export</div>
-    <div class="btn-clear" (click)="clearModuleSelected()">Clear</div>
+    <div (click)="viewJson()" class="btn-view">View JSON</div>
+    <div (click)="export()" class="btn-export">Export</div>
+    <div (click)="clearModuleSelected()" class="btn-clear">Clear</div>
   </div>
 </div>

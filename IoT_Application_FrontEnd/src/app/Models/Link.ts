@@ -1,8 +1,8 @@
-import { Entity } from "./Entity";
+import {Entity} from "./Entity";
 import {Field} from "./Field";
 
 /**
- * This model represents a link. 
+ * This model represents a link.
  * Each link is composed of two connecting entities and a list of fields.
  */
 export class Link {

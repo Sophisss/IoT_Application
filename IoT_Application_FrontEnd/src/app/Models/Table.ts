@@ -1,31 +1,31 @@
 /**
- * This model represents a table. 
- * Each table consists of an id, a name, 
+ * This model represents a table.
+ * Each table consists of an id, a name,
  * partition key and sort key.
  */
 export class Table {
 
-    id : Number
+  id: Number
 
-    name: String
+  name: String
 
-    partition_key: String | undefined
+  partition_key: String | undefined
 
-    sort_Key: String | undefined
-
-
-    constructor(id: Number, name: String) {
-        this.id = id
-        this.name = name
-    }
+  sort_Key: String | undefined
 
 
-    setPartitionKey(partition_key: String): void {
-        this.partition_key = partition_key;
-    }
+  constructor(id: Number, name: String) {
+    this.id = id
+    this.name = name
+  }
 
-    setSortKey(sort_Key: String): void {
-        this.sort_Key = sort_Key;
-    }
+
+  setPartitionKey(partition_key: String): void {
+    this.partition_key = partition_key;
+  }
+
+  setSortKey(sort_Key: String): void {
+    this.sort_Key = sort_Key;
+  }
 
 }

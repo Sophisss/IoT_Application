@@ -1,11 +1,8 @@
-import { Component } from '@angular/core';
-import { Entity } from '../../Models/Entity';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Configuration } from '../../Models/Configuration';
-import { Field } from '../../Models/Field';
-import { JsonDownloadService } from "../../Services/JSONdownload/json-download.service";
-import { Link } from '../../Models/Link';
-
+import {Component} from '@angular/core';
+import {Entity} from '../../Models/Entity';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Configuration} from '../../Models/Configuration';
+import {JsonDownloadService} from "../../Services/JSONdownload/json-download.service";
 
 
 @Component({

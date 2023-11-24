@@ -1,14 +1,13 @@
 import {Field} from "./Field";
-import { Table } from "./Table";
 
 /**
- * This model represents an entity. 
- * Each entity is characterized by a name, 
+ * This model represents an entity.
+ * Each entity is characterized by a name,
  * an id and a list of fields.
  */
 export class Entity {
 
-  id : Number;
+  id: Number;
 
   name: String;
 
@@ -21,7 +20,7 @@ export class Entity {
     this.id = id
   }
 
-  setTable(table_name: String) : void{
+  setTable(table_name: String): void {
     this.table = table_name;
   }
 

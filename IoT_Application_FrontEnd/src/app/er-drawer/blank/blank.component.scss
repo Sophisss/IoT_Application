@@ -46,7 +46,7 @@ mat-drawer-container {
   cursor: pointer;
   z-index: 5;
 
-  .input{
+  .input {
     display: none;
   }
 }
@@ -118,6 +118,7 @@ mat-drawer-container {
   .drawflow .parent-node {
     position: relative;
   }
+
   .parent-drawflow {
     display: flex;
     overflow: hidden;
@@ -184,6 +185,7 @@ mat-drawer-container {
     z-index: 1;
     margin-bottom: 5px;
   }
+
   .drawflow .drawflow-node.Table .input {
     visibility: var(--viewInputTable);
     left: -25px;
@@ -233,6 +235,7 @@ mat-drawer-container {
     stroke: #1266ab;
     cursor: pointer;
   }
+
   .drawflow .connection .main-path.selected {
     stroke: #43b993;
   }
@@ -290,7 +293,7 @@ mat-drawer-container {
     background: #ffffff;
     background-size: 25px 25px;
     background-image: linear-gradient(to right, #f1f1f1 1px, transparent 1px),
-      linear-gradient(to bottom, #f1f1f1 1px, transparent 1px);
+    linear-gradient(to bottom, #f1f1f1 1px, transparent 1px);
     --viewInputTable: hidden;
     --viewInputEntity: hidden;
     --viewOutputHover: visible;

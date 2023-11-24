@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 
 @Injectable({
   providedIn: 'root'
@@ -32,13 +32,13 @@ export class JsonDownloadService {
    */
   downloadJson(fileName: string) {
     const jsonData = this.getData();
-    
-    if(jsonData) {
+
+    if (jsonData) {
       const jsonStr = JSON.stringify(jsonData, null, 2);
       const blob = new Blob([jsonStr], {type: 'application/json'});
       saveAs(blob, `${fileName}.json`);
 
-    }else {
+    } else {
       alert('No JSON data available.');
     }
   }

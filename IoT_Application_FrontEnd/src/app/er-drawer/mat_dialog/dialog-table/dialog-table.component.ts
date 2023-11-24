@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dialog-table',
@@ -10,10 +10,10 @@ export class DialogTableComponent {
 
   constructor(
     private dialogRef: MatDialogRef<DialogTableComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {}) 
-    { }
+    @Inject(MAT_DIALOG_DATA) public data: {}) {
+  }
 
-    onNoClick(): void {
+  onNoClick(): void {
     this.dialogRef.close();
   }
 
