@@ -1,6 +1,6 @@
 <div class="content" id="drop-area">
 
-  <div class="logo" id="project-logo">
+  <div class="logo" id="devq-text-logo">
     <a href="https://www.devq.it/">
       <img alt="DevQ Logo" src="assets/images/logos/logo-devq.svg">
     </a>
@@ -8,9 +8,9 @@
 
   <div class="open-create" id="open-create-text">
 
-    <a routerLink="/dash">Apri</a>
+    <a routerLink="/new">Apri</a>
     o
-    <a routerLink="">crea</a>
+    <a routerLink="new">crea</a>
     un nuovo diagramma BPMN per iniziare
 
   </div>
@@ -30,13 +30,13 @@
 
   <div class="open-create" id="open-create-icons">
 
-    <a id="new-diagram-button" routerLink="/dash">
+    <a id="new-diagram-button" routerLink="/new">
       <button aria-label="Create a new project" class="child-button" mat-icon-button
               matTooltip="Create a new project">
         <mat-icon>add</mat-icon>
       </button>
     </a>
-    <a>
+    <a id="load-diagram-button" routerLink="/new">
       <button aria-label="Open a pre existing project" class="child-button" mat-icon-button
               matTooltip="Open a pre existing project">
         <mat-icon>upload_file</mat-icon>

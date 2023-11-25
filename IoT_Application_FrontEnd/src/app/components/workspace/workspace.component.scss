@@ -1,0 +1,16 @@
+#body {
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #eee;
+}
+
+mat-drawer {
+  width: fit-content;
+}
+
+app-header {
+  flex: 1 1 auto;
+}
