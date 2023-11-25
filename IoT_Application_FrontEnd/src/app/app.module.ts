@@ -18,30 +18,36 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTableModule} from "@angular/material/table";
+import {MaterialModule} from "./material.module";
+import { CardComponent } from './components/card/card.component';
+import { ContentComponent } from './components/content/content.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
     HeaderComponent,
-    WorkspaceComponent
+    WorkspaceComponent,
+    CardComponent,
+    ContentComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatListModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatTableModule,
-    MatTooltipModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatListModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatTableModule,
+        MatTooltipModule,
+        MaterialModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -1,12 +1,23 @@
-<app-header></app-header>
+<mat-toolbar>
+  <app-header></app-header>
+</mat-toolbar>
 
-<mat-sidenav-container id="body">
-  <mat-sidenav id="sidebar" #sidebar mode="side" opened position="end"><router-outlet>aaaa</router-outlet></mat-sidenav>
-  <mat-sidenav-content>Main content
-<!-- Bottone per aprire e chiudere la sidebar
-   <button type="button" mat-button (dblclick)="sidebar.toggle()">
-      Toggle sidenav
-    </button>
--->
+<mat-sidenav-container>
+
+  <mat-sidenav-content>
+    <div>
+      Main content
+      <button mat-button routerLink="card/content" type="button"> <!-- (dblclick)="sidebar.toggle()" -->
+        content
+      </button>
+      <button mat-button routerLink="card" type="button"> <!-- (dblclick)="sidebar.toggle()" -->
+        card
+      </button>
+    </div>
   </mat-sidenav-content>
+
+  <mat-sidenav [mode]="'side'" [opened]="true" id="sidenav" position="end">
+    <router-outlet></router-outlet>
+  </mat-sidenav>
+
 </mat-sidenav-container>
