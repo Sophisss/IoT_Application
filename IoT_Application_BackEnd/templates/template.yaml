@@ -15,15 +15,10 @@ Parameters:
     Description: S3 bucket name
     Default: devq.iot.iot-platform
 
-  S3FirstFolder:
+  S3Folder:
     Type: String
     Description: S3 first folder name
-    Default: template
-
-  S3SecondFolder:
-    Type: String
-    Description: S3 second folder name
-    Default: src
+    Default: code_generated
 
 
 # endregion
@@ -126,8 +121,7 @@ Resources:
             Condition:
               StringLike:
                 s3:prefix:
-                  - !Sub "${S3FirstFolder}/*"
-                  - !Sub "${S3SecondFolder}/*"
+                  - !Sub "${S3Folder}/*"
       Roles:
         - !Ref LambdaExecutionRole
 
