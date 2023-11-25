@@ -3,66 +3,66 @@ from services.generation.utility_methods import generate_resource_name
 
 def generate_delete_functions(json: dict) -> str:
     """
-    This function generates the code for the delete functions.
-    :param json: The json that contains the information.
-    :return: The code for the delete functions.
+    This function generates delete functions for entities and links based on the provided JSON.
+    :param json: The JSON containing entity and link information.
+    :return: The delete functions.
     """
     return f"""{__generate_delete_entities_functions(json['entities'])}{__generate_delete_links_functions(json['links'])}
-{__generate_delete_item()}
-{__generate_remove_associated_link()}
-{__generate_delete()}"""
+{__generate_delete_item_method()}
+{__generate_remove_associated_link_method()}
+{__generate_delete_method()}"""
 
 
 def __generate_delete_entities_functions(entities: list) -> str:
     """
-    This function generates the code for the delete_entities_functions.
-    :param entities: The entities that need to be deleted.
-    :return: The code for the delete_entities_functions.
+    This function generates delete functions for entities.
+    :param entities: The list of entities to generate delete functions for.
+    :return: The delete functions for the entities.
     """
-    return "".join(map(lambda entity: __generate_delete_entity_function(entity), entities))
+    return "".join(map(lambda entity: __generate_delete_entity_method(generate_resource_name(entity), entity['primary_key'][0]), entities))
 
 
-def __generate_delete_links_functions(links: list) -> str:
+def __generate_delete_entity_method(entity_name: str, entity_id: str) -> str:
     """
-    This function generates the code for the delete_links_functions.
-    :param links: The links that need to be deleted.
-    :return: The code for the delete_links_functions.
+    This function generates the delete function for a specific entity.
+    :param entity_name: The name of the entity.
+    :param entity_id: The ID of the entity.
+    :return: The delete function for the specific entity.
     """
-    return "".join(map(lambda link: __generate_delete_link_function(link), links))
-
-
-def __generate_delete_entity_function(entity: dict) -> str:
-    """
-    This function generates the code for the delete_entity function.
-    :param entity: The entity that needs to be deleted.
-    :return: The code for the delete_entity function.
-    """
-    entity_name = generate_resource_name(entity)
-    entity_id = entity['primary_key'][0]
     return f"""
     def delete_{entity_name.lower()}(self, {entity_id}: str) -> Optional[dict]:
         return self.__delete_item("{entity_name}", {entity_id})
         """
 
 
-def __generate_delete_link_function(link: dict) -> str:
+def __generate_delete_links_functions(links: list) -> str:
     """
-    This function generates the code for the delete_link function.
-    :param link: The link that needs to be deleted.
-    :return: The code for the delete_link function.
+    This function generates delete functions for links.
+    :param links: The list of links to generate delete functions for.
+    :return: The delete functions for the links.
     """
-    link_name = generate_resource_name(link)
-    first_entity_name = link['first_entity']
-    first_entity_id = link['primary_key'][0]
-    second_entity_name = link['second_entity']
-    second_entity_id = link['primary_key'][1]
+    return "".join(map(lambda link: __generate_delete_link_method(generate_resource_name(link), link['first_entity'], link['primary_key'][0],
+                                                                  link['second_entity'], link['primary_key'][1]), links))
+
+
+def __generate_delete_link_method(link_name: str, first_entity_name: str, first_entity_id: str, second_entity_name: str,
+                                  second_entity_id: str) -> str:
+    """
+    This function generates the delete function for a specific link.
+    :param link_name: The name of the link.
+    :param first_entity_name: The name of the first entity in the link.
+    :param first_entity_id: The ID of the first entity in the link.
+    :param second_entity_name: The name of the second entity in the link.
+    :param second_entity_id: The ID of the second entity in the link.
+    :return: The delete function for the specific link.
+    """
     return f"""
     def delete_link_{first_entity_name.lower()}_{second_entity_name.lower()}(self, {first_entity_id}: str, {second_entity_id}: str):
         return self.__delete_item("{link_name}", {first_entity_id}, {second_entity_id})
         """
 
 
-def __generate_delete_item() -> str:
+def __generate_delete_item_method() -> str:
     """
     This function generates the code for the delete_item function.
     :return: The code for the delete_item function.
@@ -76,7 +76,7 @@ def __generate_delete_item() -> str:
     """
 
 
-def __generate_remove_associated_link() -> str:
+def __generate_remove_associated_link_method() -> str:
     """
     This function generates the code for the remove_associated_link function.
     :return: The code for the remove_associated_link function.
@@ -98,7 +98,7 @@ def __generate_remove_associated_link() -> str:
     """
 
 
-def __generate_delete() -> str:
+def __generate_delete_method() -> str:
     """
     This function generates the code for the delete function.
     :return: The code for the delete function.

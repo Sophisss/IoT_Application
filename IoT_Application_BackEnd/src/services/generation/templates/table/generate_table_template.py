@@ -26,19 +26,14 @@ def __generate_table_properties(resource: dict) -> str:
     :param resource: the resource.
     :return: the DynamoDB table properties.
     """
-    properties = f"""
+    return f"""
       TableName: {resource['tableName']}
       AttributeDefinitions: {__generate_table_attributes(resource)}
       KeySchema:{__generate_key_schema_table(resource)}
       ProvisionedThroughput:
         ReadCapacityUnits: 5
-        WriteCapacityUnits: 5"""
-
-    properties += f"""
-      GlobalSecondaryIndexes: {__generate_gsi(resource)}
-      """ if resource.get('GSI', None) else ""
-
-    return properties
+        WriteCapacityUnits: 5
+      {__generate_gsi(resource)}"""
 
 
 def __generate_table_attributes(resource: dict) -> str:
@@ -69,6 +64,17 @@ def __generate_key_schema_table(resource: dict) -> str:
 
 
 def __generate_gsi(resource: dict) -> str:
+    """
+    This function generates the DynamoDB table GSI.
+    :param resource: the resource.
+    :return: the DynamoDB table GSI if it exists or an empty string otherwise.
+    """
+    return f"""
+      GlobalSecondaryIndexes: {__generate_gsi_resources(resource)}
+      """ if resource.get('GSI', None) else ""
+
+
+def __generate_gsi_resources(resource: dict) -> str:
     """
     This function generates the DynamoDB table GSI.
     :param resource: the resource.

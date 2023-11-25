@@ -1,4 +1,8 @@
 def generate_event_parse() -> str:
+    """
+    This function generates the event parse for the DAL template.
+    :return: The event parse for the DAL template.
+    """
     return """import functools
 
 
