@@ -11,7 +11,7 @@ export class Field {
   name: String
   type: String
   required: Boolean
-  minLenght: Number | undefined
+  minLength: Number | undefined
   maxLength: Number | undefined
   minimum: Number | undefined
   maximum: Number | undefined
@@ -24,7 +24,7 @@ export class Field {
   }
 
   setMinLength(minLenght: Number): void {
-    this.minLenght = minLenght;
+    this.minLength = minLenght;
   }
 
   setMaxLength(maxLength: Number): void {

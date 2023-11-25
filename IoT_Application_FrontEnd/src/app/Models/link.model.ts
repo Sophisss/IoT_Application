@@ -1,5 +1,5 @@
-import {Entity} from "./Entity";
-import {Field} from "./Field";
+import {Entity} from "./entity.model";
+import {Field} from "./field.model";
 
 /**
  * This model represents a link.

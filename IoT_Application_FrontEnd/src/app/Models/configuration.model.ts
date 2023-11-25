@@ -1,6 +1,6 @@
-import {Entity} from "./Entity";
-import {Link} from "./Link";
-import {Table} from "./Table";
+import {Entity} from "./entity.model";
+import {Link} from "./link.model";
+import {Table} from "./table.model";
 
 /**
  * This model represents a system configuration.

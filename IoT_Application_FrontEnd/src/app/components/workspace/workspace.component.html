@@ -1,6 +1,12 @@
 <app-header></app-header>
 
-<mat-drawer-container id="body">
-  <mat-drawer id="sidebar" mode="side" opened position="end"><router-outlet>aaaa</router-outlet></mat-drawer>
-  <mat-drawer-content>Main content</mat-drawer-content>
-</mat-drawer-container>
+<mat-sidenav-container id="body">
+  <mat-sidenav id="sidebar" #sidebar mode="side" opened position="end"><router-outlet>aaaa</router-outlet></mat-sidenav>
+  <mat-sidenav-content>Main content
+<!-- Bottone per aprire e chiudere la sidebar
+   <button type="button" mat-button (dblclick)="sidebar.toggle()">
+      Toggle sidenav
+    </button>
+-->
+  </mat-sidenav-content>
+</mat-sidenav-container>

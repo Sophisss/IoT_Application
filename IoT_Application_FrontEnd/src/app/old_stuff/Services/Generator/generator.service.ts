@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Configuration} from 'src/app/old_stuff/Models/Configuration';
-import {Entity} from 'src/app/old_stuff/Models/Entity';
-import {Link} from 'src/app/old_stuff/Models/Link';
+import {Configuration} from 'src/app/models/configuration.model';
+import {Entity} from 'src/app/models/entity.model';
+import {Link} from 'src/app/models/link.model';
 import {JsonDownloadService} from '../JSONdownload/json-download.service';
-import {Table} from 'src/app/old_stuff/Models/Table';
+import {Table} from 'src/app/models/table.model';
 
 @Injectable({
   providedIn: 'root'
@@ -160,7 +160,7 @@ export class GeneratorService {
 
   /**
    * This method creates the fields part of the JSON.
-   * @param object representing an entity or link from which to get the list of fields.
+   * @param object representing an entity or a link from which to get the list of fields.
    * @returns json of the fields.
    */
   createFields(object: Entity | Link) {
@@ -172,8 +172,8 @@ export class GeneratorService {
   }
 
   /**
-   * This method remove an object (entity or table) from configuration
-   * and update JSON.
+   * This method removes an object (entity or table) from configuration
+   * and updates JSON.
    * @param id object id to remove.
    * @param class_name indicates whether to remove an entity or a table.
    */
@@ -190,8 +190,8 @@ export class GeneratorService {
 
 
   /**
-   * This method remove a link from configuration
-   * and update JSON.
+   * This method removes a link from configuration
+   * and updates JSON.
    * @param first_entity first entity id to remove.
    * @param second_entity second entity id to remove.
    * @param node_class second entity class.
@@ -211,7 +211,7 @@ export class GeneratorService {
   }
 
   /**
-   * This method delete all configuration.
+   * This method deletes all configuration.
    *
    */
   clear() {
