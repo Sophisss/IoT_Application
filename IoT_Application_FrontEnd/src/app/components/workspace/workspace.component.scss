@@ -1,8 +1,8 @@
-app-header{
+app-header {
   width: 100%;
 }
 
-#sidenav{
+#sidenav {
   width: auto;
   max-width: 35%;
   min-width: 15%;
@@ -12,4 +12,7 @@ mat-sidenav-content > div {
   height: 90vh
 }
 
+app-diagram {
+  width: auto;
+}
 

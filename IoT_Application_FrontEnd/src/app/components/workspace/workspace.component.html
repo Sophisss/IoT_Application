@@ -6,17 +6,11 @@
 
   <mat-sidenav-content>
     <div>
-      Main content
-      <button mat-button routerLink="card/content" type="button"> <!-- (dblclick)="sidebar.toggle()" -->
-        content
-      </button>
-      <button mat-button routerLink="card" type="button"> <!-- (dblclick)="sidebar.toggle()" -->
-        card
-      </button>
+      <app-diagram></app-diagram>
     </div>
   </mat-sidenav-content>
 
-  <mat-sidenav [mode]="'side'" [opened]="true" id="sidenav" position="end">
+  <mat-sidenav [mode]="'side'" [opened]=toggleSidebar id="sidenav" position="end">
     <router-outlet></router-outlet>
   </mat-sidenav>
 

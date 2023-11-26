@@ -5,7 +5,10 @@ import {AppComponent} from './app.component';
 import {HomepageComponent} from "./components/homepage/homepage.component";
 import {HeaderComponent} from "./components/header/header.component";
 import {WorkspaceComponent} from "./components/workspace/workspace.component";
+import {CardComponent} from './components/card/card.component';
+import {ContentComponent} from './components/content/content.component';
 
+import {MaterialModule} from "./material.module";
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
@@ -18,9 +21,8 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTableModule} from "@angular/material/table";
-import {MaterialModule} from "./material.module";
-import { CardComponent } from './components/card/card.component';
-import { ContentComponent } from './components/content/content.component';
+import {DxButtonModule, DxDiagramModule} from "devextreme-angular";
+import { DiagramComponent } from './components/diagram/diagram.component';
 
 @NgModule({
   declarations: [
@@ -29,25 +31,28 @@ import { ContentComponent } from './components/content/content.component';
     HeaderComponent,
     WorkspaceComponent,
     CardComponent,
-    ContentComponent
+    ContentComponent,
+    DiagramComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSidenavModule,
-        MatListModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatTableModule,
-        MatTooltipModule,
-        MaterialModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatTableModule,
+    MatTooltipModule,
+    MaterialModule,
+    DxButtonModule,
+    DxDiagramModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

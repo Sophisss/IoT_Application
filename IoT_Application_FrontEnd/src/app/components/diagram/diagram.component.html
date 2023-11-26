@@ -1,0 +1,21 @@
+<dx-diagram #diagram (onRequestEditOperation)="log()"
+            (onRequestEditOperation)="requestEditOperationHandler($event)"
+            (onItemDblClick)="openFieldsEditor()"
+            autoZoomMode="fitContent"
+            id="diagram">
+  <dxo-context-menu [enabled]="true"></dxo-context-menu>
+  <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false">
+    <dxi-group [expanded]="true" category="iot-devq" title="IoT"></dxi-group>
+  </dxo-toolbox>
+
+  <dxi-custom-shape
+    [allowEditText]="true"
+    [defaultHeight]="0.75"
+    [defaultWidth]="0.75"
+    baseType="rectangle"
+    category="iot-devq"
+    defaultText="Internet"
+    title="Entity"
+    type="entity">
+  </dxi-custom-shape>
+</dx-diagram>
