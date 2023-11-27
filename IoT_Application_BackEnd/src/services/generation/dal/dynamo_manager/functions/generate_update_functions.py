@@ -67,15 +67,19 @@ def __generate_update_item_method() -> str:
     This function generates the update function for an item of a DynamoClass.
     :return: The update function for the item.
     """
-    return """    def __update_item(self, name, arguments, partition_key: str, sort_key=None):
-        pk = self.create_id(name, partition_key)
-        sk = self.create_id(name, sort_key) if sort_key is not None else sort_key
-        if not self.get_item(pk, sk):
+    return """    def __update_item(self, name: str, arguments: dict, first_entity_id: str, second_entity_id: Optional[str] = None) -> Optional[dict]:
+        partition_key = create_id(name, first_entity_id, self.get_configuration().get_separator())
+        sort_key = create_id(name, second_entity_id, self.get_configuration().get_separator())
+        
+        if not self.get_item(partition_key, sort_key):
             raise ItemNotPresentError(name)
-        response = self.configuration.table.update_item(
-            Key=self.__create_arguments(pk, sk),
-            UpdateExpression=self.create_update_expression(arguments),
-            ExpressionAttributeValues=self.create_expression_attribute_values(arguments),
+        
+        response = self.get_configuration().get_table().update_item(
+            Key=create_arguments(self.get_configuration().get_storage_keyword(),
+                                 self.get_configuration().get_pk_table(),
+                                 self.get_configuration().get_sk_table(), partition_key, sort_key),
+            UpdateExpression=create_update_expression(arguments),
+            ExpressionAttributeValues=create_expression_attribute_values(arguments),
             ReturnValues='ALL_NEW'
         )
         return response['Attributes'] if 'Attributes' in response else None"""

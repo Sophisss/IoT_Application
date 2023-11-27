@@ -28,10 +28,10 @@ def generate_item_not_present_error():
     :return: The ItemNotPresentError class.
     """
     return """
-class ItemNotPresentError(Exception):
-    def __init__(self, name):
-        self.message = f'{name} with the id is not in the database'
-        self.type = 'ItemNotPresentError'
+class IdAlreadyExistsError(Exception):
+    def __init__(self):
+        self.message = 'Item with the same id already exists'
+        self.type = "IdAlreadyExistsError"
         super().__init__(self.message)
     """
 

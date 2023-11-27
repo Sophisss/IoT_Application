@@ -178,6 +178,10 @@
             "index_name": "SK-PK",
             "partition_key": "SK",
             "sort_key": "PK"
+          },
+          "parameters": {
+            "single_entity_storage_keyword": "registry",
+            "id_separator": ":"
           }
         }
       ]
@@ -204,9 +208,5 @@
         }
       }
     }
-  },
-  "parameters": {
-    "single_entity_storage_keyword": "registry",
-    "id_separator": ":"
   }
 }

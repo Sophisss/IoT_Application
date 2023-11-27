@@ -67,10 +67,13 @@ def __generate_delete_item_method() -> str:
     This function generates the code for the delete_item function.
     :return: The code for the delete_item function.
     """
-    return """    def __delete_item(self, name, partition_key: str, sort_key=None) -> Optional[dict]:
-        pk = self.create_id(name, partition_key)
-        sk = self.create_id(name, sort_key) if sort_key is not None else sort_key
-        response = self.__delete(self.__create_arguments(pk, sk))
+    return """    def __delete_item(self, name: str, partition_key: str, sort_key=None) -> Optional[dict]:
+        pk = create_id(name, partition_key, self.get_configuration().get_separator())
+        sk = create_id(name, sort_key, self.get_configuration().get_separator())
+        response = self.__delete(
+            create_arguments(self.get_configuration().get_storage_keyword(),
+                             self.get_configuration().get_pk_table(),
+                             self.get_configuration().get_sk_table(), pk, sk))
         self.__remove_associated_link(pk)
         return response['Attributes'] if 'Attributes' in response else None
     """
@@ -86,14 +89,22 @@ def __generate_remove_associated_link_method() -> str:
 
         if response is not None:
             for item in response:
-                key = self.__create_arguments(item[self.get_partition_key_table()], item[self.get_sort_key_table()])
+                key = create_arguments(self.get_configuration().get_storage_keyword(),
+                                       self.configuration.get_pk_table(),
+                                       self.get_configuration().get_sk_table(),
+                                       item[self.configuration.get_pk_table()],
+                                       item[self.get_configuration().get_sk_table()])
                 self.__delete(key)
 
         response = self.get_items_with_secondary_index(key=item_id)
 
         if response is not None:
             for item in response:
-                key = self.__create_arguments(item[self.get_partition_key_table()], item[self.get_sort_key_table()])
+                key = create_arguments(self.get_configuration().get_storage_keyword(),
+                                       self.get_configuration().get_pk_table(),
+                                       self.get_configuration().get_sk_table(),
+                                       item[self.get_configuration().get_pk_table()],
+                                       item[self.get_configuration().get_sk_table()])
                 self.__delete(key)
     """
 
@@ -104,7 +115,7 @@ def __generate_delete_method() -> str:
     :return: The code for the delete function.
     """
     return """    def __delete(self, key: dict):
-        return self.configuration.table.delete_item(
+        return self.get_configuration().get_table().delete_item(
             Key=key,
             ReturnValues='ALL_OLD'
         )"""

@@ -29,7 +29,7 @@ def __generate_create_entity_method(entity_name: str, entity_id: str) -> str:
     """
     return f"""
     def create_{entity_name.lower()}(self, {entity_name.lower()}) -> tuple:
-        return self.__put_item({entity_name.lower()}, "{entity_name}", "{entity_id}"), self.__getAttr({entity_name.lower()}, "{entity_id}")
+        return self.__put_item({entity_name.lower()}, "{entity_name}", "{entity_id}"), getAttr({entity_name.lower()}, "{entity_id}")
     """
 
 
@@ -69,12 +69,21 @@ def __generate_put_item_method() -> str:
     This function generates the function used to put an item in the database.
     :return: The generated function as a string.
     """
-    return """    def __put_item(self, item, name_first_entity: str, first_entity_id_key: str, name_second_entity=None, second_entity_id_key=None) -> dict:
-        first_id_entity_to_put = self.create_id(name_first_entity, self.__getAttr(item, first_entity_id_key))
-        second_id_entity_to_put = self.create_id(name_second_entity, self.__getAttr(item, second_entity_id_key)) if (name_second_entity and second_entity_id_key) is not None else None
-        if self.get_item(first_id_entity_to_put, second_id_entity_to_put):
-            raise IdAlreadyExistsError(name_first_entity)
+    return """    def __put_item(self, item, name_first_entity: str, first_id_key: str,
+                   name_second_entity: Optional[str] = None, second_id_key: Optional[str] = None) -> dict:
 
-        arguments_to_put = self.__remove_values(item.model_dump(), [f'{first_entity_id_key}', f'{second_entity_id_key}'])
-        arguments_to_put.update(self.__create_arguments(first_id_entity_to_put, second_id_entity_to_put))
-        return self.configuration.table.put_item(Item=arguments_to_put)"""
+        first_id_to_put = create_id(name_first_entity, getAttr(item, first_id_key),
+                                    self.get_configuration().get_separator())
+        second_id_to_put = create_id(name_second_entity, getAttr(item, second_id_key),
+                                     self.get_configuration().get_separator())
+
+        if self.get_item(first_id_to_put, second_id_to_put):
+            raise IdAlreadyExistsError()
+
+        arguments_to_put = remove_values(item.model_dump(), [f'{first_id_key}', f'{second_id_key}'])
+        arguments_to_put.update(
+            create_arguments(self.get_configuration().get_storage_keyword(),
+                             self.get_configuration().get_pk_table(),
+                             self.get_configuration().get_pk_table(), getAttr(item, first_id_key),
+                             getAttr(item, second_id_key)))
+        return self.get_configuration().get_table().put_item(Item=arguments_to_put)"""
