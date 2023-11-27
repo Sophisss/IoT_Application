@@ -1,15 +1,15 @@
-def generator_exception():
+def generator_exception() -> str:
     """
     This function generates the exception file.
     :return: The exception file.
     """
-    return f"""{generate_id_already_exists_error()}
-{generate_item_not_present_error()}
-{generate_entities_not_present_error()}
+    return f"""{__generate_id_already_exists_error()}
+{__generate_item_not_present_error()}
+{__generate_entities_not_present_error()}
 """
 
 
-def generate_id_already_exists_error():
+def __generate_id_already_exists_error() -> str:
     """
     This function generates the IdAlreadyExistsError class.
     :return: The IdAlreadyExistsError class.
@@ -22,7 +22,7 @@ def generate_id_already_exists_error():
     """
 
 
-def generate_item_not_present_error():
+def __generate_item_not_present_error() -> str:
     """
     This function generates the ItemNotPresentError class.
     :return: The ItemNotPresentError class.
@@ -36,7 +36,7 @@ class IdAlreadyExistsError(Exception):
     """
 
 
-def generate_entities_not_present_error():
+def __generate_entities_not_present_error() -> str:
     """
     This function generates the EntitiesNotPresentError class.
     :return: The EntitiesNotPresentError class.

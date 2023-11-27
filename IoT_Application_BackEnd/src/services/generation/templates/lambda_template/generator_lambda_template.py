@@ -32,7 +32,7 @@ def __generate_lambda_properties(resource_name: str) -> str:
     return f"""
      FunctionName: !Sub "${{Project}}-{resource_name}Handler"
      CodeUri: ../src/
-     Handler: lambda.lambda_handler_{resource_name.lower()}
+     Handler: lambda_{resource_name.lower()}.lambda_handler_{resource_name.lower()}
      Role:
        Fn::ImportValue: !Sub "${{Project}}-LambdaExecutionRoleArn"
      Tags:

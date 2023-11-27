@@ -1,18 +1,18 @@
 from services.generation.dal.dynamo_manager.configuration.generator_configuration_class import generate_configuration_class
-from services.generation.dal.dynamo_manager.generator_dynamo_class import generate_dbmanager
-from services.generation.dal.dynamo_manager.utility.generate_utility_functions import generate_utility_functions
+from services.generation.dal.dynamo_manager.generator_dynamo_manager import generate_dbmanager
+from services.generation.dal.dynamo_manager.utility.generator_utility_functions import generate_utility_functions
 from services.generation.dal.event.generator_event_class import generate_event_class
 from services.generation.dal.event.generator_event_parse import generate_event_parse
-from services.generation.dal.exception.generation_exception import generator_exception
+from services.generation.dal.exception.generator_exception import generator_exception
 from services.generation.dal.model.generator_model_entity import generate_model_entity
 from services.generation.dal.model.generator_model_link import generate_model_link
 from services.generation.dal.lambda_functions.generation_in_one_file import generation_one_file
-from services.generation.deployment_guide.generate_deployment_guide import generate_deployment_guide
+from services.generation.deployment_guide.generator_deployment_guide import generate_deployment_guide
 from services.generation.graphql_resources.generate_invoker import generator_invoker
 from services.generation.graphql_resources.generate_schema_graphql import generate_graphql_schema
 from services.generation.requirements.generator_requirements import generate_requirements
-from services.generation.templates.api.generate_api_template import generate_api_template
-from services.generation.templates.cognito.generate_cognito_template_service import generate_cognito_template
+from services.generation.templates.api.generator_api_template import generate_api_template
+from services.generation.templates.cognito.generator_cognito_template import generate_cognito_template
 from services.generation.utility_methods import generate_resource_name
 
 
@@ -37,8 +37,7 @@ def __generate_templates(codes_generated: dict, json: dict):
     :param codes_generated: the code that will be generated.
     :param json: the json with the data.
     """
-    codes_generated['code_generated/template/cognito.yaml'] = generate_cognito_template(
-        json['awsConfig']['authentication']['cognito'])
+    codes_generated['code_generated/template/cognito.yaml'] = generate_cognito_template(json['awsConfig']['authentication']['cognito'])
     codes_generated['code_generated/template/api.yaml'] = generate_api_template(json)
 
 
@@ -97,8 +96,7 @@ def __generate_entities_model(codes_generated: dict, json: dict):
     """
     for entity in json['entities']:
         entity_name = generate_resource_name(entity)
-        codes_generated[f'code_generated/src/model/{entity_name.lower()}.py'] = generate_model_entity(entity_name,
-                                                                                                      entity['fields'])
+        codes_generated[f'code_generated/src/model/{entity_name.lower()}.py'] = generate_model_entity(entity_name, entity['fields'])
 
 
 def __generate_links_model(codes_generated: dict, json: dict):
@@ -128,7 +126,7 @@ def __generate_dal_code(codes_generated: dict, json: dict):
     :param json: the json with the data.
     """
     __generate_dynamo_manager_resources(codes_generated, json)
-    codes_generated['code_generated/src/lambda.py'] = generation_one_file(json)
+    __generate_lambdas_functions(codes_generated, json['entities'] + json['links'])
 
 
 def __generate_dynamo_manager_resources(codes_generated: dict, json: dict):
@@ -149,3 +147,14 @@ def __generate_utility_resources(codes_generated: dict):
     """
     codes_generated['code_generated/src/dynamo_manager/utility/utility.py'] = generate_utility_functions()
     codes_generated['code_generated/src/dynamo_manager/utility/exception_class.py'] = generator_exception()
+
+
+def __generate_lambdas_functions(codes_generated: dict, json: dict):
+    """
+    This method generate the code for the lambda functions.
+    :param codes_generated: the code that will be generated.
+    :param json: the json with the data.
+    """
+    for item in json:
+        item_name = generate_resource_name(item)
+        codes_generated[f'code_generated/src/lambda_{item_name.lower()}.py'] = generation_one_file(json)

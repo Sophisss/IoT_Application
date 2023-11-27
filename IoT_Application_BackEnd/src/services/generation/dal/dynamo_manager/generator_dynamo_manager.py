@@ -6,9 +6,9 @@ from services.generation.dal.dynamo_manager.functions.generate_update_functions 
 
 def generate_dbmanager(json: dict) -> str:
     """
-    This function generates the code for the DynamoDBManager class.
+    This function generates DynamoDBManager class.
     :param json: The json that contains the information.
-    :return: The code for the DynamoDBManager class.
+    :return: The DynamoDBManager class generated.
     """
     return f"""{__generate_header()}
 {__generate_class(json)}

@@ -1,7 +1,7 @@
-from services.generation.templates.cognito.resources.generate_client_template import generate_client
-from services.generation.templates.cognito.resources.generate_user_pool_template import generate_user_pool
-from services.generation.templates.header.generator_header_template_service import generate_header_template
-from services.generation.templates.outputs.userpool.generate_userpool_outputs import generate_user_pool_outputs
+from services.generation.templates.cognito.resources.generator_client_template import generate_client
+from services.generation.templates.cognito.resources.generator_user_pool_template import generate_user_pool
+from services.generation.templates.header.generator_header_template import generate_header_template
+from services.generation.templates.outputs.userpool.generator_userpool_outputs import generate_user_pool_outputs
 
 
 def generate_cognito_template(json: dict) -> str:
