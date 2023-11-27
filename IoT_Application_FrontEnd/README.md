@@ -1,3 +1,3 @@
 Documentation for diagram elements
 
-https://js.devexpress.com/Content/images/doc/23_1/diagram/ui-customization.png
+https://js.devexpress.com/Contentimages/doc/23_1/diagram

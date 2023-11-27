@@ -46,7 +46,7 @@ mat-drawer-container {
   cursor: pointer;
   z-index: 5;
 
-  .input {
+  .inputJSON {
     display: none;
   }
 }
@@ -173,7 +173,7 @@ mat-drawer-container {
     display: block;
   }
 
-  .drawflow .drawflow-node .input,
+  .drawflow .drawflow-node .inputJSON,
   .drawflow .drawflow-node .output {
     position: relative;
     width: 13px;
@@ -186,14 +186,14 @@ mat-drawer-container {
     margin-bottom: 5px;
   }
 
-  .drawflow .drawflow-node.Table .input {
+  .drawflow .drawflow-node.Table .inputJSON {
     visibility: var(--viewInputTable);
     left: -25px;
     top: 2px;
     background: #fff;
   }
 
-  .drawflow .drawflow-node.Entity .input {
+  .drawflow .drawflow-node.Entity .inputJSON {
     visibility: var(--viewInputEntity);
     left: -25px;
     top: 2px;

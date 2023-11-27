@@ -7,41 +7,32 @@
   </div>
 
   <div class="open-create" id="open-create-text">
-
-    <a routerLink="/new">Apri</a>
+    <label for="textInput" id="openInput" >Apri</label>
+    <input #jsonInput (change)="import($event)" accept=".json" class="inputJSON" hidden id="textInput" type="file">
     o
-    <a routerLink="new">crea</a>
+    <a routerLink="new" id="create">crea</a>
     un nuovo diagramma BPMN per iniziare
-
   </div>
 
   <div class="description" id="caption">
     <span>
       Modella e crea facilmente il tuo sistema IoT
     </span>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat convallis sapien, vitae semper enim
-      volutpat facilisis. Maecenas et lacus arcu. Mauris cursus eu risus nec iaculis. Integer a diam ut nisl luctus
-      convallis vitae non metus. Suspendisse potenti. In in ipsum sem. Curabitur et mauris eget augue lacinia malesuada.
-      Vivamus euismod neque convallis, maximus lacus at, semper sapien.Lorem ipsum dolor sit amet, consectetur
-      adipiscing elit. Aenean volutpat convallis sapien, vitae semper enim volutpat facilisis. Maecenas et lacus arcu.
-      Mauris cursus eu risus nec iaculis. Integer a diam ut nisl luctus convallis vitae non metus. Suspendisse potenti.
-      In in ipsum sem.</p>
+    <p>{{descriptionText}}</p>
   </div>
 
   <div class="open-create" id="open-create-icons">
-
     <a id="new-diagram-button" routerLink="/new">
       <button aria-label="Create a new project" class="child-button" mat-icon-button
               matTooltip="Create a new project">
         <mat-icon>add</mat-icon>
       </button>
     </a>
-    <a id="load-diagram-button" routerLink="/new">
-      <button aria-label="Open a pre existing project" class="child-button" mat-icon-button
-              matTooltip="Open a pre existing project">
-        <mat-icon>upload_file</mat-icon>
-      </button>
-    </a>
+
+    <button (click)="jsonInput.click()" aria-label="Open a pre existing project" class="child-button"
+            mat-icon-button matTooltip="Open a pre existing project">
+      <mat-icon>upload_file</mat-icon>
+    </button>
   </div>
 
 </div>

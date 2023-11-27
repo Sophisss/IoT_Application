@@ -7,6 +7,7 @@ import {HeaderComponent} from "./components/header/header.component";
 import {WorkspaceComponent} from "./components/workspace/workspace.component";
 import {CardComponent} from './components/card/card.component';
 import {ContentComponent} from './components/content/content.component';
+import {DiagramComponent} from './components/diagram/diagram.component';
 
 import {MaterialModule} from "./material.module";
 import {AppRoutingModule} from './app-routing.module';
@@ -21,8 +22,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTableModule} from "@angular/material/table";
-import {DxButtonModule, DxDiagramModule} from "devextreme-angular";
-import { DiagramComponent } from './components/diagram/diagram.component';
+import {DxButtonModule, DxDiagramModule, DxFileUploaderModule} from "devextreme-angular";
 
 @NgModule({
   declarations: [
@@ -51,7 +51,8 @@ import { DiagramComponent } from './components/diagram/diagram.component';
     MatTooltipModule,
     MaterialModule,
     DxButtonModule,
-    DxDiagramModule
+    DxDiagramModule,
+    DxFileUploaderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

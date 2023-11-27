@@ -158,7 +158,7 @@ export class BlankComponent {
    * @returns the found input element or null if not found.
    */
   getNodeInput(element: HTMLElement | null) {
-    const inputElement = element?.querySelector(".inputs .input.input_1") as HTMLElement;
+    const inputElement = element?.querySelector(".inputs .inputJSON.input_1") as HTMLElement;
     this.currentInputElement = inputElement;
     return this.currentInputElement;
   }
