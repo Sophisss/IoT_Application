@@ -28,7 +28,7 @@ def __generate_item_not_present_error() -> str:
     :return: The ItemNotPresentError class.
     """
     return """
-class IdAlreadyExistsError(Exception):
+class ItemNotPresentError(Exception):
     def __init__(self):
         self.message = 'Item with the same id already exists'
         self.type = "IdAlreadyExistsError"

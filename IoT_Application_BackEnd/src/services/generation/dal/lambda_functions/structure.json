@@ -3,6 +3,7 @@
   "entities": [
     {
       "name": "Device",
+      "table": "IoT",
       "fields": [
         {
           "name": "device_id",
