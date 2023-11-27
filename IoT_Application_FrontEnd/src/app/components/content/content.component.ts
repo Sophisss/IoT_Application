@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {SidenavService} from "../../services/sidenav.service";
 import {WorkspaceComponent} from "../workspace/workspace.component";
 
 @Component({
@@ -8,7 +7,6 @@ import {WorkspaceComponent} from "../workspace/workspace.component";
   styleUrls: ['./content.component.scss']
 })
 export class ContentComponent {
-
 
   constructor(private workspace: WorkspaceComponent) {
   }

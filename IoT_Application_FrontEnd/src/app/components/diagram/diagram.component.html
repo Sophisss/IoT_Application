@@ -1,21 +1,39 @@
-<dx-diagram #diagram (onRequestEditOperation)="log()"
+<dx-diagram #diagram (onItemDblClick)="openFieldsEditor()"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
-            (onItemDblClick)="openFieldsEditor()"
+            (onRequestEditOperation)="log()"
+            [simpleView]="true"
             autoZoomMode="fitContent"
-            id="diagram">
+            id="diagram"
+>
   <dxo-context-menu [enabled]="true"></dxo-context-menu>
-  <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false">
-    <dxi-group [expanded]="true" category="iot-devq" title="IoT"></dxi-group>
+  <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false" role="banner">
+    <dxi-group [expanded]="true" category="iot-devq" displayMode="texts" title="IoT"></dxi-group>
   </dxo-toolbox>
+  <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
 
   <dxi-custom-shape
     [allowEditText]="true"
-    [defaultHeight]="0.75"
-    [defaultWidth]="0.75"
-    baseType="rectangle"
+    [defaultHeight]="1"
+    [defaultWidth]="1"
+    baseType="ellipse"
     category="iot-devq"
-    defaultText="Internet"
+    defaultText="Entity"
     title="Entity"
     type="entity">
   </dxi-custom-shape>
+
+  <dxi-custom-shape
+    [allowEditText]="true"
+    [defaultHeight]="1"
+    [defaultWidth]="1"
+    baseType="internalStorage"
+    category="iot-devq"
+    defaultText="Table"
+    title="Table"
+    type="table">
+  </dxi-custom-shape>
+
+  <dxo-default-item-properties
+    style="">
+  </dxo-default-item-properties>
 </dx-diagram>

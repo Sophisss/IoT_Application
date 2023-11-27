@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-workspace',
@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent {
-  toggleSidebar: boolean = true;
+  toggleSidebar: boolean = false;
 
 
   setToggleSidebar() {
@@ -16,5 +16,4 @@ export class WorkspaceComponent {
   getToggleSidebar() {
     return this.toggleSidebar;
   }
-
 }
