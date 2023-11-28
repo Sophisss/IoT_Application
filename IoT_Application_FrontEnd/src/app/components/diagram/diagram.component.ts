@@ -1,8 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
-import {Router} from "@angular/router";
-import {WorkspaceComponent} from "../workspace/workspace.component";
-import {CustomCommandsService} from "../../services/custom-commands.service";
 
 @Component({
   selector: 'app-diagram',
@@ -12,10 +9,11 @@ import {CustomCommandsService} from "../../services/custom-commands.service";
 export class DiagramComponent {
 
   popupVisible = false;
+  sidebarToggle: boolean = false;
 
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
-  constructor(private router: Router, private workspace: WorkspaceComponent, private customCommandsService: CustomCommandsService) {
+  constructor() {
   }
 
   log() {
@@ -23,7 +21,14 @@ export class DiagramComponent {
   }
 
   onCustomCommand(e: any) {
-    this.customCommandsService.executeCommand(e.name);
+    const commandName: string = e.name;
+
+    if (commandName === 'export') {
+      console.log('export')
+    }
+    if (commandName === 'viewJson') {
+      this.showJson();
+    }
   }
 
   requestEditOperationHandler(e: any) {
@@ -32,13 +37,13 @@ export class DiagramComponent {
         e.allowed = false;
   }
 
-  openJsonSide() {
-    this.workspace.toggleSidebar()
-    console.log(this.workspace.getToggleSidebar())
-  }
-
   showPopup(event: any) {
     this.popupVisible = true;
     console.log(event);
+  }
+
+  private showJson() {
+    this.sidebarToggle = !this.sidebarToggle;
+    //this.diagram.instance.beginUpdate();
   }
 }

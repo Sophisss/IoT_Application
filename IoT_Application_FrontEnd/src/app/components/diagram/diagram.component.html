@@ -1,67 +1,79 @@
-<dx-diagram (onCustomCommand)="onCustomCommand($event)"
-            (onRequestEditOperation)="log()"
-            (onRequestEditOperation)="requestEditOperationHandler($event)"
-            (onItemDblClick)="showPopup($event)"
-            [simpleView]="true"
-            autoZoomMode="fitContent"
-            id="diagram">
+<mat-sidenav-container>
 
-  <dxo-context-menu [enabled]="true"></dxo-context-menu>
-  <dxo-history-toolbar>
-    <dxi-command name="undo"></dxi-command>
-    <dxi-command name="redo"></dxi-command>
-  </dxo-history-toolbar>
+  <mat-sidenav-content>
+    <div>
+      <dx-diagram (onCustomCommand)="onCustomCommand($event)"
+                  (onItemDblClick)="showPopup($event)"
+                  (onRequestEditOperation)="requestEditOperationHandler($event)"
+                  [simpleView]="true"
+                  autoZoomMode="fitContent"
+                  id="diagram">
+
+        <dxo-context-menu [enabled]="true"></dxo-context-menu>
+        <dxo-history-toolbar>
+          <dxi-command name="undo"></dxi-command>
+          <dxi-command name="redo"></dxi-command>
+        </dxo-history-toolbar>
 
 
-  <dxo-view-toolbar [visible]="true">
-    <dxi-command name="toolbox"></dxi-command>
-    <dxi-command name="separator"></dxi-command>
-    <dxi-command name="selectAll"></dxi-command>
-    <dxi-command name="delete"></dxi-command>
-    <dxi-command name="separator"></dxi-command>
-    <dxi-command name='layoutTreeTopToBottom'></dxi-command>
-    <dxi-command name="separator"></dxi-command>
-    <dxi-command icon="export" name='export' text="Export JSON"></dxi-command>
-    <dxi-command icon="alignleft" name='viewJson' text="View JSON"></dxi-command>
-    <dxi-command icon="tips" name='generateCode' text="Generate code from Diagram"></dxi-command>
-  </dxo-view-toolbar>
+        <dxo-view-toolbar [visible]="true">
+          <dxi-command name="toolbox"></dxi-command>
+          <dxi-command name="separator"></dxi-command>
+          <dxi-command name="selectAll"></dxi-command>
+          <dxi-command name="delete"></dxi-command>
+          <dxi-command name="separator"></dxi-command>
+          <dxi-command name='layoutTreeTopToBottom'></dxi-command>
+          <dxi-command name="separator"></dxi-command>
+          <dxi-command icon="export" name='export' text="Export JSON"></dxi-command>
+          <dxi-command icon="{{ sidebarToggle ? 'alignright' : 'alignleft' }}" name='viewJson'
+                       text="View JSON"></dxi-command>
+          <dxi-command icon="tips" name='generateCode' text="Generate code from Diagram"></dxi-command>
+        </dxo-view-toolbar>
 
-  <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
+        <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
 
-  <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false" role="banner">
-    <dxi-group [expanded]="true" category="iot-devq" displayMode="texts" title="IoT"></dxi-group>
-  </dxo-toolbox>
+        <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false" role="banner">
+          <dxi-group [expanded]="true" category="iot-devq" displayMode="texts" title="IoT"></dxi-group>
+        </dxo-toolbox>
 
-  <dxi-custom-shape
-    [allowEditText]="true"
-    [defaultHeight]="1"
-    [defaultWidth]="1"
-    baseType="ellipse"
-    category="iot-devq"
-    defaultText="Entity"
-    title="Entity"
-    type="entity">
-  </dxi-custom-shape>
+        <dxi-custom-shape
+          [allowEditText]="true"
+          [defaultHeight]="1"
+          [defaultWidth]="1"
+          baseType="ellipse"
+          category="iot-devq"
+          defaultText="Entity"
+          title="Entity"
+          type="entity">
+        </dxi-custom-shape>
 
-  <dxi-custom-shape
-    [allowEditText]="true"
-    [defaultHeight]="1"
-    [defaultWidth]="1"
-    baseType="internalStorage"
-    category="iot-devq"
-    defaultText="Table"
-    title="Table"
-    type="table">
-  </dxi-custom-shape>
+        <dxi-custom-shape
+          [allowEditText]="true"
+          [defaultHeight]="1"
+          [defaultWidth]="1"
+          baseType="internalStorage"
+          category="iot-devq"
+          defaultText="Table"
+          title="Table"
+          type="table">
+        </dxi-custom-shape>
 
-</dx-diagram>
+      </dx-diagram>
 
-<dx-popup
-  [width]="360"
-  [height]="320"
-  [hideOnOutsideClick]="true"
-  [showCloseButton]="true"
-  [(visible)]="popupVisible"
-  title="Entity properties">
-  <app-content></app-content>
-</dx-popup>
+      <dx-popup
+        [(visible)]="popupVisible"
+        [height]="320"
+        [hideOnOutsideClick]="true"
+        [showCloseButton]="true"
+        [width]="360"
+        title="Entity properties">
+        <app-content></app-content>
+      </dx-popup>
+    </div>
+  </mat-sidenav-content>
+
+  <mat-sidenav [mode]="'side'" [opened]=sidebarToggle id="sidenav" position="end">
+    <router-outlet></router-outlet>
+  </mat-sidenav>
+
+</mat-sidenav-container>
