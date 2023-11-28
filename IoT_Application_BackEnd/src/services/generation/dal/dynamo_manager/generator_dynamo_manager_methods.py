@@ -12,8 +12,7 @@ def generate_methods() -> str:
 {__generate_get_item_method()}
 {__generate_get_items_with_secondary_index_method()}
 {__generate_create_update_expression_method()}
-{__generate_create_expression_attribute_values_method()}
-"""
+{__generate_create_expression_attribute_values_method()}"""
 
 
 def __generate_put_item_method() -> str:
@@ -167,5 +166,4 @@ def __generate_create_expression_attribute_values_method() -> str:
     """
     return """    @staticmethod
     def __create_expression_attribute_values(arguments: dict) -> dict:
-        return {f':{key}': value for key, value in arguments.items()}
-    """
+        return {f':{key}': value for key, value in arguments.items()}"""
