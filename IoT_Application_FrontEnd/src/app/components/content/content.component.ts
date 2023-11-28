@@ -8,15 +8,7 @@ import {WorkspaceComponent} from "../workspace/workspace.component";
 })
 export class ContentComponent {
 
-  constructor(private workspace: WorkspaceComponent) {
+  constructor() {
   }
 
-  helloWorld() {
-    console.log("hello")
-  }
-
-  openClose() {
-    this.workspace.setToggleSidebar()
-    console.log(this.workspace.getToggleSidebar())
-  }
 }

@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {MatSidenav} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-workspace',
@@ -6,14 +7,19 @@ import {Component} from '@angular/core';
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent {
-  toggleSidebar: boolean = false;
+  sidebarToggle: boolean = false;
+  //TODO: correggere
+  sidenav: MatSidenav;
 
+  constructor() {
+  }
 
-  setToggleSidebar() {
-    this.toggleSidebar = !this.toggleSidebar;
+  toggleSidebar() {
+    this.sidebarToggle = !this.sidebarToggle;
+    this.sidenav.toggle();
   }
 
   getToggleSidebar() {
-    return this.toggleSidebar;
+    return this.sidebarToggle;
   }
 }

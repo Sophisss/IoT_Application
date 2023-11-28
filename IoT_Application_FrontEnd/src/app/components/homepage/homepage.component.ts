@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
-import {ImportServiceService} from "../../old_stuff/Services/Import_Json/import-service.service";
+import {ImportServiceService} from "../../services/import-service.service";
 
 @Component({
   selector: 'app-homepage',

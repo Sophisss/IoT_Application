@@ -1,7 +1,7 @@
 <dx-diagram (onCustomCommand)="onCustomCommand($event)"
-            (onItemDblClick)="openFieldsEditor()"
             (onRequestEditOperation)="log()"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
+            (onItemDblClick)="showPopup($event)"
             [simpleView]="true"
             autoZoomMode="fitContent"
             id="diagram">
@@ -53,4 +53,15 @@
     title="Table"
     type="table">
   </dxi-custom-shape>
+
 </dx-diagram>
+
+<dx-popup
+  [width]="360"
+  [height]="320"
+  [hideOnOutsideClick]="true"
+  [showCloseButton]="true"
+  [(visible)]="popupVisible"
+  title="Entity properties">
+  <app-content></app-content>
+</dx-popup>

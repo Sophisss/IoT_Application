@@ -11,6 +11,8 @@ import {CustomCommandsService} from "../../services/custom-commands.service";
 })
 export class DiagramComponent {
 
+  popupVisible = false;
+
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   constructor(private router: Router, private workspace: WorkspaceComponent, private customCommandsService: CustomCommandsService) {
@@ -30,9 +32,13 @@ export class DiagramComponent {
         e.allowed = false;
   }
 
-  openFieldsEditor() {
-    this.router.navigate(['new/card/content']);
-    this.workspace.setToggleSidebar()
+  openJsonSide() {
+    this.workspace.toggleSidebar()
     console.log(this.workspace.getToggleSidebar())
+  }
+
+  showPopup(event: any) {
+    this.popupVisible = true;
+    console.log(event);
   }
 }

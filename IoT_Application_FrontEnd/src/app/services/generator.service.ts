@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Configuration} from 'src/app/models/configuration.model';
 import {Entity} from 'src/app/models/entity.model';
 import {Link} from 'src/app/models/link.model';
-import {JsonDownloadService} from '../JSONdownload/json-download.service';
+import {JsonDownloadService} from './json-download.service';
 import {Table} from 'src/app/models/table.model';
 
 @Injectable({
@@ -44,7 +44,6 @@ export class GeneratorService {
    * add the link to the configuration and update the JSON.
    * @param first_id first object id.
    * @param second_id second object id.
-   * @param first_class first object class.
    * @param second_class second object class.
    */
   saveLink(first_id: number, second_id: number, second_class: string) {
@@ -86,8 +85,8 @@ export class GeneratorService {
    * saveAttributes() {
    const nomeAttributo = this.form.value.nomeAttributo
    const type = this.form.value.type
-   const isrequired = this.form.value.isrequired
-   const newField = new Field(nomeAttributo, type, isrequired)
+   const isRequired = this.form.value.isRequired
+   const newField = new Field(nomeAttributo, type, isRequired)
    this.entity.fields.push(newField)
    this.resetForm()
    }

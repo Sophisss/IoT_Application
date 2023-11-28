@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {Entity} from '../../Models/Entity';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Configuration} from '../../Models/Configuration';
-import {JsonDownloadService} from "../../Services/JSONdownload/json-download.service";
+import {JsonDownloadService} from "../../../services/json-download.service";
 
 
 @Component({
