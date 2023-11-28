@@ -1,16 +1,16 @@
-def generate_deployment_guide():
+def generate_deployment_guide() -> str:
     """
     This function generates the deployment guide for the project.
     :return: The deployment guide for the project.
     """
     return f"""
-{generate_deployment_introduction()}
-{generate_deployment_guide_api_template()}
-{generate_deployment_guide_cognito_template()}
+{__generate_deployment_introduction()}
+{__generate_deployment_guide_api_template()}
+{__generate_deployment_guide_cognito_template()}
     """
 
 
-def generate_deployment_introduction():
+def __generate_deployment_introduction() -> str:
     """
     This function generates the introduction for the deployment guide.
     :return: The introduction for the deployment guide.
@@ -22,7 +22,7 @@ This guide will help you deploy the project to AWS.
     """
 
 
-def generate_deployment_guide_api_template():
+def __generate_deployment_guide_api_template() -> str:
     """
     This function generates the deployment guide for the api template.
     :return: The deployment guide for the api template.
@@ -35,7 +35,7 @@ def generate_deployment_guide_api_template():
     """
 
 
-def generate_deployment_guide_cognito_template():
+def __generate_deployment_guide_cognito_template() -> str:
     """
     This function generates the deployment guide for the cognito template.
     :return: The deployment guide for the cognito template.

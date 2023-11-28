@@ -4,7 +4,7 @@ from services.generation.dal.dynamo_manager.configuration.generator_methods impo
 def generate_configuration_class() -> str:
     """
     This function generates the configuration class.
-    :return: The configuration class.
+    :return: The configuration class generated.
     """
     return f"""import boto3
 
@@ -16,6 +16,10 @@ class Configuration:
 
 
 def __generate_constructor() -> str:
+    """
+    This function generates the constructor of the configuration class.
+    :return: The constructor of the configuration class.
+    """
     return """    def __init__(self, table_name, separator, partition_key_table, sort_key_table, single_entity_storage_keyword, gsi):
         self.table = self.__instance_table(table_name)
         self.separator = separator
