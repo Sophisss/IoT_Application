@@ -1,5 +1,5 @@
 """This file is responsible for generating the entity pydantic model."""
-from generate_model import generate_header_model, generate_fields_model
+from services.generation.dal.model.generate_model import generate_header_model, generate_fields_model
 
 
 def generate_model_entity(name_entity: str, fields: list) -> str:

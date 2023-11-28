@@ -7,7 +7,7 @@ def generate_case_link(link):
         'PUT': lambda api: generator_case_put(name, api['name']),
         'DELETE': lambda api: generator_case_delete(name, api['name'], partition_key, sort_key),
         'GET': lambda api: generator_case_get(name, api['name'], partition_key, sort_key),
-        'POST': lambda api: generator_case_post(name, api['name'], partition_key),
+        'POST': lambda api: generator_case_post(name, api['name'], partition_key, sort_key),
     }
 
     return ''.join([api_mapping[api['type']](api) for api in link['API']]) + default_case()

@@ -1,4 +1,4 @@
-def generator_invoker():
+def generator_invoker() -> str:
     """
     This function generates the invoker file for the lambda function.
     :return: The invoker file.
@@ -9,7 +9,7 @@ def generator_invoker():
 """
 
 
-def generate_request():
+def generate_request() -> str:
     """
     This function generates the request function for the invoker file.
     :return: The request function.
@@ -24,7 +24,7 @@ export function request(ctx) {
 }"""
 
 
-def generate_response():
+def generate_response() -> str:
     """
     This function generates the response function for the invoker file.
     :return: The response function.

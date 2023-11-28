@@ -1,7 +1,7 @@
 """This file generates the GraphQL schema from the JSON file"""
-from generate_input import generate_inputs
-from generate_query_mutation import generate_queries_mutations
-from generate_types_schema import generate_types
+from services.generation.graphql_resources.schema.generate_input import generate_inputs
+from services.generation.graphql_resources.schema.generate_query_mutation import generate_queries_mutations
+from services.generation.graphql_resources.schema.generate_types_schema import generate_types
 
 
 def generate_graphql_schema(file_json) -> str:

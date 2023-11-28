@@ -1,6 +1,5 @@
 """This file contains functions for generating parameters for queries and mutations."""
-
-from generate_fields_link import type_mapping
+from services.generation.graphql_resources.schema.generate_fields_link import type_mapping
 
 
 def generate_parameters_entity(entity, api):

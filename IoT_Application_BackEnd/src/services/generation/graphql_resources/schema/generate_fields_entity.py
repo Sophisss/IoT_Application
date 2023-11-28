@@ -1,5 +1,5 @@
 """This file is responsible for generating the fields of an entity in the schema.graphql file."""
-from generate_fields_link import type_mapping
+from services.generation.graphql_resources.schema.generate_fields_link import type_mapping
 
 
 def generate_fields_entity(entity: dict) -> str:

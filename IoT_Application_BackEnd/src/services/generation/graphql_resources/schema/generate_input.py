@@ -1,7 +1,7 @@
 """This file generates the input types of the schema."""
-from generate_fields_entity import generate_fields_entity
-from generate_fields_link import generate_fields_link
-from generate_types_schema import search_types_primary_key_field
+from services.generation.graphql_resources.schema.generate_fields_entity import generate_fields_entity
+from services.generation.graphql_resources.schema.generate_fields_link import generate_fields_link
+from services.generation.graphql_resources.schema.generate_types_schema import search_types_primary_key_field
 
 
 def generate_inputs(entities, links):

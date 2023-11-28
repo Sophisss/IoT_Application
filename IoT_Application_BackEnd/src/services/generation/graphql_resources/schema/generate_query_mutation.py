@@ -1,6 +1,7 @@
 """This file is responsible for generating the queries and mutations in the schema.graphql file."""
-from generate_types_schema import search_types_primary_key_field
-from generate_parameters import generate_parameters_entity, generate_parameters_link
+from services.generation.graphql_resources.schema.generate_parameters import generate_parameters_entity, \
+    generate_parameters_link
+from services.generation.graphql_resources.schema.generate_types_schema import search_types_primary_key_field
 
 
 def generate_queries_mutations(entities, links):

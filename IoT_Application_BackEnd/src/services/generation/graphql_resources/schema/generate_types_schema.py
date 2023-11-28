@@ -1,7 +1,8 @@
 """This file is responsible for generating entities and links types in the schema.graphql file."""
-from generate_enum import generate_enum
-from generate_fields_entity import generate_fields_entity, generate_fields_entity_links
-from generate_fields_link import generate_fields_link
+from services.generation.graphql_resources.schema.generate_enum import generate_enum
+from services.generation.graphql_resources.schema.generate_fields_entity import generate_fields_entity_links, \
+    generate_fields_entity
+from services.generation.graphql_resources.schema.generate_fields_link import generate_fields_link
 
 
 def generate_types(entities, links):
