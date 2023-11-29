@@ -8,8 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "aws-sync": "ng build && aws s3 sync dist/iot-application-front-end/ s3://devq.iot.iot-platform",
-    "aws-deploy": "sam build --template template.yml && sam deploy --stack-name devq-iot-platform --template-file .aws-sam/build/template.yaml --parameter-overrides Project=IoT_Application --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND && ng build && aws s3 sync dist/iot-application-front-end/ s3://devq.iot.iot-platform",
-    "aws-tmp1": "sam build && sam deploy --stack-name devq-iot-platform --template-file .aws-sam/build/template.yaml --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND",
+    "aws-deploy": "sam build --template template.yml && sam deploy --stack-name devq-iot-platform-frontend --template-file .aws-sam/build/template.yaml --parameter-overrides Project=IoT_Application --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND && ng build && aws s3 sync dist/iot-application-front-end/ s3://devq.iot.iot-platform",
+    "aws-tmp1": "sam build && sam deploy --stack-name devq-iot-platform-frontend --template-file .aws-sam/build/template.yaml --capabilities CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND",
     "aws-delete-stack": "aws cloudformation delete-stack --stack-name devq-iot-platform",
     "aws-delete-bucket": "aws s3 rb s3://devq.iot.iot-platform --force",
     "aws-empty-bucket": "aws s3 rm s3://devq.iot.iot-platform --recursive"
