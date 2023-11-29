@@ -1,0 +1,73 @@
+a {
+  text-decoration: none;
+  color: #444444
+}
+
+.logo a img {
+  display: inline-block;
+  height: 7em;
+  width: auto;
+}
+
+#drop-area {
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+  text-align: center;
+  display: table;
+  font-size: 16px;
+}
+
+#devq-text-logo {
+  margin: 35px auto;
+}
+
+#open-create-text {
+  color: #444444;
+  font-size: 30px;
+  text-decoration: none;
+  margin: 15px auto;
+}
+
+#caption {
+  margin: 80px auto 70px auto;
+  text-align: center;
+  color: #444444;
+  width: 500px;
+}
+
+#caption > span {
+  font-size: 25px;
+  margin: 10px auto;
+}
+
+#caption > p {
+  font-size: 15px;
+  margin: 10px auto;
+  width: 450px;
+}
+
+#open-create-icons {
+  position: fixed;
+  bottom: 3%;
+  left: 2%;
+}
+
+#new-diagram-button {
+  color: black;
+}
+
+.child-button {
+  background-color: lightgrey;
+  margin-right: 10px;
+}
+
+#openInput:hover {
+  cursor: pointer;
+}
+
+/*
+::ng-deep .dx-fa-button.dx-fa-button-main .dx-overlay-content {
+  box-shadow: none !important;
+}
+*/

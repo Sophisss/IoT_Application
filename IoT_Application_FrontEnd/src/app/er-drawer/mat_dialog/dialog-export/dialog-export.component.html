@@ -1,9 +1,0 @@
-<h2 mat-dialog-title>Inserisci il nome del file</h2>
-<mat-form-field>
-    <mat-label>File name</mat-label>
-    <input type="text" [(ngModel)]="data.file">
-</mat-form-field>
-<mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Close</button>
-    <button mat-button [mat-dialog-close]="data.file" cdkFocusInitial>Save</button>
-</mat-dialog-actions>

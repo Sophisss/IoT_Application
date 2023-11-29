@@ -1,53 +1,59 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {AppRoutingModule} from './app-routing.module';
+
 import {AppComponent} from './app.component';
-import {MaterialModule} from './material.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {ReactiveFormsModule} from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-import {StructureComponent} from './pages/Structure/structure.component';
-import {FooterComponent} from './componentsHome/footer/footer.component';
-import {HeaderHomeComponent} from './componentsHome/header-home/header-home.component';
-import { HomeComponent } from './pages/home/home.component';
-import { DragDropModule} from '@angular/cdk/drag-drop';
-import { BlankComponent } from './er-drawer/blank/blank.component';
-import { SidenavComponent } from './er-drawer/sidenav/sidenav.component';
-import { EntityComponent } from './er-drawer/components/entity/entity.component';
-import { TableComponent } from './er-drawer/components/table/table.component';
-import { DialogContentComponent } from './er-drawer/mat_dialog/dialog-content/dialog-content.component';
-import { DialogEntityComponent } from './er-drawer/mat_dialog/dialog-entity/dialog-entity.component';
-import { DialogTableComponent } from './er-drawer/mat_dialog/dialog-table/dialog-table.component';
-import { DialogLinkComponent } from './er-drawer/mat_dialog/dialog-link/dialog-link.component';
-import { DialogExportComponent } from './er-drawer/mat_dialog/dialog-export/dialog-export.component';
+import {HomepageComponent} from "./components/homepage/homepage.component";
+import {HeaderComponent} from "./components/header/header.component";
+import {WorkspaceComponent} from "./components/workspace/workspace.component";
+import {ContentComponent} from './components/content/content.component';
+import {DiagramComponent} from './components/diagram/diagram.component';
+
+import {MaterialModule} from "./material.module";
+import {AppRoutingModule} from './app-routing.module';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatButtonModule} from "@angular/material/button";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatIconModule} from "@angular/material/icon";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatTableModule} from "@angular/material/table";
+import {DxButtonModule, DxDiagramModule, DxFileUploaderModule, DxPopupModule} from "devextreme-angular";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
-    StructureComponent,
-    FooterComponent,
-    HeaderHomeComponent,
-    HomeComponent,
-    BlankComponent,
-    SidenavComponent,
-    EntityComponent,
-    TableComponent,
-    DialogContentComponent,
-    DialogEntityComponent,
-    DialogTableComponent,
-    DialogLinkComponent,
-    DialogExportComponent,
+    HomepageComponent,
+    HeaderComponent,
+    WorkspaceComponent,
+    ContentComponent,
+    DiagramComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MaterialModule,
     BrowserAnimationsModule,
-    ReactiveFormsModule,
+    MatFormFieldModule,
     FormsModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatTableModule,
+    MatTooltipModule,
+    MaterialModule,
+    DxButtonModule,
+    DxDiagramModule,
+    DxFileUploaderModule,
     HttpClientModule,
-    DragDropModule
+    DxPopupModule
   ],
   providers: [],
   bootstrap: [AppComponent]
