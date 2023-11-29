@@ -34,10 +34,9 @@ export class JsonDownloadService {
     const jsonData = this.getData();
 
     if (jsonData) {
-      const jsonStr = JSON.stringify(jsonData, null, 2);
-      const blob = new Blob([jsonStr], {type: 'application/json'});
-      saveAs(blob, `${fileName}.json`);
+      const blob = new Blob([jsonData], {type: 'application/json'});
 
+      saveAs(blob, `${fileName}.json`);
     } else {
       alert('No JSON data available.');
     }

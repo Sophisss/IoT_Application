@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
-import {HttpClient} from "@angular/common/http";
-import {ImportServiceService} from "../../services/import-service.service";
+import {ActivatedRoute} from "@angular/router";
+import {JsonDownloadService} from "../../services/json-download.service";
 
 @Component({
   selector: 'app-diagram',
@@ -13,27 +13,24 @@ export class DiagramComponent implements OnInit {
 
   popupVisible = false;
   sidebarToggle: boolean = false;
+  private receivedData: any;
 
-  constructor(private http: HttpClient, private importService: ImportServiceService) {
+  constructor(private route: ActivatedRoute, private jsonDownload : JsonDownloadService) {
   }
 
-  ngOnInit(): void {
-    const diagramFlow = this.importService.getSavedFileContent();
-    console.log(diagramFlow);
-    if (diagramFlow) {
-      this.diagram.instance.import(JSON.stringify(diagramFlow));
-    }
-  }
-
-  log() {
-    console.log('log')
+  async ngOnInit(): Promise<void> {
+    this.route.queryParams.subscribe(params => {
+      this.receivedData = params['file'];
+    });
+    await (1);
+    this.diagram.instance.import(this.receivedData, false)
   }
 
   onCustomCommand(e: any) {
     const commandName: string = e.name;
 
     if (commandName === 'export') {
-      console.log('export')
+      this.exportToJson();
     }
     if (commandName === 'viewJson') {
       this.showJson();
@@ -53,6 +50,11 @@ export class DiagramComponent implements OnInit {
 
   private showJson() {
     this.sidebarToggle = !this.sidebarToggle;
-    //this.diagram.instance.beginUpdate();
+    this.diagram.instance.focus();
+  }
+
+  private exportToJson() {
+    this.jsonDownload.setData(this.diagram.instance.export());
+    this.jsonDownload.downloadJson('diagram');
   }
 }

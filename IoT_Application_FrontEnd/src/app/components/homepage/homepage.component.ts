@@ -23,8 +23,9 @@ export class HomepageComponent {
     this.importService.manageImportedFile(event)
       .then(() => {
         // Now, the file import is complete
-        this.router.navigate(['/new']);
-        console.log(this.importService.getSavedFileContent());
+        let file = this.importService.getSavedFileContent();
+
+        this.router.navigate(['/new'], {queryParams: {file}});
       });
   }
 }

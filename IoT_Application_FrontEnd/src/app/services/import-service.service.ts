@@ -10,18 +10,14 @@ export class ImportServiceService {
 
   private savedFileContent: string | null = null;
 
-  manageImportedFile(event: Event): Promise<void> {
-    return this.onFileSelected(event)
-      .then((fileContent) => {
-
-        // Save the file content for later use
-        this.savedFileContent = fileContent;
-
-        // Do something with the file content
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+  async manageImportedFile(event: Event): Promise<void> {
+    try {
+      const fileContent = await this.onFileSelected(event);
+      // Save the file content for later use
+      this.savedFileContent = fileContent;
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 
   /**
