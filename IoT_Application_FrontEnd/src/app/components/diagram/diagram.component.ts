@@ -1,19 +1,28 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
+import {HttpClient} from "@angular/common/http";
+import {ImportServiceService} from "../../services/import-service.service";
 
 @Component({
   selector: 'app-diagram',
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss']
 })
-export class DiagramComponent {
+export class DiagramComponent implements OnInit {
+  @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   popupVisible = false;
   sidebarToggle: boolean = false;
 
-  @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
+  constructor(private http: HttpClient, private importService: ImportServiceService) {
+  }
 
-  constructor() {
+  ngOnInit(): void {
+    const diagramFlow = this.importService.getSavedFileContent();
+    console.log(diagramFlow);
+    if (diagramFlow) {
+      this.diagram.instance.import(JSON.stringify(diagramFlow));
+    }
   }
 
   log() {

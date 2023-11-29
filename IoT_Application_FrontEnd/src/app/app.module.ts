@@ -22,6 +22,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTableModule} from "@angular/material/table";
 import {DxButtonModule, DxDiagramModule, DxFileUploaderModule, DxPopupModule} from "devextreme-angular";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import {DxButtonModule, DxDiagramModule, DxFileUploaderModule, DxPopupModule} fr
     DxButtonModule,
     DxDiagramModule,
     DxFileUploaderModule,
+    HttpClientModule,
     DxPopupModule
   ],
   providers: [],

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {Router} from "@angular/router";
 import {ImportServiceService} from "../../services/import-service.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-homepage',
@@ -16,21 +16,15 @@ export class HomepageComponent {
     "      Mauris cursus eu risus nec iaculis. Integer a diam ut nisl luctus convallis vitae non metus. Suspendisse potenti.\n" +
     "      In in ipsum sem.";
 
-  constructor(private router: Router, private importService: ImportServiceService,) {
-
+  constructor(private importService: ImportServiceService, private router: Router) {
   }
 
-  import(event: Event) {
-    this.importService.onFileSelected(event)
-      .then((jsonContent) => {
-        this.convertToDiagram(jsonContent);
-      })
-      .catch((error) => {
-        alert(error);
+  importFromButton(event: Event) {
+    this.importService.manageImportedFile(event)
+      .then(() => {
+        // Now, the file import is complete
+        this.router.navigate(['/new']);
+        console.log(this.importService.getSavedFileContent());
       });
-  }
-
-  private convertToDiagram(jsonContent: unknown) {
-
   }
 }

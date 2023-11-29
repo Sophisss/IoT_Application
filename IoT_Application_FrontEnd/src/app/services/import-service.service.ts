@@ -8,47 +8,20 @@ import {Injectable} from '@angular/core';
  */
 export class ImportServiceService {
 
-  /**
-   * Variable that tracks a File object or is set to null if no file is selected.
-   */
-  file: File | null = null;
+  private savedFileContent: string | null = null;
 
-  constructor() {
-  }
+  manageImportedFile(event: Event): Promise<void> {
+    return this.onFileSelected(event)
+      .then((fileContent) => {
 
-  /**
-   * This method validates the selected file.
-   * @param selectedFile the selected file from the input.
-   */
-  validateFile(selectedFile: File | undefined) {
-    if (!selectedFile) {
-      throw 'Nessun file selezionato.';
-    }
+        // Save the file content for later use
+        this.savedFileContent = fileContent;
 
-    if (!selectedFile.name.endsWith('.json')) {
-      throw 'Seleziona un file .json.';
-    }
-  }
-
-  /**
-   * This method reads the content of a selected file and resolves with its JSON data.
-   * @param selectedFile file to read as a Blob.
-   * @returns a Promise that resolves with the JSON data from the file.
-   */
-  readFileContent(selectedFile: Blob) {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-
-      fileReader.onload = (e) => {
-        if (e.target) {
-          const jsonContent = JSON.parse(e.target.result as string);
-          resolve(jsonContent);
-        } else {
-          reject('Errore nell\'evento di caricamento del file.');
-        }
-      };
-      fileReader.readAsText(selectedFile);
-    });
+        // Do something with the file content
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
 
   /**
@@ -56,20 +29,39 @@ export class ImportServiceService {
    * @param event event triggered when a file is selected.
    * @returns a Promise that resolves with the content of the selected JSON file.
    */
-  onFileSelected(event: Event) {
+  onFileSelected(event: Event): Promise<string> {
     return new Promise((resolve, reject) => {
       const fileInput = event.target as HTMLInputElement;
-      const selectedFile = fileInput?.files?.[0];
+      const file: File | null = fileInput.files?.[0] || null;
 
-      try {
-        this.validateFile(selectedFile);
-        if (selectedFile) this.readFileContent(selectedFile)
-          .then(resolve)
-          .catch(reject);
-      } catch (error) {
-        reject(error);
+      if (!file) {
+        console.log('No file selected');
+        reject('No file selected');
+        return;
       }
+
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        // 'result' contains the contents of the file as a data URL
+        const content: string | ArrayBuffer | null = event.target?.result;
+
+        if (typeof content === 'string') {
+          resolve(content);
+        } else {
+          reject('Failed to read file content');
+        }
+      };
+
+      // Read the file as text
+      reader.readAsText(file);
     });
   }
 
+  /**
+   * Getter method to retrieve the saved file content
+   */
+  getSavedFileContent(): string | null {
+    return this.savedFileContent;
+  }
 }

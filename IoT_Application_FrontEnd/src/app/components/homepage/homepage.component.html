@@ -7,10 +7,11 @@
   </div>
 
   <div class="open-create" id="open-create-text">
-    <label for="textInput" id="openInput" >Apri</label>
-    <input #jsonInput (change)="import($event)" accept=".json" class="inputJSON" hidden id="textInput" type="file">
+    <label for="textInput" id="openInput">Apri</label>
+    <input #jsonInput (change)="importFromButton($event)" accept=".json" class="inputJSON" hidden id="textInput"
+           type="file">
     o
-    <a routerLink="new" id="create">crea</a>
+    <a id="create" routerLink="new">crea</a>
     un nuovo diagramma BPMN per iniziare
   </div>
 
