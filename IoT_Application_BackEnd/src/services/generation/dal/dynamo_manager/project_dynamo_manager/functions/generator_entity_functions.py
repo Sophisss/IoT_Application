@@ -1,3 +1,4 @@
+from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.generator_entity_relations import generate_entity_relations
 from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.utility import get_table_configuration, get_utility_resources, generate_fields, generate_pk_sk_put, generate_pk_sk, generate_arguments_update, generate_pk_sk_update
 
 
@@ -9,7 +10,8 @@ def generate_entity_methods(entity: dict, json_data: dict) -> str:
     :return: The methods of the entity.
     """
     table_configuration = get_table_configuration(entity['table'], json_data)
-    return "".join(map(lambda api: __generate_entity_api_method(entity, api, table_configuration), entity['API']))
+    return ("".join(map(lambda api: __generate_entity_api_method(entity, api, table_configuration), entity['API'])) +
+            "".join(map(lambda link: generate_entity_relations(entity, link), json_data['links'])))
 
 
 def __generate_entity_api_method(entity: dict, api: dict, table_configuration: dict) -> str:

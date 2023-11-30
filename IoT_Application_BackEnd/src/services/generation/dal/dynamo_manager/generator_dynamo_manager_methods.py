@@ -7,15 +7,9 @@ def generate_methods() -> str:
 {__generate_delete_item_method()}
 {__generate_remove_associated_link_method()}
 {__generate_update_item_method()}
-{__generate_get_items_method()}
-{__generate_get_items_gsi_method()}
-{__generate_get_item_method()}
-{__generate_get_items_with_secondary_index_method()}
+{__generate_get_methods()}
 {__generate_remove_null_values_method()}
-{__generate_query_table_method()}
-{__generate_delete_method()}
-{__generate_create_update_expression_method()}
-{__generate_create_expression_attribute_values_method()}"""
+{__generate_static_methods()}"""
 
 
 def __generate_put_item_method() -> str:
@@ -53,8 +47,7 @@ def __generate_remove_associated_link_method() -> str:
         response = self.get_items(table_name, item_keys)
         check_response_item(response)
 
-        partition_key = list(item_keys.keys())[0]
-        sort_key = list(item_keys.keys())[1]
+        partition_key, sort_key = self.get_partition_sort_key(item_keys)
 
         if response is not None:
             for item in response['Items']:
@@ -88,6 +81,18 @@ def __generate_update_item_method() -> str:
     """
 
 
+def __generate_get_methods() -> str:
+    """
+    This function generates the functions used to get items from the database.
+    :return: The functions used to get items from the database.
+    """
+    return f"""{__generate_get_items_method()}
+{__generate_get_items_gsi_method()}
+{__generate_get_item_method()}
+{__generate_get_items_with_secondary_index_method()}
+    """
+
+
 def __generate_get_items_method() -> str:
     """
     This function generates the function used to get items from the database.
@@ -96,7 +101,7 @@ def __generate_get_items_method() -> str:
     return """    def get_items(self, table_name: str, item_keys: dict) -> Optional[dict]:
         table = self.dynamodb.Table(table_name)
 
-        partition_key = list(item_keys.keys())[0]
+        partition_key = self.get_partition_sort_key(item_keys)[0]
         key_condition_expression = Key(partition_key).eq(item_keys[partition_key])
         response = self.__query_table(table, key_condition_expression)
 
@@ -111,8 +116,7 @@ def __generate_get_items_gsi_method() -> str:
     """
     return """    def get_items_gsi(self, table_name: str, index_name: str, item_keys: dict) -> Optional[dict]:
         table = self.dynamodb.Table(table_name)
-        partition_key = list(item_keys.keys())[0]
-        sort_key = list(item_keys.keys())[1]
+        partition_key, sort_key = self.get_partition_sort_key(item_keys)
 
         key_condition_expression = Key(sort_key).eq(item_keys[partition_key])
         response = self.__query_table(table, key_condition_expression, index_name)
@@ -139,9 +143,7 @@ def __generate_get_items_with_secondary_index_method() -> str:
     """
     return """    def get_items_with_secondary_index(self, table_name: str, index_name: str, item_keys: dict) -> Optional[dict]:
         table = self.dynamodb.Table(table_name)
-
-        partition_key = list(item_keys.keys())[0]
-        sort_key = list(item_keys.keys())[1]
+        partition_key, sort_key = self.get_partition_sort_key(item_keys)
 
         key_condition_expression = Key(partition_key).eq(item_keys[partition_key]) & Key(sort_key).begins_with(
             item_keys[sort_key])
@@ -162,6 +164,19 @@ def __generate_remove_null_values_method() -> str:
             for key, value in dictionary.items()
             if value is not None
         }
+    """
+
+
+def __generate_static_methods() -> str:
+    """
+    This function generates the static methods of the DynamoDBManager class.
+    :return: The static methods of the DynamoDBManager class.
+    """
+    return f"""{__generate_query_table_method()}
+{__generate_delete_method()}
+{__generate_get_partition_sort_key_method()}
+{__generate_create_update_expression_method()}
+{__generate_create_expression_attribute_values_method()}
     """
 
 
@@ -190,6 +205,19 @@ def __generate_delete_method() -> str:
             Key=key,
             ReturnValues='ALL_OLD'
         )
+    """
+
+
+def __generate_get_partition_sort_key_method() -> str:
+    """
+    This function generates the function used to get the partition and sort keys from a dictionary.
+    :return: The function used to get the partition and sort keys from a dictionary.
+    """
+    return """    @staticmethod
+    def get_partition_sort_key(item_keys: dict) -> tuple:
+        partition_key = list(item_keys.keys())[0]
+        sort_key = list(item_keys.keys())[1]
+        return partition_key, sort_key
     """
 
 
