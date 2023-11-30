@@ -17,7 +17,10 @@ def __generate_header() -> str:
     :return: The header of the DynamoDBManager class.
     """
     return """import boto3
+from typing import Optional
 from boto3.dynamodb.conditions import Key
+from dal.response_manager.exception_class import IdAlreadyExistsError
+from dal.response_manager.response_manager import check_response_item, check_response_status
     """
 
 
