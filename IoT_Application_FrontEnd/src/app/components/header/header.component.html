@@ -1,7 +1,14 @@
+<dx-toolbar id="logo-header">
+    <dxi-item locateInMenu="never" location="before" widget="dxTextBox">
+        <div *dxTemplate id="title">
+            <div id="project-title"><b>IoT Application</b></div>
+        </div>
+    </dxi-item>
 
-  <mat-toolbar id="logo-header">
-    <span id="project-title">IoT Application</span>
-    <img alt="DevQ Logo" id="devq-simple-logo" src="assets/images/logos/logo.svg">
-  </mat-toolbar>
+    <dxi-item locateInMenu="never" location="center">
+        <div *dxTemplate>
+            <img alt="DevQ Logo" id="devq-simple-logo" src="assets/images/logos/logo.svg">
+        </div>
+    </dxi-item>
 
-
+</dx-toolbar>

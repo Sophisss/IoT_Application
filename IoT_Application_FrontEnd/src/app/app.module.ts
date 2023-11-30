@@ -21,7 +21,13 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatTableModule} from "@angular/material/table";
-import {DxButtonModule, DxDiagramModule, DxFileUploaderModule, DxPopupModule} from "devextreme-angular";
+import {
+    DxButtonModule,
+    DxDiagramModule,
+    DxFileUploaderModule,
+    DxPopupModule,
+    DxToolbarModule
+} from "devextreme-angular";
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
@@ -33,28 +39,29 @@ import {HttpClientModule} from "@angular/common/http";
     ContentComponent,
     DiagramComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatListModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatTableModule,
-    MatTooltipModule,
-    MaterialModule,
-    DxButtonModule,
-    DxDiagramModule,
-    DxFileUploaderModule,
-    HttpClientModule,
-    DxPopupModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatListModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatTableModule,
+        MatTooltipModule,
+        MaterialModule,
+        DxButtonModule,
+        DxDiagramModule,
+        DxFileUploaderModule,
+        HttpClientModule,
+        DxPopupModule,
+        DxToolbarModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

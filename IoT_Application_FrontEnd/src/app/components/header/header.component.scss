@@ -1,19 +1,22 @@
-mat-toolbar {
-  height: auto;
+#project-title {
+  font-size: 20px;
 }
 
-#project-title {
-  margin-left: 1%;
-  overflow: clip;
+#title {
+  margin-left: 20px;
+}
+
+#logo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+dx-toolbar {
+  height: 8%;
 }
 
 #devq-simple-logo {
-  display: inline-block;
-  height: 2.5em;
+  height: 40px;
   width: auto;
-  margin-left: auto;
-  margin-right: 50%;
 }
-
-
-
