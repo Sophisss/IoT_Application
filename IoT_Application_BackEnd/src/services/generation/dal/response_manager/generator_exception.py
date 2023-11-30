@@ -5,8 +5,8 @@ def generator_exception() -> str:
     """
     return f"""{__generate_id_already_exists_error()}
 {__generate_item_not_present_error()}
-{__generate_entities_not_present_error()}
 {__generate_internal_server_error()}
+{__generate_invalid_api_error()}
 """
 
 
@@ -31,22 +31,8 @@ def __generate_item_not_present_error() -> str:
     return """
 class ItemNotPresentError(Exception):
     def __init__(self):
-        self.message = 'Item not present'
-        self.type = "IdAlreadyExistsError"
-        super().__init__(self.message)
-    """
-
-
-def __generate_entities_not_present_error() -> str:
-    """
-    This function generates the EntitiesNotPresentError class.
-    :return: The EntitiesNotPresentError class.
-    """
-    return """
-class EntitiesNotPresentError(Exception):
-    def __init__(self, name_entity):
-        self.message = f' No entities with name {name_entity} '
-        self.type = 'ItemNotPresentError'
+        self.message = 'Item/s not present'
+        self.type = "ItemNotPresentError"
         super().__init__(self.message)
     """
 
@@ -63,3 +49,17 @@ class InternalServerError(Exception):
         self.type = 'InternalServerError'
         super().__init__(self.message)
         """
+
+
+def __generate_invalid_api_error() -> str:
+    """
+    This function generates the InvalidApiError class.
+    :return: The InvalidApiError class.
+    """
+    return """
+class InvalidApiError(Exception):
+    def __init__(self, api_name):
+        self.message = f"Invalid api {api_name}"
+        self.type = 'InvalidApiError'
+        super().__init__(self.message)
+    """
