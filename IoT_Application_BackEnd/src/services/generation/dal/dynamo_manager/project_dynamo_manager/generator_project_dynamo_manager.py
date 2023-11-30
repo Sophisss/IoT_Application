@@ -1,43 +1,67 @@
+from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.generator_entity_functions import \
+    generate_entity_methods
+from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.generator_link_functions import \
+    generate_link_methods
 from services.generation.utility_methods import generate_resource_name
 
 
-def generator_project_dynamo_manager(json: dict) -> str:
-    return f"""{__generate_header(json)}
-    {__generate_class(json)}
+def generator_project_dynamo_manager(json_data: dict) -> str:
+    """
+    This method generates a DynamoDB manager class for the project based on the provided JSON schema.
+    :param json_data: The JSON schema containing information.
+    :return: The generated DynamoDB manager class.
+    """
+    return f"""{__generate_header(json_data)}
+{__generate_class(json_data)}
     """
 
 
-def __generate_header(json: dict) -> str:
-    return f"""{__generate_header_entities(json)}
-{__generate_header_links(json)}
+def __generate_header(json_data: dict) -> str:
+    """
+    This method generates the header of the DynamoDB manager class.
+    :param json_data: The JSON schema containing information.
+    :return: The header of the DynamoDB manager class.
+    """
+    return f"""from dal.dynamo_manager.dynamo_manager import DynamoManager
+{__generate_header_entities_and_links(json_data['entities'] + json_data['links'])}
     """
 
 
-def __generate_header_entities(json: dict) -> str:
-    return "".join(map(lambda entity: __generate_header_entity(generate_resource_name(entity)), json['entities']))
+def __generate_header_entities_and_links(json_data: dict) -> str:
+    """
+    This method generates the header of the entities and links of the DynamoDB manager class.
+    :param json_data: The JSON schema containing information.
+    :return: The header of the entities and links of the DynamoDB manager class.
+    """
+    return "".join(map(lambda item: __create_header(generate_resource_name(item)), json_data))
 
 
-def __generate_header_entity(entity_name: str) -> str:
-    return f"""from models.{entity_name.lower()} import {entity_name}
+def __create_header(item_name: str) -> str:
+    """
+    This method generates the header of the entity or link of the DynamoDB manager class.
+    :param item_name: The name of the entity or link.
+    :return: The header of the entity or link of the DynamoDB manager class.
+    """
+    return f"""from model.{item_name.lower()} import {item_name}
+"""
+
+
+def __generate_class(json_data: dict) -> str:
+    """
+    This method generates the class of the DynamoDB manager class.
+    :param json_data: The JSON schema containing information.
+    :return: The class of the DynamoDB manager class.
+    """
+    return f"""class {json_data['projectName']}DynamoManager(DynamoManager):
+{generate_methods(json_data)}
     """
 
 
-def __generate_header_links(json: dict) -> str:
-    return "".join(map(lambda link: __generate_header_link(generate_resource_name(link)), json['links']))
-
-
-def __generate_header_link(link_name: str) -> str:
-    return f"""from models.{link_name.lower()} import {link_name}
+def generate_methods(json_data: dict) -> str:
     """
-
-
-def __generate_class(json: dict) -> str:
-    return f"""
-class ProjectDynamoManager(DynamoManager):
-    
-{__generate_methods(json)}
+    This method generates the methods of the DynamoDB manager class.
+    :param json_data: The JSON schema containing information.
+    :return: The methods of the DynamoDB manager class.
     """
-
-
-def __generate_methods(json: dict) -> str:
-    pass
+    return ("".join(map(lambda entity: generate_entity_methods(entity, json_data), json_data['entities'])) +
+            "".join(map(lambda link: generate_link_methods(link, json_data), json_data['links'])))
