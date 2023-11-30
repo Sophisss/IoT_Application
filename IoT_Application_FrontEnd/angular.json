@@ -30,7 +30,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "node_modules/devextreme/dist/css/dx.light.css",
+              "@angular/material/prebuilt-themes/deeppurple-amber.css",
+              "src/styles.scss",
+              "node_modules/devexpress-diagram/dist/dx-diagram.min.css"
             ],
             "scripts": []
           },
@@ -39,8 +42,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "800kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -93,6 +96,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.scss"
             ],
             "scripts": []
