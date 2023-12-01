@@ -21,8 +21,6 @@ def __generate_put_item_method() -> str:
         self.__validate_table_name(table_name)
         if not item or not isinstance(item, dict):
             raise Exception("item is mandatory and it must be a dictionary")
-        if self.get_item(table_name, item) is not None:
-            raise IdAlreadyExistsError()
 
         response = self.dynamodb.Table(table_name).put_item(Item=self.__remove_null_values(item))
         BaseAWSService.validate_aws_response(self, response, "put_item")
@@ -38,7 +36,6 @@ def __generate_delete_item_method() -> str:
     return """    def delete_item(self, table_name: str, item_keys: dict) -> dict:
         self.__validate_table_name(table_name)
         self.__validate_record_key(item_keys)
-        check_response_item(self.get_item(table_name, item_keys))
 
         response = self.__delete(self.dynamodb.Table(table_name), item_keys)
         BaseAWSService.validate_aws_response(self, response, "delete_item")
@@ -61,11 +58,9 @@ def __generate_remove_associated_link_method() -> str:
         partition_key, sort_key = self.get_partition_sort_key(item_keys)
 
         response = self.get_items(table_name, Key(partition_key).eq(item_keys[partition_key]))
-        check_response_item(response)
         self.remove_link(response, item_keys, table, partition_key=sort_key, sort_key=sort_key)
 
         response = self.get_items(table_name, Key(sort_key).eq(item_keys[partition_key]), index=index_name)
-        check_response_item(response)
         self.remove_link(response, item_keys, table, partition_key=partition_key, sort_key=sort_key)
     """
 
@@ -78,7 +73,6 @@ def __generate_update_item_method() -> str:
     return """    def update_item(self, table_name: str, item_keys: dict, arguments: dict) -> dict:
         self.__validate_table_name(table_name)
         self.__validate_record_key(item_keys)
-        check_response_item(self.get_item(table_name, item_keys))
 
         response = self.dynamodb.Table(table_name).update_item(
             Key=item_keys,
