@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
 import {ActivatedRoute} from "@angular/router";
 import {JsonDownloadService} from "../../services/json-download.service";
+import {SideDrawerService} from "../../services/side-drawer.service";
 
 @Component({
     selector: 'app-diagram',
@@ -12,10 +13,9 @@ export class DiagramComponent implements AfterViewInit {
     @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
     popupVisible = false;
-    sidebarToggle: boolean = false;
     private receivedData: any;
 
-    constructor(private route: ActivatedRoute, private jsonDownload: JsonDownloadService) {
+    constructor(private route: ActivatedRoute, private jsonDownload: JsonDownloadService, private drawerService: SideDrawerService) {
     }
 
     ngAfterViewInit() {
@@ -32,7 +32,7 @@ export class DiagramComponent implements AfterViewInit {
             this.exportToJson();
         }
         if (commandName === 'viewJson') {
-            this.showJson();
+            this.drawerService.toggleDrawer();
         }
     }
 
@@ -45,10 +45,6 @@ export class DiagramComponent implements AfterViewInit {
     showPopup(event: any) {
         this.popupVisible = true;
         console.log(event);
-    }
-
-    private showJson() {
-        this.sidebarToggle = !this.sidebarToggle;
     }
 
     private exportToJson() {

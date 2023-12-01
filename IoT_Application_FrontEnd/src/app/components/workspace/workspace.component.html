@@ -1,3 +1,16 @@
-<app-header></app-header>
+<div id="header">
+    <app-header></app-header>
+</div>
 
-<app-diagram></app-diagram>
+<div id="body">
+    <dx-drawer
+            [closeOnOutsideClick]=true
+            [opened]="getDrawerOpen()"
+            openedStateMode="shrink"
+            position="right"
+            revealMode="slide"
+            template="template">
+        <app-diagram></app-diagram>
+        <app-content *dxTemplate="let data of 'template'"></app-content>
+    </dx-drawer>
+</div>

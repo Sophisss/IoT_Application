@@ -24,21 +24,24 @@ import {MatTableModule} from "@angular/material/table";
 import {
     DxButtonModule,
     DxDiagramModule,
+    DxDrawerModule,
     DxFileUploaderModule,
+    DxListModule,
     DxPopupModule,
+    DxRadioGroupModule,
     DxToolbarModule
 } from "devextreme-angular";
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomepageComponent,
-    HeaderComponent,
-    WorkspaceComponent,
-    ContentComponent,
-    DiagramComponent
-  ],
+    declarations: [
+        AppComponent,
+        HomepageComponent,
+        HeaderComponent,
+        WorkspaceComponent,
+        ContentComponent,
+        DiagramComponent
+    ],
     imports: [
         BrowserModule,
         AppRoutingModule,
@@ -60,10 +63,13 @@ import {HttpClientModule} from "@angular/common/http";
         DxFileUploaderModule,
         HttpClientModule,
         DxPopupModule,
-        DxToolbarModule
+        DxToolbarModule,
+        DxDrawerModule,
+        DxRadioGroupModule,
+        DxListModule
     ],
-  providers: [],
-  bootstrap: [AppComponent]
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }
