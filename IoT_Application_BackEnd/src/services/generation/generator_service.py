@@ -14,8 +14,8 @@ from services.generation.deployment_guide.generator_deployment_guide import gene
 from services.generation.graphql_resources.generate_invoker import generator_invoker
 from services.generation.graphql_resources.schema.generate_schema import generate_graphql_schema
 from services.generation.requirements.generator_requirements import generate_requirements
-from services.generation.templates.api.generator_api_template import generate_api_template
 from services.generation.templates.cognito.generator_cognito_template import generate_cognito_template
+from services.generation.templates.generator_api_template import generate_api_template
 from services.generation.utility_methods import generate_resource_name
 
 

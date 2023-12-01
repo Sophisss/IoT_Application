@@ -69,8 +69,7 @@ def __generate_gsi(resource: dict) -> str:
     :param resource: the resource.
     :return: the DynamoDB table GSI if it exists or an empty string otherwise.
     """
-    return f"""
-      GlobalSecondaryIndexes: {__generate_gsi_resources(resource)}
+    return f"""      GlobalSecondaryIndexes: {__generate_gsi_resources(resource)}
       """ if resource.get('GSI', None) else ""
 
 

@@ -20,4 +20,8 @@ data class {generate_resource_name(item)}(
 
 
 def __generate_fields(fields: dict) -> str:
-    pass
+    return "".join(map(lambda field: __create_field(field), fields))
+
+
+def __create_field(field: dict) -> str:
+    return f"""@SerialName("{field['name']}") val {field['name']}: {field['type']}"""

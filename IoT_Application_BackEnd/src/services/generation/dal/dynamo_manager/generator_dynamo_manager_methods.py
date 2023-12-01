@@ -152,8 +152,7 @@ def __generate_remove_null_values_method() -> str:
             key: self.__remove_null_values(value) if isinstance(value, dict) else value
             for key, value in dictionary.items()
             if value is not None
-        }
-    """
+        }"""
 
 
 def __generate_static_methods() -> str:

@@ -1,8 +1,8 @@
-from services.generation.templates.graphql_api.generator_graphql_template import generate_graphql_template
+from services.generation.templates.generator_graphql_template import generate_graphql_template
+from services.generation.templates.generator_lambda_template import generate_lambda_template
+from services.generation.templates.generator_table_template import generate_table_template
 from services.generation.templates.header.generator_header_template import generate_header_template
-from services.generation.templates.lambda_template.generator_lambda_template import generate_lambda_template
-from services.generation.templates.outputs.graphql.generator_graphql_output import generate_graphql_outputs
-from services.generation.templates.table.generator_table_template import generate_table_template
+from services.generation.templates.outputs.generator_graphql_output import generate_graphql_outputs
 
 
 def generate_api_template(json: dict) -> str:

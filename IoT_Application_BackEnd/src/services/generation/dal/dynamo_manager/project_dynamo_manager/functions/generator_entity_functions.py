@@ -115,6 +115,6 @@ def __generate_get_entities_method(entity: dict, table_configuration: dict) -> s
     entity_name, entity_primary_key = get_utility_resources(entity)
     return f"""
     def get_all_{entity_name.lower()}(self) -> dict:
-        query = Key('{{table_configuration['sort_key']['name']}}').eq('{{table_configuration['parameters']['single_entity_storage_keyword']}}') & Key('{{table_configuration['partition_key']['name']}}').begins_with('{entity_name}')
+        query = Key('{table_configuration['sort_key']['name']}').eq('{table_configuration['parameters']['single_entity_storage_keyword']}') & Key('{table_configuration['partition_key']['name']}').begins_with('{entity_name}')
         return self.get_items('{entity['table']}', query, index='{table_configuration['GSI']['index_name']}')
     """
