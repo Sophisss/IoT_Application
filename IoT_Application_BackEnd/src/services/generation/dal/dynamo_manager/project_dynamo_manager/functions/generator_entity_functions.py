@@ -1,4 +1,3 @@
-from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.generator_entity_relations import generate_entity_relations
 from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.utility import get_table_configuration, get_utility_resources, generate_fields, generate_pk_sk_put, generate_pk_sk, generate_arguments_update, generate_pk_sk_update
 
 
@@ -116,8 +115,6 @@ def __generate_get_entities_method(entity: dict, table_configuration: dict) -> s
     entity_name, entity_primary_key = get_utility_resources(entity)
     return f"""
     def get_all_{entity_name.lower()}(self) -> dict:
-        return self.get_items_with_secondary_index('{entity['table']}', '{table_configuration['GSI']['index_name']}', {{
-            '{table_configuration['sort_key']['name']}': '{table_configuration['parameters']['single_entity_storage_keyword']}',
-            '{table_configuration['partition_key']['name']}': '{entity_name}'
-        }})
+        query = Key('{{table_configuration['sort_key']['name']}}').eq('{{table_configuration['parameters']['single_entity_storage_keyword']}}') & Key('{{table_configuration['partition_key']['name']}}').begins_with('{entity_name}')
+        return self.get_items('{entity['table']}', query, index='{table_configuration['GSI']['index_name']}')
     """

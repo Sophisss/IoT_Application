@@ -1,3 +1,4 @@
+from services.generation.dal.dynamo_manager.generator_base_aws_service import generate_base_aws_service
 from services.generation.dal.dynamo_manager.generator_dynamo_manager import generate_dbmanager
 from services.generation.dal.dynamo_manager.project_dynamo_manager.generator_project_dynamo_manager import generator_project_dynamo_manager
 from services.generation.dal.event.generator_event_class import generate_event_class
@@ -139,6 +140,7 @@ def __generate_dynamo_manager_resources(codes_generated: dict, json: dict):
     :param codes_generated: the code that will be generated.
     :param json: the json with the data.
     """
+    codes_generated['code_generated/src/dal/dynamo_manager/base_aws_service.py'] = generate_base_aws_service()
     codes_generated['code_generated/src/dal/dynamo_manager/dynamo_manager.py'] = generate_dbmanager()
     codes_generated['code_generated/src/dal/dynamo_manager/project_dynamo_manager.py'] = generator_project_dynamo_manager(json)
 

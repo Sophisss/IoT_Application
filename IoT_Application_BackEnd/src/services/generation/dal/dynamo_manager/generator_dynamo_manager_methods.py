@@ -18,10 +18,15 @@ def __generate_put_item_method() -> str:
     :return: The function used to put an item in the database.
     """
     return """    def put_item(self, table_name: str, item: dict) -> dict:
-        table = self.dynamodb.Table(table_name)
+        self.__validate_table_name(table_name)
+        if not item or not isinstance(item, dict):
+            raise Exception("item is mandatory and it must be a dictionary")
         if self.get_item(table_name, item) is not None:
             raise IdAlreadyExistsError()
-        return table.put_item(Item=self.__remove_null_values(item))
+
+        response = self.dynamodb.Table(table_name).put_item(Item=self.__remove_null_values(item))
+        BaseAWSService.validate_aws_response(self, response, "put_item")
+        return response
     """
 
 
@@ -31,9 +36,13 @@ def __generate_delete_item_method() -> str:
     :return: The function used to delete an item from the database.
     """
     return """    def delete_item(self, table_name: str, item_keys: dict) -> dict:
-        table = self.dynamodb.Table(table_name)
+        self.__validate_table_name(table_name)
+        self.__validate_record_key(item_keys)
         check_response_item(self.get_item(table_name, item_keys))
-        return self.__delete(table, item_keys)
+
+        response = self.__delete(self.dynamodb.Table(table_name), item_keys)
+        BaseAWSService.validate_aws_response(self, response, "delete_item")
+        return response
     """
 
 
@@ -43,24 +52,21 @@ def __generate_remove_associated_link_method() -> str:
     :return: The function used to remove an associated link from the database.
     """
     return """    def remove_associated_link(self, table_name: str, index_name: str, item_keys: dict):
-        table = self.dynamodb.Table(table_name)
-        response = self.get_items(table_name, item_keys)
-        check_response_item(response)
+        self.__validate_table_name(table_name)
+        self.__validate_record_key(item_keys)
+        if not index_name or not isinstance(index_name, str):
+            raise Exception("index_name is mandatory and it must be a string")
 
+        table = self.dynamodb.Table(table_name)
         partition_key, sort_key = self.get_partition_sort_key(item_keys)
 
-        if response is not None:
-            for item in response['Items']:
-                if item[sort_key] != f'{item_keys[sort_key]}':
-                    check_response_status(self.__delete(table, item))
-
-        response = self.get_items_gsi(table_name, index_name, item_keys)
+        response = self.get_items(table_name, Key(partition_key).eq(item_keys[partition_key]))
         check_response_item(response)
+        self.remove_link(response, item_keys, table, partition_key=sort_key, sort_key=sort_key)
 
-        if response is not None:
-            for item in response['Items']:
-                if item[partition_key] != f'{item_keys[sort_key]}':
-                    check_response_status(self.__delete(table, item))
+        response = self.get_items(table_name, Key(sort_key).eq(item_keys[partition_key]), index=index_name)
+        check_response_item(response)
+        self.remove_link(response, item_keys, table, partition_key=partition_key, sort_key=sort_key)
     """
 
 
@@ -70,14 +76,18 @@ def __generate_update_item_method() -> str:
     :return: The function used to update an item in the database.
     """
     return """    def update_item(self, table_name: str, item_keys: dict, arguments: dict) -> dict:
-        table = self.dynamodb.Table(table_name)
+        self.__validate_table_name(table_name)
+        self.__validate_record_key(item_keys)
         check_response_item(self.get_item(table_name, item_keys))
-        return table.update_item(
+
+        response = self.dynamodb.Table(table_name).update_item(
             Key=item_keys,
             UpdateExpression=self.__create_update_expression(arguments),
             ExpressionAttributeValues=self.__create_expression_attribute_values(arguments),
-            ReturnValues='ALL_NEW'
+            ReturnValues='UPDATED_NEW'
         )
+        BaseAWSService.validate_aws_response(self, response, "update_item")
+        return response
     """
 
 
@@ -86,41 +96,8 @@ def __generate_get_methods() -> str:
     This function generates the functions used to get items from the database.
     :return: The functions used to get items from the database.
     """
-    return f"""{__generate_get_items_method()}
-{__generate_get_items_gsi_method()}
-{__generate_get_item_method()}
-{__generate_get_items_with_secondary_index_method()}
-    """
-
-
-def __generate_get_items_method() -> str:
-    """
-    This function generates the function used to get items from the database.
-    :return: The function used to get items from the database.
-    """
-    return """    def get_items(self, table_name: str, item_keys: dict) -> Optional[dict]:
-        table = self.dynamodb.Table(table_name)
-
-        partition_key = self.get_partition_sort_key(item_keys)[0]
-        key_condition_expression = Key(partition_key).eq(item_keys[partition_key])
-        response = self.__query_table(table, key_condition_expression)
-
-        return response if response['Items'] else None
-    """
-
-
-def __generate_get_items_gsi_method() -> str:
-    """
-    This function generates the function used to get items with a global secondary index from the database.
-    :return: The function used to get items with a global secondary index from the database.
-    """
-    return """    def get_items_gsi(self, table_name: str, index_name: str, item_keys: dict) -> Optional[dict]:
-        table = self.dynamodb.Table(table_name)
-        partition_key, sort_key = self.get_partition_sort_key(item_keys)
-
-        key_condition_expression = Key(sort_key).eq(item_keys[partition_key])
-        response = self.__query_table(table, key_condition_expression, index_name)
-        return response if response['Items'] else None
+    return f"""{__generate_get_item_method()}
+{__generate_get_items_method()}
     """
 
 
@@ -129,27 +106,45 @@ def __generate_get_item_method() -> str:
     This function generates the function used to get an item from the database.
     :return: The function used to get an item from the database.
     """
-    return """    def get_item(self, table_name: str, key: dict) -> Optional[dict]:
-        table = self.dynamodb.Table(table_name)
-        response = table.get_item(Key=key)
-        return response if 'Item' in response else None
+    return """    def get_item(self, table_name: str, key: dict):
+        self.__validate_table_name(table_name)
+        self.__validate_record_key(key)
+        response = self.dynamodb.Table(table_name).get_item(Key=key)
+        return response if response.get(self.ITEM) else None
     """
 
 
-def __generate_get_items_with_secondary_index_method() -> str:
+def __generate_get_items_method() -> str:
     """
-    This function generates the function used to get items with a secondary index from the database.
-    :return: The function used to get items with a secondary index from the database.
+    This function generates the function used to get items from the database.
+    :return: The function used to get items from the database.
     """
-    return """    def get_items_with_secondary_index(self, table_name: str, index_name: str, item_keys: dict) -> Optional[dict]:
-        table = self.dynamodb.Table(table_name)
-        partition_key, sort_key = self.get_partition_sort_key(item_keys)
+    return """    def get_items(self, table_name: str, query, index=None):
+        self.__validate_table_name(table_name)
+        if not query:
+            raise Exception("query is mandatory")
+        if index is not None and not isinstance(index, str):
+            raise Exception("index must be a string")
 
-        key_condition_expression = Key(partition_key).eq(item_keys[partition_key]) & Key(sort_key).begins_with(
-            item_keys[sort_key])
+        if index:
+            response = self.dynamodb.Table(table_name).query(KeyConditionExpression=query, IndexName=index)
+        else:
+            response = self.dynamodb.Table(table_name).query(KeyConditionExpression=query)
 
-        response = self.__query_table(table, key_condition_expression, index_name)
-        return response if response['Items'] else None
+        return response if response.get(self.ITEMS) else None
+    """
+
+
+def __generate_remove_link_method() -> str:
+    """
+    This function generates the function used to remove a link from the database.
+    :return: The function used to remove a link from the database.
+    """
+    return """    def remove_link(self, response: Optional, item_keys: dict, table, partition_key: str, sort_key: str):
+        if response is not None:
+            for item in response['Items']:
+                if item[partition_key] != f'{item_keys[sort_key]}':
+                    check_response_status(self.__delete(table, item))
     """
 
 
@@ -172,7 +167,8 @@ def __generate_static_methods() -> str:
     This function generates the static methods of the DynamoDBManager class.
     :return: The static methods of the DynamoDBManager class.
     """
-    return f"""{__generate_query_table_method()}
+    return f"""{__generate_validate_record_key_method()}
+{__generate_validate_table_name_method()}
 {__generate_delete_method()}
 {__generate_get_partition_sort_key_method()}
 {__generate_create_update_expression_method()}
@@ -180,17 +176,27 @@ def __generate_static_methods() -> str:
     """
 
 
-def __generate_query_table_method() -> str:
+def __generate_validate_record_key_method() -> str:
     """
-    This function generates the function used to query a table.
-    :return: The function used to query a table.
+    This function generates the function used to validate a record key.
+    :return: The function used to validate a record key.
     """
     return """    @staticmethod
-    def __query_table(table, key_conditions, index_name: Optional[str] = None) -> dict:
-        if index_name:
-            return table.query(IndexName=index_name, KeyConditionExpression=key_conditions)
-        else:
-            return table.query(KeyConditionExpression=key_conditions)
+    def __validate_record_key(key: dict):
+        if not key or not isinstance(key, dict):
+            raise Exception("key is mandatory and it must be a dictionary")
+    """
+
+
+def __generate_validate_table_name_method() -> str:
+    """
+    This function generates the function used to validate a table name.
+    :return: The function used to validate a table name.
+    """
+    return """    @staticmethod
+    def __validate_table_name(table_name: str):
+        if not table_name or not isinstance(table_name, str):
+            raise Exception("table_name is mandatory and it must be a string")
     """
 
 

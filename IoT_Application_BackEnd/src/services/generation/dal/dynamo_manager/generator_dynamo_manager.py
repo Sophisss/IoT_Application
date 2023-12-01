@@ -19,6 +19,7 @@ def __generate_header() -> str:
     return """import boto3
 from typing import Optional
 from boto3.dynamodb.conditions import Key
+from dal.dynamo_manager.base_aws_service import BaseAWSService
 from dal.response_manager.exception_class import IdAlreadyExistsError
 from dal.response_manager.response_manager import check_response_item, check_response_status
     """
@@ -30,8 +31,12 @@ def __generate_class() -> str:
     :return: The code for the DynamoDBManager class.
     """
     return f"""
-class DynamoManager:
-    dynamodb = boto3.resource('dynamodb')
+class BaseDynamoManager(BaseAWSService):
+    dynamodb = None
+
+    def __init__(self):
+        BaseAWSService.__init__(self, "AWS DynamoDB")
+        self.dynamodb = boto3.resource('dynamodb')
 
 {generate_methods()}"""
 

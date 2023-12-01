@@ -1,7 +1,5 @@
-from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.generator_entity_functions import \
-    generate_entity_methods
-from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.generator_link_functions import \
-    generate_link_methods
+from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.generator_entity_functions import generate_entity_methods
+from services.generation.dal.dynamo_manager.project_dynamo_manager.functions.generator_link_functions import generate_link_methods
 from services.generation.utility_methods import generate_resource_name
 
 
@@ -22,7 +20,8 @@ def __generate_header(json_data: dict) -> str:
     :param json_data: The JSON schema containing information.
     :return: The header of the DynamoDB manager class.
     """
-    return f"""from dal.dynamo_manager.dynamo_manager import DynamoManager
+    return f"""from boto3.dynamodb.conditions import Key
+from dal.dynamo_manager.dynamo_manager import BaseDynamoManager
 {__generate_header_entities_and_links(json_data['entities'] + json_data['links'])}
     """
 
