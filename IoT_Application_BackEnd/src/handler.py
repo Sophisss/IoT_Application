@@ -1,23 +1,26 @@
 import json
+import os
 from services.generation.generator_service import generate_code
-from services.storage.storage_service import Storage
+from services.response import http_status_code
+from services.storage.storage_service import StorageService
 
 
-def download_zip_code(event, context):
+def download_code(event, context):
     """
-    Lambda function to generate a code, put it into an S3 bucket, create a zip file,
-    and return a URL pointing to the zip file.
+    Lambda function to generate a code, put it into an S3 bucket, and return the URL of the generated code.
     :param event: input event that triggers the Lambda function.
     :param context: context information about the execution environment.
-    :return: a response containing the URL of the generated zip file.
+    :return: a response containing the URL of the generated code.
     """
-    storage_instance = Storage()
-    json_data = json.loads(event['body'])
-    code_generated = generate_code(json_data)
-    response = storage_instance.put_object_to_s3(code_generated)
+    storage_service = StorageService(os.environ['BUCKET_NAME'])
+    code_generated = generate_code(json.loads(event['body']))
+    try:
+        storage_service.create_zip_and_upload_code(code_generated)
+        url = storage_service.create_url()
 
-    if response['statusCode'] == 200:
-        storage_instance.create_zip(code_generated.keys())
-        return storage_instance.create_url()
+        return http_status_code.ok(json_body=json.dumps({
+            "message": "Object uploaded successfully",
+            "url": url}))
 
-    return response
+    except Exception as e:
+        return http_status_code.internal_server_error(json_body=json.dumps({"error": str(e)}))
