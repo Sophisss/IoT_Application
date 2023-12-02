@@ -1,6 +1,7 @@
 <dx-diagram (onCustomCommand)="onCustomCommand($event)"
             (onItemDblClick)="showPopup($event)"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
+            (onSelectionChanged)="selectionChangedHandler($event)"
             [simpleView]="true"
             autoZoomMode="fitContent"
             id="diagram">

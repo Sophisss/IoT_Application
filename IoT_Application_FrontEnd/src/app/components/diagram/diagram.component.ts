@@ -15,6 +15,8 @@ export class DiagramComponent implements AfterViewInit {
   popupVisible = false;
   private receivedData: any;
 
+  selectedItems: any[];
+
   constructor(private route: ActivatedRoute, private jsonDownload: JsonDownloadService, private drawerService: SideDrawerService) {
   }
 
@@ -34,6 +36,11 @@ export class DiagramComponent implements AfterViewInit {
     if (commandName === 'viewJson') {
       this.drawerService.toggleDrawer();
     }
+  }
+
+  selectionChangedHandler(e: any) {
+    this.selectedItems = e.items.filter((item: any) => item.itemType === 'shape');
+    console.log(this.selectedItems);
   }
 
   requestEditOperationHandler(e: any) {
