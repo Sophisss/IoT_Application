@@ -29,7 +29,7 @@ import {
     DxListModule,
     DxPopupModule,
     DxRadioGroupModule,
-    DxToolbarModule
+    DxToolbarModule, DxTooltipModule
 } from "devextreme-angular";
 import {HttpClientModule} from "@angular/common/http";
 
@@ -66,7 +66,8 @@ import {HttpClientModule} from "@angular/common/http";
         DxToolbarModule,
         DxDrawerModule,
         DxRadioGroupModule,
-        DxListModule
+        DxListModule,
+        DxTooltipModule
     ],
     providers: [],
     bootstrap: [AppComponent]
