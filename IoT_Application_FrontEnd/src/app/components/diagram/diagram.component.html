@@ -1,3 +1,4 @@
+<!-- The diagram: simple view keeps an entire grid instead of only the part you're using. -->
 <dx-diagram (onCustomCommand)="onCustomCommand($event)"
             (onItemDblClick)="showPopup($event)"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
@@ -6,10 +7,33 @@
             autoZoomMode="fitContent"
             id="diagram">
 
+    <!-- The menu you get after left-clicking on an object or the diagram. -->
     <dxo-context-menu [enabled]="true"></dxo-context-menu>
+
+    <!-- The little bar with the undo/redo button that gets covered so it's disabled and its buttons moved. -->
     <dxo-history-toolbar [visible]="false"></dxo-history-toolbar>
 
+    <!-- The list of entities/tables coming from an uploaded file. -->
+    <dxo-nodes
+            [dataSource]="flowNodesDataSource"
+            customDataExpr="name"
+            keyExpr="id"
+            textExpr="text"
+            typeExpr="type"
+    >
+        <dxo-auto-layout type="layered"></dxo-auto-layout>
+    </dxo-nodes>
 
+    <!-- The list of links coming from an uploaded file. -->
+    <dxo-edges
+            [dataSource]="flowEdgesDataSource"
+            fromExpr="fromId"
+            keyExpr="id"
+            textExpr="text"
+            toExpr="toId"
+    ></dxo-edges>
+
+    <!-- The toolbar on the left-bottom corner. -->
     <dxo-view-toolbar [visible]="true">
         <dxi-command name="toolbox"></dxi-command>
         <dxi-command name="separator"></dxi-command>
@@ -26,12 +50,15 @@
         <dxi-command icon="tips" name='generateCode' text="Generate code from Diagram"></dxi-command>
     </dxo-view-toolbar>
 
+    <!-- A button for modifying the page layout, the text font and dimensions. -->
     <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
 
+    <!-- The list of possible shapes to drag on the diagram, with a custom group of objects. -->
     <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false" role="banner">
         <dxi-group [expanded]="true" category="iot-devq" displayMode="texts" title="IoT"></dxi-group>
     </dxo-toolbox>
 
+    <!-- The entity custom shape. -->
     <dxi-custom-shape
             [allowEditText]="true"
             [defaultHeight]="1"
@@ -43,6 +70,7 @@
             type="entity">
     </dxi-custom-shape>
 
+    <!-- The table custom shape. -->
     <dxi-custom-shape
             [allowEditText]="true"
             [defaultHeight]="1"
@@ -56,12 +84,13 @@
 
 </dx-diagram>
 
+<!-- The popup window that appears on double click to modify the fields of entities and tables. -->
 <dx-popup
         [(visible)]="popupVisible"
         [height]="320"
         [hideOnOutsideClick]="true"
         [showCloseButton]="true"
         [width]="360"
-        title="Entity properties">
+        title="Object properties">
     <app-content></app-content>
 </dx-popup>

@@ -1,30 +1,34 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
-import {ActivatedRoute} from "@angular/router";
 import {JsonDownloadService} from "../../services/json-download.service";
 import {SideDrawerService} from "../../services/side-drawer.service";
+import ArrayStore from "devextreme/data/array_store";
+import {NodesEdgesService} from "../../services/nodes-edges.service";
 
 @Component({
   selector: 'app-diagram',
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss']
 })
-export class DiagramComponent implements AfterViewInit {
+export class DiagramComponent {
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   popupVisible = false;
-  private receivedData: any;
-
   selectedItems: any[];
+  flowNodesDataSource: ArrayStore;
+  flowEdgesDataSource: ArrayStore;
 
-  constructor(private route: ActivatedRoute, private jsonDownload: JsonDownloadService, private drawerService: SideDrawerService) {
-  }
+  constructor(private jsonDownload: JsonDownloadService, private drawerService: SideDrawerService,
+              private nodesEdgesService: NodesEdgesService) {
 
-  ngAfterViewInit() {
-    this.route.queryParams.subscribe(params => {
-      this.receivedData = params['file'];
+    this.flowNodesDataSource = new ArrayStore({
+      key: 'id',
+      data: this.nodesEdgesService.getFlowNodes(),
     });
-    this.diagram.instance.import(this.receivedData, false)
+    this.flowEdgesDataSource = new ArrayStore({
+      key: 'id',
+      data: this.nodesEdgesService.getFlowEdges(),
+    });
   }
 
   onCustomCommand(e: any) {

@@ -1,0 +1,22 @@
+{
+  "entities": [
+    {
+      "id": 107,
+      "text": "scemo",
+      "type": "terminator"
+    },
+    {
+      "id": 108,
+      "text": "Analyze the issue",
+      "type": "process"
+    }
+  ],
+  "links": [
+    {
+      "fromId": 107,
+      "id": 116,
+      "text": "aaaaa",
+      "toId": 108
+    }
+  ]
+}

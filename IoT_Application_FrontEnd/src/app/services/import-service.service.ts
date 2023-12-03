@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {FlowEdge, FlowNode, NodesEdgesService} from "./nodes-edges.service";
 
 @Injectable({
   providedIn: 'root'
@@ -8,15 +9,32 @@ import {Injectable} from '@angular/core';
  */
 export class ImportServiceService {
 
-  private savedFileContent: string | null = null;
+  constructor(private nodesEdgesService: NodesEdgesService) {
+  }
 
-  async manageImportedFile(event: Event): Promise<void> {
-    try {
-      const fileContent = await this.onFileSelected(event);
-      // Save the file content for later use
-      this.savedFileContent = fileContent;
-    } catch (error) {
-      console.error('Error:', error);
+  parseToRightFormat(jsonContent: any) {
+    // Parse the JSON content and add the nodes and edges to the array in the service
+    // Call a function to convert the JSON content into a list with the right format
+
+    // Push the list into the node/edge service
+
+    for (const entity of jsonContent.entities) {
+      let node: FlowNode = {
+        id: entity.id,
+        text: entity.text,
+        type: entity.type
+      }
+      this.nodesEdgesService.getFlowNodes().push(node);
+    }
+
+    for (const link of jsonContent.links) {
+      let edge: FlowEdge = {
+        id: link.id,
+        fromId: link.fromId,
+        toId: link.toId,
+        text: link.text
+      }
+      this.nodesEdgesService.getFlowEdges().push(edge);
     }
   }
 
@@ -25,39 +43,39 @@ export class ImportServiceService {
    * @param event event triggered when a file is selected.
    * @returns a Promise that resolves with the content of the selected JSON file.
    */
-  onFileSelected(event: Event): Promise<string> {
+  onFileSelected(event: Event) {
     return new Promise((resolve, reject) => {
       const fileInput = event.target as HTMLInputElement;
-      const file: File | null = fileInput.files?.[0] || null;
+      const selectedFile = fileInput?.files?.[0];
 
-      if (!file) {
-        console.log('No file selected');
-        reject('No file selected');
-        return;
+      try {
+        if (selectedFile) this.readFileContent(selectedFile)
+          .then(resolve)
+          .catch(reject);
+      } catch (error) {
+        reject(error);
       }
-
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        // 'result' contains the contents of the file as a data URL
-        const content: string | ArrayBuffer | null = event.target?.result;
-
-        if (typeof content === 'string') {
-          resolve(content);
-        } else {
-          reject('Failed to read file content');
-        }
-      };
-
-      // Read the file as text
-      reader.readAsText(file);
     });
   }
 
   /**
-   * Getter method to retrieve the saved file content
+   * This method reads the content of a selected file and resolves with its JSON data.
+   * @param selectedFile file to read as a Blob.
+   * @returns a Promise that resolves with the JSON data from the file.
    */
-  getSavedFileContent(): string | null {
-    return this.savedFileContent;
+  readFileContent(selectedFile: Blob) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+
+      fileReader.onload = (e) => {
+        if (e.target) {
+          const jsonContent = JSON.parse(e.target.result as string);
+          resolve(jsonContent);
+        } else {
+          reject('Errore nell\'evento di caricamento del file.');
+        }
+      };
+      fileReader.readAsText(selectedFile);
+    });
   }
 }
