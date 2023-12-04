@@ -24,7 +24,7 @@ def generate_case_many_to_one_or_one_to_one_first_entity(link, name_partition_ke
     second_entity = link['second_entity']
     first_entity = link['first_entity']
     return f"""
-                 if '{second_entity}' in event_parse.projection:
+                if '{second_entity}' in event_parse.projection:
                     res = project_manager.get_{second_entity.lower()}_for_{first_entity.lower()}(event_parse.arguments['{link['primary_key'][0]}'])
                     response['{second_entity}'] = change_name_keys(res['Item'], ('{link['primary_key'][1]}', '{name_partition_key_field}'))              """
 
