@@ -55,7 +55,7 @@ def generator_case_get_all(entity_name, api_name):
                 response = project_manager.get_all_{entity_name.lower()}
                 check_response_item(response)
                 check_response_status(response)
-                response = response['Items']              
+                response = [item['Item'] for item in response]                
 """
 
 
