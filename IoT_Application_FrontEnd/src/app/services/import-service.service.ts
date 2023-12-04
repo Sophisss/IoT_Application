@@ -27,7 +27,7 @@ export class ImportServiceService {
       this.nodesEdgesService.getEntities().push(nodeEntity);
     }
 
-    for (const table of jsonContent.entities) {
+    for (const table of jsonContent.awsConfig.dynamo.tables) {
       let nodeTable: Table;
       //assegna campi di table
       this.nodesEdgesService.getTables().push(nodeTable);

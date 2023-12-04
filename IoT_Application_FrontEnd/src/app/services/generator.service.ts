@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Configuration} from 'src/app/models/configuration.model';
 import {Entity} from 'src/app/models/entity.model';
 import {Link} from 'src/app/models/link.model';
 import {JsonDownloadService} from './json-download.service';
 import {Table} from 'src/app/models/table.model';
+import {ConfigurationService} from "./configuration.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +14,11 @@ import {Table} from 'src/app/models/table.model';
 export class GeneratorService {
 
   /**
-   * Variable that represent a new configuration.
-   */
-  configuration: Configuration = new Configuration;
-
-  /**
    * Constructor for this Component.
    * @param jsonDownloadService service to export JSON.
+   * @param confService service to model the .json file.
    */
-  constructor(private jsonDownloadService: JsonDownloadService) {
+  constructor(private jsonDownloadService: JsonDownloadService, private confService: ConfigurationService) {
   }
 
   /**
@@ -33,7 +29,7 @@ export class GeneratorService {
    */
   saveEntity(entity_id: number, entityName: string) {
     const entity = new Entity(entity_id, entityName);
-    this.configuration.entities.push(entity)
+    this.confService.getEntities().push(entity)
     this.saveConfiguration()
   }
 
@@ -51,16 +47,16 @@ export class GeneratorService {
     let secondEntity = undefined;
 
     if (second_class === 'Entity') {
-      firstEntity = this.configuration.entities.find(entity => entity.id === first_id);
-      secondEntity = this.configuration.entities.find(entity => entity.id === second_id);
+      firstEntity = this.confService.getEntities().find(entity => entity.id === first_id);
+      secondEntity = this.confService.getEntities().find(entity => entity.id === second_id);
 
       if (firstEntity && secondEntity) {
         const link = new Link(firstEntity, secondEntity);
-        this.configuration.links.push(link);
+        this.confService.getLinks().push(link);
       }
     } else if (second_class === 'Table') {
-      firstEntity = this.configuration.entities.find(entity => entity.id === first_id);
-      secondEntity = this.configuration.tables.find(table => table.id === second_id);
+      firstEntity = this.confService.getEntities().find(entity => entity.id === first_id);
+      secondEntity = this.confService.getTables().find(table => table.id === second_id);
 
       if (firstEntity && secondEntity) {
         firstEntity.setTable(secondEntity.name);
@@ -77,7 +73,7 @@ export class GeneratorService {
    */
   saveTable(table_id: number, name: string) {
     const table = new Table(table_id, name)
-    this.configuration.tables.push(table)
+    this.confService.getTables().push(table)
     this.saveConfiguration()
   }
 
@@ -123,7 +119,7 @@ export class GeneratorService {
    * @returns json of the entities.
    */
   createEntityJson() {
-    return this.configuration.entities.map(entity => ({
+    return this.confService.getEntities().map(entity => ({
       name: entity.name,
       table: entity.table,
       entity_id: entity.id,
@@ -137,7 +133,7 @@ export class GeneratorService {
    * @returns json of the links.
    */
   createLinkJson() {
-    return this.configuration.links.map(link => ({
+    return this.confService.getLinks().map(link => ({
       first_entity: link.first_entity.name,
       second_entity: link.second_entity.name,
       fields: this.createFields(link)
@@ -149,7 +145,7 @@ export class GeneratorService {
    * @returns json of the tables.
    */
   createTableJson() {
-    return this.configuration.tables.map(table => ({
+    return this.confService.getTables().map(table => ({
       tableName: table.name,
       table_id: table.id,
       partitionKey: table.partition_key,
@@ -178,11 +174,11 @@ export class GeneratorService {
    */
   removeObject(id: number, class_name: string) {
     if (class_name == 'Entity') {
-      const elementIndex = this.configuration.entities.findIndex(entity => entity.id === id);
-      this.configuration.entities.splice(elementIndex, 1)
+      const elementIndex = this.confService.getEntities().findIndex(entity => entity.id === id);
+      this.confService.getEntities().splice(elementIndex, 1)
     } else if (class_name == 'Table') {
-      const elementIndex = this.configuration.tables.findIndex(table => table.id === id);
-      this.configuration.tables.splice(elementIndex, 1)
+      const elementIndex = this.confService.getTables().findIndex(table => table.id === id);
+      this.confService.getTables().splice(elementIndex, 1)
     }
     this.saveConfiguration()
   }
@@ -197,26 +193,15 @@ export class GeneratorService {
    */
   removeLinkConfiguration(first_entity: number, second_entity: number, node_class: string) {
     if (node_class === 'Table') {
-      const entity = this.configuration.entities.find(entity => entity.id === first_entity);
+      const entity = this.confService.getEntities().find(entity => entity.id === first_entity);
       if (entity) {
         entity.resetTable();
       }
     } else {
-      const elementIndex = this.configuration.links.findIndex(link =>
+      const elementIndex = this.confService.getLinks().findIndex(link =>
         link.first_entity.id === first_entity && link.second_entity.id === second_entity);
-      this.configuration.links.splice(elementIndex, 1)
+      this.confService.getLinks().splice(elementIndex, 1)
     }
-    this.saveConfiguration();
-  }
-
-  /**
-   * This method deletes all configuration.
-   *
-   */
-  clear() {
-    this.configuration.entities = []
-    this.configuration.links = []
-    this.configuration.tables = []
     this.saveConfiguration();
   }
 
