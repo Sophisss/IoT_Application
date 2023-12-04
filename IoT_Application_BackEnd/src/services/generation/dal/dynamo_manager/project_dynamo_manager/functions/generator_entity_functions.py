@@ -123,5 +123,5 @@ def __generate_get_entities_method(entity: dict, table_configuration: dict) -> s
     def get_all_{entity_name.lower()}(self) -> list:
         query = Key('{table_configuration['sort_key']['name']}').eq('{table_configuration['parameters']['single_entity_storage_keyword']}') & Key('{table_configuration['partition_key']['name']}').begins_with('{entity_name}')
         items = self.get_items('{entity['table']}', query, index='{table_configuration['GSI']['index_name']}')
-        return list(map(lambda item: self.get_{entity_name.lower()}(item['{table_configuration['partition_key']['name']}'].split('{table_configuration['parameters']['single_entity_storage_keyword']}')[1]), items))
+        return list(map(lambda item: self.get_{entity_name.lower()}(item['{table_configuration['partition_key']['name']}'].split('{table_configuration['parameters']['id_separator']}')[1]), items))
     """

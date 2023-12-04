@@ -12,9 +12,11 @@ def __generate_change_name_keys_method() -> str:
     This function generate the change_name_keys method.
     :return: the change_name_keys method.
     """
-    return """def change_name_keys(dict_to_change: dict, *args) -> dict:
-    for key in args:
-        dict_to_change[key[0]] = dict_to_change.pop(key[1])
+    return """def change_name_keys(dict_to_change, *args):
+    if isinstance(dict_to_change, list):
+        return [change_name_keys(item, *args) for item in dict_to_change]
+
+    dict_to_change.update((key[0], dict_to_change.pop(key[1])) for key in args if key[1] in dict_to_change)
     return dict_to_change
     """
 

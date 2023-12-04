@@ -47,7 +47,7 @@ def generator_case_delete(entity_name, api_name, partition_key):
 def generator_case_get_all(entity_name, api_name):
     return f"""            
             case '{api_name}':
-                response = project_manager.get_all_{entity_name.lower()}
+                response = project_manager.get_all_{entity_name.lower()}()
                 check_response_item(response)
                 check_response_status(response)
                 response = [item['Item'] for item in response]                
@@ -79,4 +79,4 @@ def generator_case_get(entity_name, api_name, partition_key, links_associated_fi
 def default_case():
     return f"""
             case _:
-                raise InvalidAPIError(event_parse.field)"""
+                raise InvalidApiError(event_parse.field)"""

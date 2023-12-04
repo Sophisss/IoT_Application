@@ -17,15 +17,14 @@ def generate_case_link(link):
 def generator_case_put(name, api_name, name_):
     return f"""
             case '{api_name}':
-                response = project_manager.create_link_{name.lower()}({name_}(**event_parse.arguments['{name_}']))
+                response = project_manager.create_{name.lower()}({name_}(**event_parse.arguments['{name_}']))
 """
 
 
 def generator_case_delete(name, api_name, partition_key, sort_key):
     return f"""
             case '{api_name}':
-                response = project_manager.delete_link_{name.lower()}(event_parse.arguments['{partition_key}'],
-                                                                       event_parse.arguments['{sort_key}'])
+                response = project_manager.delete_{name.lower()}(event_parse.arguments['{partition_key}'], event_parse.arguments['{sort_key}'])
                 response = response['Attributes']
 """
 
@@ -33,8 +32,7 @@ def generator_case_delete(name, api_name, partition_key, sort_key):
 def generator_case_get(name, api_name, partition_key, sort_key):
     return f"""
             case '{api_name}':
-                response = project_manager.get_{name.lower()}(event_parse.arguments['{partition_key}'],
-                                                               event_parse.arguments['{sort_key}'])
+                response = project_manager.get_{name.lower()}(event_parse.arguments['{partition_key}'], event_parse.arguments['{sort_key}'])
                 check_response_item(response)
                 response = response['Item']
 """
@@ -43,7 +41,7 @@ def generator_case_get(name, api_name, partition_key, sort_key):
 def generator_case_post(name, api_name):
     return f"""
             case '{api_name}':
-                response = project_manager.update_link_{name.lower()}(event_parse.arguments)
+                response = project_manager.update_{name.lower()}(event_parse.arguments)
                 response = response['Attributes']
 """
 
@@ -51,4 +49,4 @@ def generator_case_post(name, api_name):
 def default_case():
     return f"""
             case _:
-                raise InvalidAPIError(event_parse.field)"""
+                raise InvalidApiError(event_parse.field)"""
