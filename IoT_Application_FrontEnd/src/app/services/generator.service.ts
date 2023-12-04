@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Configuration} from 'src/app/Models/configuration.model';
-import {Entity} from 'src/app/Models/entity.model';
-import {Link} from 'src/app/Models/link.model';
+import {Configuration} from 'src/app/models/configuration.model';
+import {Entity} from 'src/app/models/entity.model';
+import {Link} from 'src/app/models/link.model';
 import {JsonDownloadService} from './json-download.service';
-import {Table} from 'src/app/Models/table.model';
+import {Table} from 'src/app/models/table.model';
 
 @Injectable({
   providedIn: 'root'

@@ -3,7 +3,7 @@ import {DxDiagramComponent} from "devextreme-angular";
 import {JsonDownloadService} from "../../services/json-download.service";
 import {SideDrawerService} from "../../services/side-drawer.service";
 import ArrayStore from "devextreme/data/array_store";
-import {NodesEdgesService} from "../../services/nodes-edges.service";
+import {ConfigurationService} from "../../services/configuration.service";
 
 @Component({
   selector: 'app-diagram',
@@ -19,15 +19,15 @@ export class DiagramComponent implements OnDestroy {
   flowEdgesDataSource: ArrayStore;
 
   constructor(private jsonDownload: JsonDownloadService, private drawerService: SideDrawerService,
-              private nodesEdgesService: NodesEdgesService) {
+              private nodesEdgesService: ConfigurationService) {
 
     this.flowNodesDataSource = new ArrayStore({
       key: 'id',
-      data: this.nodesEdgesService.getFlowNodes(),
+      data: this.nodesEdgesService.getEntities(),
     });
     this.flowEdgesDataSource = new ArrayStore({
       key: 'id',
-      data: this.nodesEdgesService.getFlowEdges(),
+      data: this.nodesEdgesService.getLinks(),
     });
   }
 
@@ -59,7 +59,7 @@ export class DiagramComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.nodesEdgesService.clearNodesAndEdges();
+    this.nodesEdgesService.clearLists();
     this.diagram.instance.dispose();
   }
 

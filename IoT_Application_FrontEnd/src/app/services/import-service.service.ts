@@ -1,5 +1,8 @@
 import {Injectable} from '@angular/core';
-import {FlowEdge, FlowNode, NodesEdgesService} from "./nodes-edges.service";
+import {ConfigurationService} from "./configuration.service";
+import {Entity} from "../models/entity.model";
+import {Link} from "../models/link.model";
+import {Table} from "../models/table.model";
 
 @Injectable({
   providedIn: 'root'
@@ -9,32 +12,31 @@ import {FlowEdge, FlowNode, NodesEdgesService} from "./nodes-edges.service";
  */
 export class ImportServiceService {
 
-  constructor(private nodesEdgesService: NodesEdgesService) {
+  constructor(private nodesEdgesService: ConfigurationService) {
   }
 
+  /**
+   * Takes all the elements from the imported .json file and pushes them into the correspondent list.
+   * @param jsonContent the content of the .json file
+   */
+  //TODO
   parseToRightFormat(jsonContent: any) {
-    // Parse the JSON content and add the nodes and edges to the array in the service
-    // Call a function to convert the JSON content into a list with the right format
-
-    // Push the list into the node/edge service
-
     for (const entity of jsonContent.entities) {
-      let node: FlowNode = {
-        id: entity.id,
-        text: entity.text,
-        type: entity.type
-      }
-      this.nodesEdgesService.getFlowNodes().push(node);
+      let nodeEntity: Entity;
+      //assegna campi di entity
+      this.nodesEdgesService.getEntities().push(nodeEntity);
+    }
+
+    for (const table of jsonContent.entities) {
+      let nodeTable: Table;
+      //assegna campi di table
+      this.nodesEdgesService.getTables().push(nodeTable);
     }
 
     for (const link of jsonContent.links) {
-      let edge: FlowEdge = {
-        id: link.id,
-        fromId: link.fromId,
-        toId: link.toId,
-        text: link.text
-      }
-      this.nodesEdgesService.getFlowEdges().push(edge);
+      let edge: Link;
+      //assegna campi di link
+      this.nodesEdgesService.getLinks().push(edge);
     }
   }
 
