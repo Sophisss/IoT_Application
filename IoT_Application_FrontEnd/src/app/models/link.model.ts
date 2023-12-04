@@ -9,7 +9,7 @@ export class Link {
 
   first_entity: Entity;
 
-  second_entity: Entity
+  second_entity: Entity;
 
   fields: Field[] = []
 

@@ -7,25 +7,11 @@ import {Field} from "./field.model";
  */
 export class Entity {
 
-  id: Number;
+  id: number;
 
-  name: String;
+  name: string;
 
-  table: String | undefined;
+  table: string | undefined;
 
   fields: Field[] = [];
-
-  constructor(id: Number, entity_name: String) {
-    this.name = entity_name
-    this.id = id
-  }
-
-  setTable(table_name: String): void {
-    this.table = table_name;
-  }
-
-
-  resetTable() {
-    this.table = undefined
-  }
 }

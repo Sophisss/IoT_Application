@@ -8,34 +8,34 @@
  */
 export class Field {
 
-  name: String
-  type: String
+  name: string
+  type: string
   required: Boolean
-  minLength: Number | undefined
-  maxLength: Number | undefined
-  minimum: Number | undefined
-  maximum: Number | undefined
-  allowed_values: String[] = []
+  minLength: number | undefined
+  maxLength: number | undefined
+  minimum: number | undefined
+  maximum: number | undefined
+  allowed_values: string[] = []
 
-  constructor(name: String, type: String, required: Boolean) {
+  constructor(name: string, type: string, required: Boolean) {
     this.name = name
     this.type = type
     this.required = required
   }
 
-  setMinLength(minLenght: Number): void {
+  setMinLength(minLenght: number): void {
     this.minLength = minLenght;
   }
 
-  setMaxLength(maxLength: Number): void {
+  setMaxLength(maxLength: number): void {
     this.maxLength = maxLength;
   }
 
-  setMinimum(minimum: Number): void {
+  setMinimum(minimum: number): void {
     this.minimum = minimum;
   }
 
-  setMaximum(maximum: Number): void {
+  setMaximum(maximum: number): void {
     this.maximum = maximum;
   }
 }
