@@ -7,7 +7,6 @@ def generate_case_entity(entity, links, name_partition_key_table):
     partition_key = entity['primary_key'][0]
     link_associated_first_entity, link_associated_second_entity = get_links_associated(entity, links)
 
-
     api_mapping = {
         'PUT': lambda api: generator_case_put(entity_name, api['name']),
         'DELETE': lambda api: generator_case_delete(entity_name, api['name'], partition_key),

@@ -6,8 +6,7 @@ def generate_entity_relation(entity, links, table_configuration):
     sr_key = table_configuration['sort_key']['name']
     gsi_index = table_configuration['GSI']['index_name']
     separator = table_configuration['parameters']['id_separator']
-    link_associated_first_entity, link_associated_second_entity = get_links_associated(
-        lambda link: link['first_entity'] == entity['name'], links)
+    link_associated_first_entity, link_associated_second_entity = get_links_associated(entity, links)
     return f"""
 {generate_entity_relation_case_first_entity(entity, link_associated_first_entity, pr_key, sr_key, gsi_index, separator)}
 {generate_entity_relation_case_second_entity(entity, link_associated_second_entity, pr_key, sr_key, gsi_index, separator)}
