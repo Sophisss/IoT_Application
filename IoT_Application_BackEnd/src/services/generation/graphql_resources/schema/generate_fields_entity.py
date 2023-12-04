@@ -19,9 +19,9 @@ def generate_field_link(name_entity: str, link: dict) -> str:
         ('one-to-many', True): '{name}:[{name_type}]\n',
         ('many-to-one', True): '{name}:{name_type}\n',
         ('one-to-many', False): '{name}:{name_type}\n',
-        ('many-to-one', False): '[{name}]:[{name_type}]\n',
-        ('many-to-many', True): '[{name}]:[{name_type}]\n',
-        ('many-to-many', False): '[{name}]:[{name_type}]\n',
+        ('many-to-one', False): '{name}:[{name_type}]\n',
+        ('many-to-many', True): '{name}:[{name_type}]\n',
+        ('many-to-many', False): '{name}:[{name_type}]\n',
         ('one-to-one', True): '{name}:{name_type}\n',
         ('one-to-one', False): '{name}:{name_type}\n',
     }
