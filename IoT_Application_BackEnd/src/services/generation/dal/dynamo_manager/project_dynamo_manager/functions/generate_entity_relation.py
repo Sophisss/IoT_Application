@@ -1,4 +1,3 @@
-# PASSATA entity, links, table_configuration
 from services.generation.dal.lambda_functions.generate_case_entity import get_links_associated
 
 
@@ -37,43 +36,34 @@ def generate_entity_relation_case_second_entity(entity, link_associated_second_e
         link_associated_second_entity)
 
 
-def generate_relation_one_to_many_or_one_to_one_second_entity(entity, link, pr_key, sr_key, gsi_index,separator):
-    return f"""
-    def get_{link['first_entity'].lower()}_for_{entity['name'].lower()}(self,{link['primary_key'][1]} ) -> dict:
+def generate_relation_one_to_many_or_one_to_one_second_entity(entity, link, pr_key, sr_key, gsi_index, separator):
+    return f"""    def get_{link['first_entity'].lower()}_for_{entity['name'].lower()}(self,{link['primary_key'][1]} ) -> dict:
         query = Key('{sr_key}').eq(f'{entity['name']}:{{{link['primary_key'][1]}}}') & Key('{pr_key}').begins_with('{link['first_entity']}')
         response = self.get_items('{entity['table']}', query, index='{gsi_index}')
-        return self.get_{link['first_entity'].lower()}(response['Items'][0]['{pr_key}'].split('{separator}')[1])
+        return self.get_{link['first_entity'].lower()}(response[0]['{pr_key}'].split('{separator}')[1])
 """
 
 
-def generate_relation_many_to_one_or_many_to_many_second_entity(entity, link, pr_key, sr_key, gsi_index):
-    return f"""
-    def get_all_{link['first_entity'].lower()}_for_{entity['name'].lower()}(self, {link['primary_key'][1]}):
+def generate_relation_many_to_one_or_many_to_many_second_entity(entity, link, pr_key, sr_key, gsi_index, separator):
+    return f"""    def get_all_{link['first_entity'].lower()}_for_{entity['name'].lower()}(self, {link['primary_key'][1]}) -> list:
         query = Key('{sr_key}').eq(f'{entity['name']}:{{{link['primary_key'][1]}}}') & Key('{pr_key}').begins_with('{link['first_entity']}')
-        response = self.get_items('{entity['table']}', query, index='{gsi_index}
-        return list(map(lambda {link['first_entity'].lower()}: self.get_{link['first_entity'].lower()}({link['first_entity'].lower()}['{pr_key}'].split(':')[1]), response))
+        response = self.get_items('{entity['table']}', query, index='{gsi_index}')
+        return list(map(lambda {link['first_entity'].lower()}: self.get_{link['first_entity'].lower()}({link['first_entity'].lower()}['{pr_key}'].split('{separator}')[1]), response))
 """
 
 
-def generate_relation_one_to_many_or_many_to_many_first_entity(entity, link, pr_key, sr_key, gsi_index):
-    return f"""
-    def get_all_{link['second_entity'].lower()}_for_{entity['name'].lower()}(self, {link['primary_key'][0]}):
+def generate_relation_one_to_many_or_many_to_many_first_entity(entity, link, pr_key, sr_key, gsi_index, separator):
+    return f"""    def get_all_{link['second_entity'].lower()}_for_{entity['name'].lower()}(self, {link['primary_key'][0]}) -> list:
         query = Key('{pr_key}').eq(f'{entity['name']}:{{{link['primary_key'][0]}}}') & Key('{sr_key}').begins_with('{link['second_entity']}')
         response = self.get_items('{entity['table']}', query)
-        return list(map(lambda {link['second_entity'].lower()}: self.get_{link['second_entity'].lower()}({link['second_entity'].lower()}['{sr_key}'].split(':')[1]), response))
+        return list(map(lambda {link['second_entity'].lower()}: self.get_{link['second_entity'].lower()}({link['second_entity'].lower()}['{sr_key}'].split('{separator}')[1]), response))
 """
 
 
-def generate_relation_many_to_one_or_one_to_one_first_entity(entity, link, pr_key, sr_key, gsi_index):
-    return f"""
-    def get_{link['second_entity'].lower()}_for_{entity['name'].lower()}(self, {link['primary_key'][0]}):
+def generate_relation_many_to_one_or_one_to_one_first_entity(entity, link, pr_key, sr_key, gsi_index, separator):
+    return f"""    def get_{link['second_entity'].lower()}_for_{entity['name'].lower()}(self, {link['primary_key'][0]}) -> dict:
         query = Key('{pr_key}').eq(f'{entity['name']}:{{{link['primary_key'][0]}}}') & Key('{sr_key}').begins_with('{link['second_entity']}')
         response = self.get_items('{entity['table']}', query)
-        return self.get_{link['second_entity'].lower()}(response['Items'][0]['{sr_key}'].split(':')[1])
+        return self.get_{link['second_entity'].lower()}(response[0]['{sr_key}'].split('{separator}')[1])
 """
 
-# def generate_query_response(entity, second_entity, table_configuration):
-#     return f"""
-#     query = Key('PK').eq(f'{entity['name']}:{{{entity['primary_key'][0]}}}') & Key('SK').begins_with('{link['second_entity']}')
-#     response = self.get_items('IoT1', query)
-# """
