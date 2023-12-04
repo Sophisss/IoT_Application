@@ -45,10 +45,10 @@ def __generate_create_method(entity: dict, table_configuration: dict) -> str:
     entity_name, entity_primary_key = get_utility_resources(entity)
     return f"""
     def create_{entity_name.lower()}(self, {entity_name.lower()}: {entity_name}) -> dict:
-        return self.put_item('{entity['table']}', {{
-            {generate_pk_sk_put(entity_primary_key, table_configuration, entity_name)},
+        return self.put_item('{entity['table']}', remove_null_values({{
+            {generate_pk_sk_put(entity_primary_key, table_configuration, entity_name)},   
 {generate_fields(entity, entity_name)}
-        }})
+        }}))
     """
 
 
@@ -114,7 +114,8 @@ def __generate_get_entities_method(entity: dict, table_configuration: dict) -> s
     """
     entity_name, entity_primary_key = get_utility_resources(entity)
     return f"""
-    def get_all_{entity_name.lower()}(self) -> dict:
+    def get_all_{entity_name.lower()}(self) -> list:
         query = Key('{table_configuration['sort_key']['name']}').eq('{table_configuration['parameters']['single_entity_storage_keyword']}') & Key('{table_configuration['partition_key']['name']}').begins_with('{entity_name}')
-        return self.get_items('{entity['table']}', query, index='{table_configuration['GSI']['index_name']}')
+        items = self.get_items('{entity['table']}', query, index='{table_configuration['GSI']['index_name']}')
+        return list(map(lambda item: self.get_{entity_name.lower()}(item['{table_configuration['partition_key']['name']}'].split('{table_configuration['parameters']['single_entity_storage_keyword']}')[1]), items))
     """

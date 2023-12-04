@@ -8,7 +8,7 @@ def generate_methods() -> str:
 {__generate_remove_associated_link_method()}
 {__generate_update_item_method()}
 {__generate_get_methods()}
-{__generate_remove_null_values_method()}
+{__generate_remove_link_method()}
 {__generate_static_methods()}"""
 
 
@@ -22,7 +22,8 @@ def __generate_put_item_method() -> str:
         if not item or not isinstance(item, dict):
             raise Exception("item is mandatory and it must be a dictionary")
 
-        response = self.dynamodb.Table(table_name).put_item(Item=self.__remove_null_values(item))
+        table = self.dynamodb.Table(table_name)
+        response = table.put_item(Item=item)
         BaseAWSService.validate_aws_response(self, response, "put_item")
         return response
     """
@@ -36,8 +37,8 @@ def __generate_delete_item_method() -> str:
     return """    def delete_item(self, table_name: str, item_keys: dict) -> dict:
         self.__validate_table_name(table_name)
         self.__validate_record_key(item_keys)
-
-        response = self.__delete(self.dynamodb.Table(table_name), item_keys)
+        table = self.dynamodb.Table(table_name)
+        response = self.__delete(table, item_keys)
         BaseAWSService.validate_aws_response(self, response, "delete_item")
         return response
     """
@@ -73,12 +74,14 @@ def __generate_update_item_method() -> str:
     return """    def update_item(self, table_name: str, item_keys: dict, arguments: dict) -> dict:
         self.__validate_table_name(table_name)
         self.__validate_record_key(item_keys)
+        if not arguments or not isinstance(arguments, dict):
+            raise Exception("arguments is mandatory and it must be a dictionary")
 
         response = self.dynamodb.Table(table_name).update_item(
             Key=item_keys,
             UpdateExpression=self.__create_update_expression(arguments),
             ExpressionAttributeValues=self.__create_expression_attribute_values(arguments),
-            ReturnValues='UPDATED_NEW'
+            ReturnValues='ALL_NEW'
         )
         BaseAWSService.validate_aws_response(self, response, "update_item")
         return response
@@ -91,8 +94,7 @@ def __generate_get_methods() -> str:
     :return: The functions used to get items from the database.
     """
     return f"""{__generate_get_item_method()}
-{__generate_get_items_method()}
-    """
+{__generate_get_items_method()}"""
 
 
 def __generate_get_item_method() -> str:
@@ -113,7 +115,7 @@ def __generate_get_items_method() -> str:
     This function generates the function used to get items from the database.
     :return: The function used to get items from the database.
     """
-    return """    def get_items(self, table_name: str, query, index=None):
+    return """    def get_items(self, table_name: str, query, index=None) -> list:
         self.__validate_table_name(table_name)
         if not query:
             raise Exception("query is mandatory")
@@ -125,7 +127,8 @@ def __generate_get_items_method() -> str:
         else:
             response = self.dynamodb.Table(table_name).query(KeyConditionExpression=query)
 
-        return response if response.get(self.ITEMS) else None
+        table_rows = response.get(self.ITEMS)
+        return list(map(lambda row: self.parse_function(row), table_rows))
     """
 
 
@@ -134,25 +137,12 @@ def __generate_remove_link_method() -> str:
     This function generates the function used to remove a link from the database.
     :return: The function used to remove a link from the database.
     """
-    return """    def remove_link(self, response: Optional, item_keys: dict, table, partition_key: str, sort_key: str):
+    return """    def remove_link(self, response, item_keys: dict, table, partition_key: str, sort_key: str):
         if response is not None:
-            for item in response['Items']:
+            for item in response:
                 if item[partition_key] != f'{item_keys[sort_key]}':
                     check_response_status(self.__delete(table, item))
     """
-
-
-def __generate_remove_null_values_method() -> str:
-    """
-    This function generates the function used to remove null values from a dictionary.
-    :return: The function used to remove null values from a dictionary.
-    """
-    return """    def __remove_null_values(self, dictionary: dict) -> dict:
-        return {
-            key: self.__remove_null_values(value) if isinstance(value, dict) else value
-            for key, value in dictionary.items()
-            if value is not None
-        }"""
 
 
 def __generate_static_methods() -> str:
@@ -160,12 +150,22 @@ def __generate_static_methods() -> str:
     This function generates the static methods of the DynamoDBManager class.
     :return: The static methods of the DynamoDBManager class.
     """
-    return f"""{__generate_validate_record_key_method()}
+    return f"""{__generate_parse_function_method()}
+{__generate_validate_record_key_method()}
 {__generate_validate_table_name_method()}
 {__generate_delete_method()}
 {__generate_get_partition_sort_key_method()}
 {__generate_create_update_expression_method()}
 {__generate_create_expression_attribute_values_method()}
+    """
+
+
+def __generate_parse_function_method() -> str:
+    return """    @staticmethod
+    def parse_function(row):
+        partition_key = row.get('PK')
+        sort_key = row.get('SK')
+        return {'PK': partition_key, 'SK': sort_key}
     """
 
 

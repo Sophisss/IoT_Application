@@ -22,6 +22,7 @@ def __generate_header(json_data: dict) -> str:
     """
     return f"""from boto3.dynamodb.conditions import Key
 from dal.dynamo_manager.dynamo_manager import BaseDynamoManager
+from dal.utility import remove_null_values
 {__generate_header_entities_and_links(json_data['entities'] + json_data['links'])}
     """
 
@@ -51,7 +52,7 @@ def __generate_class(json_data: dict) -> str:
     :param json_data: The JSON schema containing information.
     :return: The class of the DynamoDB manager class.
     """
-    return f"""class {json_data['projectName']}DynamoManager(DynamoManager):
+    return f"""class {json_data['projectName']}DynamoManager(BaseDynamoManager):
 {generate_methods(json_data)}
     """
 
