@@ -18,8 +18,8 @@ def generate_parameters_entity(entity, api):
     )
 
 
-def generate_parameters_link(link, api, type_partion_key, type_sort_key):
-    fields_primary_key = f"""{link['primary_key'][0]}: {type_mapping.get(type_partion_key)}!
+def generate_parameters_link(link, api, type_partition_key, type_sort_key):
+    fields_primary_key = f"""{link['primary_key'][0]}: {type_mapping.get(type_partition_key)}!
    {link['primary_key'][1]}: {type_mapping.get(type_sort_key)}!
    """
     return (

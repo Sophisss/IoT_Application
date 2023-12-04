@@ -1,66 +1,54 @@
 def generate_case_link(link):
-    name = f"{link['first_entity']}{link['second_entity']}"
+    name = f"{link['first_entity']}_{link['second_entity']}"
+    name_ = f"{link['first_entity']}{link['second_entity']}"
     partition_key = link['primary_key'][0]
     sort_key = link['primary_key'][1]
 
     api_mapping = {
-        'PUT': lambda api: generator_case_put(name, api['name']),
+        'PUT': lambda api: generator_case_put(name, api['name'], name_),
         'DELETE': lambda api: generator_case_delete(name, api['name'], partition_key, sort_key),
         'GET': lambda api: generator_case_get(name, api['name'], partition_key, sort_key),
-        'POST': lambda api: generator_case_post(name, api['name'], partition_key, sort_key),
+        'POST': lambda api: generator_case_post(name, api['name']),
     }
 
     return ''.join([api_mapping[api['type']](api) for api in link['API']]) + default_case()
 
 
-def generator_case_put(name, api_name):
+def generator_case_put(name, api_name, name_):
     return f"""
             case '{api_name}':
-                response = dynamodb_manager.create_link_{name.lower()}({name}(**event_parse.arguments['{name}']))
-                if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-                    response = f"Link created"
-    """
+                response = project_manager.create_link_{name.lower()}({name_}(**event_parse.arguments['{name_}']))
+"""
 
 
 def generator_case_delete(name, api_name, partition_key, sort_key):
     return f"""
             case '{api_name}':
-                response = dynamodb_manager.delete_link_{name.lower()}(event_parse.arguments['{partition_key}']
+                response = project_manager.delete_link_{name.lower()}(event_parse.arguments['{partition_key}'],
                                                                        event_parse.arguments['{sort_key}'])
-                if not response:
-                    raise ItemNotPresentError('{name}')
-                response['{partition_key}'] = response.pop(dynamodb_manager.get_configuration().get_pk_table())
-                resposne['{sort_key}'] = response.pop(dynamodb_managerget_configuration().get_sk_table())
-    """
+                response = response['Attributes']
+"""
 
 
 def generator_case_get(name, api_name, partition_key, sort_key):
     return f"""
             case '{api_name}':
-                {partition_key} = dynamodb_manager.create_id('{name}',event_parse.arguments['{partition_key}'])
-                {sort_key} = dynamodb_manager.create_id('{name}',event_parse.arguments['{sort_key}'])
-                response = dynamodb_manager.get_item({partition_key}, {sort_key})
-                response['{partition_key}'] = response.pop(dynamodb_manager.get_configuration().get_pk_table())
-                response['{sort_key}'] = response.pop(dynamodb_managerget_configuration().get_sk_table())
-               
+                response = project_manager.get_{name.lower()}(event_parse.arguments['{partition_key}'],
+                                                               event_parse.arguments['{sort_key}'])
+                check_response_item(response)
+                response = response['Item']
 """
 
 
-def generator_case_post(name, api_name, partition_key, sort_key):
+def generator_case_post(name, api_name):
     return f"""
             case '{api_name}':
-                response = dynamodb_manager.update_link_{name.lower()}(event_parse.arguments)
-                if not response:
-                    raise ItemNotPresentError('{name}')
-                else:
-                    response['{partition_key}'] = response.pop(dynamodb_manager.get_configuration().get_pk_table())
-                    response['{sort_key}'] = response.pop(dynamodb_managerget_configuration().get_sk_table())
+                response = project_manager.update_link_{name.lower()}(event_parse.arguments)
+                response = response['Attributes']
 """
 
 
 def default_case():
-      return f"""
+    return f"""
             case _:
                 raise InvalidAPIError(event_parse.field)"""
-
-

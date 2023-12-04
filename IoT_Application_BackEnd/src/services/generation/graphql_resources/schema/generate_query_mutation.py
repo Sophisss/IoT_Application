@@ -14,8 +14,11 @@ def generate_queries_mutations(entities, links):
 def generate_queries_mutations_entity(entity):
     return (
         ''.join(map(lambda
-                        api: f"""\n  {api['name']}(\n   {generate_parameters_entity(entity, api)}\n  ): {f'[{entity["name"]}]' if api['type'] == 'GET_ALL' else entity['name']}\n""",
-                    filter(lambda api: api['type'] in ['GET', 'GET_ALL'], entity['API']))),
+                        api: f"""\n  {api['name']}(\n   {generate_parameters_entity(entity, api)}\n  ): {entity["name"]}\n""",
+                    filter(lambda api: api['type'] in ['GET'], entity['API']))) +
+        ''.join(map(lambda
+                        api: f"""\n  {api['name']}: {f'[{entity["name"]}]'}\n""",
+                    filter(lambda api: api['type'] in ['GET_ALL'], entity['API']))),
         ''.join(map(lambda
                         api: f"\n  {api['name']}(\n   {generate_parameters_entity(entity, api)}\n  ): {'String' if api['type'] == 'PUT' else entity['name']}\n",
                     filter(lambda api: api['type'] in ['POST', 'DELETE', 'PUT'], entity['API'])))
@@ -26,9 +29,8 @@ def generate_queries_mutations_link(link, entities):
     type_partition_key, type_sort_key = search_types_primary_key_field(entities, link)
     return (
         ''.join(map(lambda
-                        api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}): {f'[{link["first_entity"]}{link["second_entity"]}]'
-        if api['type'] == 'GET_ALL' else f'{link["first_entity"]}{link["second_entity"]}'}\n""",
-                    filter(lambda api: api['type'] in ['GET', 'GET_ALL'], link['API']))),
+                        api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}): {f'{link["first_entity"]}{link["second_entity"]}'}\n""",
+                    filter(lambda api: api['type'] in ['GET'], link['API']))),
         ''.join(map(lambda
                         api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}\n  ): {'String'
         if api['type'] == 'PUT' else f'{link["first_entity"]}{link["second_entity"]}'}\n""",
