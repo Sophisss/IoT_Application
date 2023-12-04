@@ -33,7 +33,7 @@ def __generate_table_properties(resource: dict) -> str:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      {__generate_gsi(resource)}"""
+{__generate_gsi(resource)}"""
 
 
 def __generate_table_attributes(resource: dict) -> str:

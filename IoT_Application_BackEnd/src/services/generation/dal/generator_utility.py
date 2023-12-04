@@ -15,7 +15,8 @@ def __generate_change_name_keys_method() -> str:
     return """def change_name_keys(dict_to_change: dict, *args) -> dict:
     for key in args:
         dict_to_change[key[0]] = dict_to_change.pop(key[1])
-    return dict_to_change"""
+    return dict_to_change
+    """
 
 
 def __generate_remove_null_values_method() -> str:
