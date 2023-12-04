@@ -175,4 +175,5 @@ def __generate_lambdas_for_links(codes_generated: dict, links: dict, json: dict)
     :param json: the json with the data.
     """
     for link in links:
-        codes_generated[f'code_generated/src/lambda_{link["first_entity"].lower()}_{link["second_entity"].lower()}.py'] = generate_lambda_link(link, json)
+        link_name = generate_resource_name(link)
+        codes_generated[f'code_generated/src/lambda_{link_name.lower()}.py'] = generate_lambda_link(link, json)

@@ -44,11 +44,11 @@ def __generate_create_method(link: dict, table_configuration: dict) -> str:
     first_entity, second_entity = get_entity_name(link)
     method_name = f"{first_entity.lower()}_{second_entity.lower()}"
     return f"""
-    def create_{method_name}(self, link: BuildingDevice) -> dict:
-        return self.put_item('{link['table']}', {{
+    def create_{method_name}(self, link: {link_name}) -> dict:
+        return self.put_item('IoT', remove_null_values({{
             {generate_pk_sk_put(link_primary_key, table_configuration, first_entity, second_entity)},
 {generate_fields(link, 'link')}
-        }})
+        }}))
     """
 
 
