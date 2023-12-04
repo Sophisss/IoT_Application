@@ -14,4 +14,6 @@ export class Entity {
   table: string | undefined;
 
   fields: Field[] = [];
+
+  type: string;
 }

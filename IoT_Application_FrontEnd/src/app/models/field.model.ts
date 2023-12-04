@@ -16,26 +16,4 @@ export class Field {
   minimum: number | undefined
   maximum: number | undefined
   allowed_values: string[] = []
-
-  constructor(name: string, type: string, required: Boolean) {
-    this.name = name
-    this.type = type
-    this.required = required
-  }
-
-  setMinLength(minLenght: number): void {
-    this.minLength = minLenght;
-  }
-
-  setMaxLength(maxLength: number): void {
-    this.maxLength = maxLength;
-  }
-
-  setMinimum(minimum: number): void {
-    this.minimum = minimum;
-  }
-
-  setMaximum(maximum: number): void {
-    this.maximum = maximum;
-  }
 }

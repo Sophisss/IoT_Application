@@ -13,12 +13,12 @@
     <!-- The little bar with the undo/redo button that gets covered so it's disabled and its buttons moved. -->
     <dxo-history-toolbar [visible]="false"></dxo-history-toolbar>
 
-    <!-- The list of entities/tables coming from an uploaded file. -->
+    <!-- The list of entities coming from an uploaded file.
+         There can only be one set of nodes, so all the items need to be stored in the same data source. -->
     <dxo-nodes
-            [dataSource]="flowNodesDataSource"
-            customDataExpr="name"
-            keyExpr="id"
-            textExpr="text"
+            [dataSource]="flowEntitiesDataSource"
+            keyExpr="name"
+            textExpr="name"
             typeExpr="type"
     >
         <dxo-auto-layout type="layered"></dxo-auto-layout>
@@ -26,11 +26,11 @@
 
     <!-- The list of links coming from an uploaded file. -->
     <dxo-edges
-            [dataSource]="flowEdgesDataSource"
-            fromExpr="fromId"
+            [dataSource]="flowLinksDataSource"
+            fromExpr="first_entity"
             keyExpr="id"
-            textExpr="text"
-            toExpr="toId"
+            textExpr="name"
+            toExpr="second_entity"
     ></dxo-edges>
 
     <!-- The toolbar on the left-bottom corner. -->
@@ -65,7 +65,6 @@
             [defaultWidth]="1"
             baseType="ellipse"
             category="iot-devq"
-            defaultText="Entity"
             title="Entity"
             type="entity">
     </dxi-custom-shape>

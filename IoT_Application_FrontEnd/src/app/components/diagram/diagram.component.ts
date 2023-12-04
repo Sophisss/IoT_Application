@@ -15,17 +15,24 @@ export class DiagramComponent implements OnDestroy {
 
   popupVisible = false;
   selectedItems: any[];
-  flowNodesDataSource: ArrayStore;
-  flowEdgesDataSource: ArrayStore;
+  //TODO unire entities e tables in un'unica lista
+  //https://js.devexpress.com/Angular/Demos/WidgetsGallery/Demo/Diagram/AdvancedDataBinding/MaterialBlueLight/
+  flowEntitiesDataSource: ArrayStore;
+  flowTablesDataSource: ArrayStore;
+  flowLinksDataSource: ArrayStore;
 
   constructor(private jsonDownload: JsonDownloadService, private drawerService: SideDrawerService,
               private nodesEdgesService: ConfigurationService) {
 
-    this.flowNodesDataSource = new ArrayStore({
+    this.flowEntitiesDataSource = new ArrayStore({
       key: 'id',
       data: this.nodesEdgesService.getEntities(),
     });
-    this.flowEdgesDataSource = new ArrayStore({
+    this.flowTablesDataSource = new ArrayStore({
+      key: 'id',
+      data: this.nodesEdgesService.getTables(),
+    });
+    this.flowLinksDataSource = new ArrayStore({
       key: 'id',
       data: this.nodesEdgesService.getLinks(),
     });

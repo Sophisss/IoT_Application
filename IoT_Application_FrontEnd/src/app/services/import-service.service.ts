@@ -22,22 +22,55 @@ export class ImportServiceService {
   //TODO
   parseToRightFormat(jsonContent: any) {
     for (const entity of jsonContent.entities) {
-      let nodeEntity: Entity;
-      //assegna campi di entity
+      let nodeEntity: Entity = {
+        //assegna campi di entity
+        id: entity.id,
+        name: entity.name,
+        table: entity.table,
+        fields: entity.fields,
+        type: "entity"
+      }
       this.nodesEdgesService.getEntities().push(nodeEntity);
     }
+    /*
+    let node: FlowNode = {
+        id: entity.id,
+        text: entity.text,
+        type: entity.type
+      }
+     */
 
     for (const table of jsonContent.awsConfig.dynamo.tables) {
-      let nodeTable: Table;
+      let nodeTable: Table = {
+        id: table.id,
+        name: table.tableName,
+        type: "table",
+        partition_key: "pk",
+        sort_Key: "sk"
+      }
       //assegna campi di table
       this.nodesEdgesService.getTables().push(nodeTable);
     }
 
     for (const link of jsonContent.links) {
-      let edge: Link;
+      let edge: Link = {
+        id: link.id,
+        first_entity: link.first_entity,
+        second_entity: link.second_entity,
+        fields: link.fields,
+        name: link.first_entity + " - " + link.second_entity,
+      }
       //assegna campi di link
       this.nodesEdgesService.getLinks().push(edge);
     }
+    /*
+    let edge: FlowEdge = {
+        id: link.id,
+        fromId: link.fromId,
+        toId: link.toId,
+        text: link.text
+      }
+     */
   }
 
   /**

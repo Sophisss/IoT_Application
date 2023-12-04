@@ -1,22 +1,193 @@
 {
   "entities": [
     {
-      "id": 107,
-      "text": "scemo",
-      "type": "terminator"
+      "id": 109,
+      "name": "Device",
+      "table": "IoT",
+      "fields": [
+        {
+          "name": "device_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "thingName",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 100
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "maxLength": 256
+        },
+        {
+          "name": "deviceType",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "required": true,
+          "allowedValues": [
+            "active",
+            "inactive"
+          ]
+        }
+      ],
+      "primary_key": [
+        "device_id"
+      ],
+      "API": [
+        {
+          "name": "createDevice",
+          "type": "PUT"
+        },
+        {
+          "name": "deleteDevice",
+          "type": "DELETE"
+        },
+        {
+          "name": "updateDevice",
+          "type": "POST",
+          "parameters": [
+            "thingName",
+            "deviceType"
+          ]
+        },
+        {
+          "name": "getDeviceById",
+          "type": "GET"
+        },
+        {
+          "name": "getDevices",
+          "type": "GET_ALL"
+        }
+      ]
     },
     {
-      "id": 108,
-      "text": "Analyze the issue",
-      "type": "process"
+      "id": 110,
+      "name": "Building",
+      "table": "IoT",
+      "fields": [
+        {
+          "name": "building_id",
+          "type": "string",
+          "required": true,
+          "minLength": 2,
+          "maxLength": 256
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "required": false,
+          "maxLength": 100
+        },
+        {
+          "name": "floors",
+          "type": "integer",
+          "required": true,
+          "minimum": 1,
+          "maximum": 100
+        }
+      ],
+      "primary_key": [
+        "building_id"
+      ],
+      "API": [
+        {
+          "name": "createBuilding",
+          "type": "PUT"
+        },
+        {
+          "name": "deleteBuilding",
+          "type": "DELETE"
+        },
+        {
+          "name": "updateBuilding",
+          "type": "POST",
+          "parameters": [
+            "location",
+            "floors"
+          ]
+        },
+        {
+          "name": "getBuildingById",
+          "type": "GET"
+        },
+        {
+          "name": "getBuildings",
+          "type": "GET_ALL"
+        }
+      ]
     }
   ],
   "links": [
     {
-      "fromId": 107,
-      "id": 116,
-      "text": "aaaaa",
-      "toId": 108
+      "first_entity": "Building",
+      "second_entity": "Device",
+      "numerosity": "one-to-many",
+      "table": "IoT",
+      "fields": [],
+      "primary_key": [
+        "building_id",
+        "device_id"
+      ],
+      "API": [
+        {
+          "name": "createLinkBuildingDevice",
+          "type": "PUT"
+        },
+        {
+          "name": "deleteLinkBuildingDevice",
+          "type": "DELETE"
+        },
+        {
+          "name": "getLinkBuildingDevice",
+          "type": "GET"
+        },
+        {
+          "name": "updateLinkBuildingDevice",
+          "type": "POST",
+          "parameters": [
+            "timestamp"
+          ]
+        }
+      ]
     }
-  ]
+  ],
+  "awsConfig": {
+    "dynamo": {
+      "tables": [
+        {
+          "id": 210,
+          "tableName": "IoT",
+          "partition_key": {
+            "name": "PK",
+            "type": "String"
+          },
+          "sort_key": {
+            "name": "SK",
+            "type": "String"
+          },
+          "GSI": {
+            "index_name": "SK-PK",
+            "partition_key": "SK",
+            "sort_key": "PK"
+          },
+          "parameters": {
+            "single_entity_storage_keyword": "registry",
+            "id_separator": ":"
+          }
+        }
+      ]
+    }
+  }
 }
