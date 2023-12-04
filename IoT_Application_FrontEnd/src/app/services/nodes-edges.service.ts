@@ -33,4 +33,9 @@ export class NodesEdgesService {
   getFlowEdges() {
     return flowEdges;
   }
+
+  clearNodesAndEdges() {
+    flowEdges.splice(0, flowEdges.length);
+    flowNodes.splice(0, flowNodes.length);
+  }
 }

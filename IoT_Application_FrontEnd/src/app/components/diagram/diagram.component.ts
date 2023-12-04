@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
 import {JsonDownloadService} from "../../services/json-download.service";
 import {SideDrawerService} from "../../services/side-drawer.service";
@@ -10,7 +10,7 @@ import {NodesEdgesService} from "../../services/nodes-edges.service";
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss']
 })
-export class DiagramComponent {
+export class DiagramComponent implements OnDestroy {
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   popupVisible = false;
@@ -56,6 +56,11 @@ export class DiagramComponent {
   showPopup(event: any) {
     this.popupVisible = true;
     console.log(event);
+  }
+
+  ngOnDestroy(): void {
+    this.nodesEdgesService.clearNodesAndEdges();
+    this.diagram.instance.dispose();
   }
 
   private exportToJson() {
