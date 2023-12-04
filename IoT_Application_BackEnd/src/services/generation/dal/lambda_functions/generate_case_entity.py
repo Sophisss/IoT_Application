@@ -5,8 +5,8 @@ from services.generation.dal.lambda_functions.generate_case_get_link import gene
 def generate_case_entity(entity, links, name_partition_key_table):
     entity_name = entity['name']
     partition_key = entity['primary_key'][0]
-    link_associated_first_entity, link_associated_second_entity = get_links_associated(
-        lambda link: link['first_entity'] == entity_name, links)
+    link_associated_first_entity, link_associated_second_entity = get_links_associated(entity, links)
+
 
     api_mapping = {
         'PUT': lambda api: generator_case_put(entity_name, api['name']),
@@ -20,15 +20,10 @@ def generate_case_entity(entity, links, name_partition_key_table):
     return ''.join([api_mapping[api['type']](api) for api in entity['API']]) + default_case()
 
 
-def get_links_associated(pred, iterable):
-    links_first_entity = []
-    links_second_entity = []
-    for item in iterable:
-        if pred(item):
-            links_first_entity.append(item)
-        else:
-            links_second_entity.append(item)
-    return links_first_entity, links_second_entity
+def get_links_associated(entity, links):
+    links_associated_first_entity = [link for link in links if link['first_entity'] == entity['name']]
+    links_associated_second_entity = [link for link in links if link['second_entity'] == entity['name']]
+    return links_associated_first_entity, links_associated_second_entity
 
 
 def generator_case_put(entity_name, api_name):
