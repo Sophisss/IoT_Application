@@ -41,7 +41,7 @@ def generator_case_delete(entity_name, api_name, partition_key):
                 check_response_status(response)
                 
                 if 'Attributes' not in response:
-                       raise ItemNotPresentError()
+                    raise ItemNotPresentError()
                        
                 response = response['Attributes']
 """

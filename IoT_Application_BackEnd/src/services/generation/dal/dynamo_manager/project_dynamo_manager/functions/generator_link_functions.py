@@ -45,7 +45,7 @@ def __generate_create_method(link: dict, table_configuration: dict) -> str:
     method_name = f"{first_entity.lower()}_{second_entity.lower()}"
     return f"""
     def create_{method_name}(self, link: {link_name}) -> dict:
-        if self.get_{first_entity.lower()}(link.{link_primary_key[0]}) is None or self.get_{second_entity.lower}(link.{link_primary_key[1]}) is None:
+        if self.get_{first_entity.lower()}(link.{link_primary_key[0]}) is None or self.get_{second_entity.lower()}(link.{link_primary_key[1]}) is None:
             raise ItemNotPresentError()
         return self.put_item('{link['table']}', remove_null_values({{
             {generate_pk_sk_put(link_primary_key, table_configuration, first_entity, second_entity)},
