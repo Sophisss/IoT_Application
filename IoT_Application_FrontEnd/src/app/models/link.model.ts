@@ -1,5 +1,5 @@
-import {Entity} from "./entity.model";
 import {Field} from "./field.model";
+import {DiagramNode} from "./node.module";
 
 /**
  * This model represents a link.
@@ -10,9 +10,9 @@ export class Link {
 
   name: string;
 
-  first_entity: Entity;
+  first_entity: DiagramNode;
 
-  second_entity: Entity;
+  second_entity: DiagramNode;
 
   fields: Field[] = []
 }

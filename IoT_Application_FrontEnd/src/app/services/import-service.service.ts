@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ConfigurationService} from "./configuration.service";
-import {Entity} from "../models/entity.model";
 import {Link} from "../models/link.model";
-import {Table} from "../models/table.model";
+import {DiagramNode} from "../models/node.module";
 
 @Injectable({
   providedIn: 'root'
@@ -19,10 +18,10 @@ export class ImportServiceService {
    * Takes all the elements from the imported .json file and pushes them into the correspondent list.
    * @param jsonContent the content of the .json file
    */
-  //TODO
   parseToRightFormat(jsonContent: any) {
+    //read entities
     for (const entity of jsonContent.entities) {
-      let nodeEntity: Entity = {
+      let nodeEntity: DiagramNode = {
         //assegna campi di entity
         id: entity.id,
         name: entity.name,
@@ -30,7 +29,7 @@ export class ImportServiceService {
         fields: entity.fields,
         type: "entity"
       }
-      this.nodesEdgesService.getEntities().push(nodeEntity);
+      this.nodesEdgesService.getNodes().push(nodeEntity);
     }
     /*
     let node: FlowNode = {
@@ -40,16 +39,18 @@ export class ImportServiceService {
       }
      */
 
+    //read tables
     for (const table of jsonContent.awsConfig.dynamo.tables) {
-      let nodeTable: Table = {
+      let nodeTable: DiagramNode = {
         id: table.id,
         name: table.tableName,
         type: "table",
         partition_key: "pk",
-        sort_Key: "sk"
+        sort_Key: "sk",
+        fields: []
       }
       //assegna campi di table
-      this.nodesEdgesService.getTables().push(nodeTable);
+      this.nodesEdgesService.getNodes().push(nodeTable);
     }
 
     for (const link of jsonContent.links) {

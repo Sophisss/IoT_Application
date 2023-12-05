@@ -1,11 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Entity} from "../models/entity.model";
 import {Link} from "../models/link.model";
-import {Table} from "../models/table.model";
+import {DiagramNode} from "../models/node.module";
 
-const entities: Entity[] = [];
-
-const tables: Table[] = [];
+const nodes: DiagramNode[] = [];
 
 const links: Link[] = [];
 
@@ -13,21 +10,16 @@ const links: Link[] = [];
   providedIn: 'root'
 })
 export class ConfigurationService {
-  getEntities(): Entity[] {
-    return entities;
-  }
-
-  getTables(): Table[] {
-    return tables;
-  }
-
   getLinks(): Link[] {
     return links;
   }
 
+  getNodes(): DiagramNode[] {
+    return nodes;
+  }
+
   clearLists() {
+    nodes.splice(0, nodes.length);
     links.splice(0, links.length);
-    tables.splice(0, tables.length);
-    entities.splice(0, entities.length);
   }
 }
