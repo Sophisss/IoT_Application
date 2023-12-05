@@ -39,6 +39,10 @@ def generator_case_delete(entity_name, api_name, partition_key):
             case '{api_name}':
                 response = project_manager.delete_{entity_name.lower()}(event_parse.arguments['{partition_key}'])
                 check_response_status(response)
+                
+                if 'Attributes' not in response:
+                       raise ItemNotPresentError()
+                       
                 response = response['Attributes']
 """
 
@@ -47,8 +51,9 @@ def generator_case_get_all(entity_name, api_name):
     return f"""            
             case '{api_name}':
                 response = project_manager.get_all_{entity_name.lower()}()
-                check_response_item(response)
-                check_response_status(response)
+                if response:
+                    for item in response:
+                        check_response_status(item)
                 response = [item['Item'] for item in response]                
 """
 
