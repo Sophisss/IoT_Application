@@ -17,9 +17,8 @@ def __generate_check_response_status_method() -> str:
     """
     return """
 def check_response_status(response):
-    for item in response if isinstance(response, list) else [response]:
-        if isinstance(item, dict) and 'ResponseMetadata' in item and item['ResponseMetadata']['HTTPStatusCode'] != 200:
-            raise InternalServerError()
+    if response['ResponseMetadata']['HTTPStatusCode'] != 200:
+        raise InternalServerError()
 """
 
 
@@ -30,6 +29,5 @@ def __generate_check_response_item_method() -> str:
     """
     return """
 def check_response_item(response):
-    for item in response if isinstance(response, list) else [response]:
-        if not item:
-            raise ItemNotPresentError()"""
+    if not response:
+        raise ItemNotPresentError()"""
