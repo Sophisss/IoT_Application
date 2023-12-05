@@ -11,6 +11,7 @@ from services.generation.dal.model.generate_model_link import generate_model_lin
 from services.generation.dal.response_manager.generator_exception import generator_exception
 from services.generation.dal.response_manager.generator_response_manager import generate_response_manager
 from services.generation.deployment_guide.generator_deployment_guide import generate_deployment_guide
+from services.generation.generator_readme import generate_readme
 from services.generation.graphql_resources.generate_invoker import generator_invoker
 from services.generation.graphql_resources.schema.generate_schema import generate_graphql_schema
 from services.generation.requirements.generator_requirements import generate_requirements
@@ -25,7 +26,7 @@ def generate_code(json: dict) -> dict:
     :param json: the json containing the data.
     :return: the code generated.
     """
-    code_generated = {}
+    code_generated = {'code_generated': generate_readme(json['projectName'])}
     __generate_templates(code_generated, json)
     __generate_deployment_guide(code_generated)
     __generate_requirements(code_generated)
