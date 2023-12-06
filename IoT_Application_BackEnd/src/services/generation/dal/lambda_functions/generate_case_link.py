@@ -29,7 +29,7 @@ def generator_case_delete(name, api_name, partition_key, sort_key):
                 response = project_manager.delete_{name.lower()}(event_parse.arguments['{partition_key}'], event_parse.arguments['{sort_key}'])
                 
                 if 'Attributes' not in response:
-                       raise ItemNotPresentError()
+                    raise ItemNotPresentError()
                     
                 response = response['Attributes']
 """

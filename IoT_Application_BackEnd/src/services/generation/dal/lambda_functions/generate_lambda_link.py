@@ -14,5 +14,5 @@ def generate_lambda_link(link, json):
 {generate_lambda_definition(f'{name}',json['projectName'])}
 {generate_case_link(link)}
 {generate_exception_lambda()}
-{generate_return_lambda_link(link['primary_key'][0], table['partition_key']['name'], link['primary_key'][1], table['sort_key']['name'])}
+{generate_return_lambda_link(link['primary_key'][0], table['partition_key']['name'], link['primary_key'][1], table['sort_key']['name'], table['parameters']['id_separator'])}
 """

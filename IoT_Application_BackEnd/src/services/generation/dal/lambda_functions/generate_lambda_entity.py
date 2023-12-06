@@ -14,5 +14,5 @@ def generate_lambda_entity(entity, json):
 {generate_lambda_definition(name, json['projectName'])}
 {generate_case_entity(entity, json['links'], table['partition_key']['name'])}
 {generate_exception_lambda()}
-{generate_return_lambda_entity(entity['primary_key'][0], table['partition_key']['name'])}
+{generate_return_lambda_entity(entity['primary_key'][0], table['partition_key']['name'], table['parameters']['id_separator'])}
 """

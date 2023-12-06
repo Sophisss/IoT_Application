@@ -26,7 +26,7 @@ def generate_code(json: dict) -> dict:
     :param json: the json containing the data.
     :return: the code generated.
     """
-    code_generated = {'code_generated': generate_readme(json['projectName'])}
+    code_generated = {'code_generated/README.md': generate_readme(json['projectName'])}
     __generate_templates(code_generated, json)
     __generate_deployment_guide(code_generated)
     __generate_requirements(code_generated)

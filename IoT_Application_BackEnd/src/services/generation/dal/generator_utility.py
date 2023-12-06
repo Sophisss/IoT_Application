@@ -12,11 +12,15 @@ def __generate_change_name_keys_method() -> str:
     This function generate the change_name_keys method.
     :return: the change_name_keys method.
     """
-    return """def change_name_keys(dict_to_change, *args):
+    return """def change_name_keys(dict_to_change: dict, *args):
     if isinstance(dict_to_change, list):
         return [change_name_keys(item, *args) for item in dict_to_change]
 
-    dict_to_change.update((key[0], dict_to_change.pop(key[1])) for key in args if key[1] in dict_to_change)
+    for new_key, old_key, separator in args:
+        if old_key in dict_to_change:
+            value = dict_to_change.pop(old_key)
+            dict_to_change[new_key] = value.split(separator)[1]
+
     return dict_to_change
     """
 
@@ -32,4 +36,5 @@ def remove_null_values(dictionary: dict) -> dict:
         key: remove_null_values(value) if isinstance(value, dict) else value
         for key, value in dictionary.items()
         if value is not None
-    }"""
+    }
+    """
