@@ -41,10 +41,13 @@ export class DiagramComponent implements OnDestroy {
     if (commandName === 'viewJson') {
       this.drawerService.toggleDrawer();
     }
+    if (commandName === 'generateCode') {
+      console.log(this.diagram.instance.getItems());
+    }
   }
 
   selectionChangedHandler(e: any) {
-    this.selectedItems = e.items.filter((item: any) => item.itemType === 'shape');
+    this.selectedItems = e.items.filter((item: any) => item.itemType === 'shape' || item.itemType === 'connector');
     console.log(this.selectedItems);
   }
 
