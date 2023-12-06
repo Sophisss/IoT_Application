@@ -1,146 +1,75 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: Template with resources for IoT platform
-
-# region parameters
+Description: Template for describing resources related to application deployment
 
 Parameters:
-
-  Project:
+  BucketName:
     Type: String
-    Description: Project name
-
-  S3Bucket:
-    Type: String
-    Description: S3 bucket name
+    Description: Name of the S3 bucket to create
     Default: devq.iot.iot-platform
-
-  S3Folder:
+  IdForDomain:
     Type: String
-    Description: S3 first folder name
-    Default: code_generated
-
-
-# endregion
-
-# region globals
-
-Globals:
-  Function:
-    Timeout: 10
-    Runtime: python3.11
-    CodeUri: ../src/
-    MemorySize: 256
-    Environment:
-      Variables:
-        AWS_ACCOUNT_ID: !Ref AWS::AccountId
-        DYNAMO_REGION: !Ref AWS::Region
-
-# endregion
+    Description: Id of the domain for the CloudFront distribution
+    Default: S3-iot-platform.devq.it
 
 Resources:
-
-  ApplicationApiGateway:
-    Type: AWS::Serverless::Api
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
     Properties:
-      StageName: v2
-      Name: !Sub "${Project}-ApplicationApiGateway"
-      EndpointConfiguration:
-        Type: REGIONAL
-      Cors:
-        AllowMethods: "'*'"
-        AllowHeaders: "'Content-Type'"
-        AllowOrigin: "'*'"
+      BucketName: !Ref BucketName
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireOldZips
+            Status: Enabled
+            ExpirationInDays: 1
+            TagFilters:
+              - Key: FileExtension
+                Value: zip
 
-  DownloadZipCode:
-    Type: AWS::Serverless::Function
+  MyBucketPolicy:
+    Type: AWS::S3::BucketPolicy
     Properties:
-      FunctionName: !Sub "${Project}-DownloadZipCode"
-      Description: Function to download zip file
-      CodeUri: ../src/
-      Handler: handler.download_code
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref S3Bucket
-      Tags:
-        Name: !Sub "${Project}-DownloadZipCode"
-      Events:
-        DownloadZipCode:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApplicationApiGateway
-            Path: /download
-            Method: GET
-
-
-  # region Lambda functions roles and policies
-
-  LambdaExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: "/"
-      RoleName: !Sub "${Project}-LambdaExecutionRole"
-      AssumeRolePolicyDocument: !Sub "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
-      MaxSessionDuration: 3600
-      ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-
-  # Policy attached to Lambda functions runs
-
-  LambdaExecutionPolicy:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: !Sub "${Project}-LambdaExecutionPolicy"
+      Bucket: !Ref MyS3Bucket
       PolicyDocument:
-        Version: 2012-10-17
+        Version: "2012-10-17"
         Statement:
-          - Effect: Allow
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: "*"
             Action:
-              - "dynamodb:PutItem"
-              - "dynamodb:DeleteItem"
-              - "dynamodb:Scan"
-              - "dynamodb:Query"
-              - "dynamodb:UpdateItem"
-              - "dynamodb:GetItem"
-            Resource:
-              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/IoT"
-              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/IoT/index/SK-PK"
-          - Effect: Allow
-            Action:
-              - "s3:PutObject*"
-              - "s3:GetObject*"
-              - "s3:DeleteObject"
-            Resource:
-              - !Sub "arn:aws:s3:::${S3Bucket}/*"
-          - Effect: Allow
-            Action:
-              - "s3:ListBucket"
-            Resource:
-              - !Sub "arn:aws:s3:::${S3Bucket}"
-            Condition:
-              StringLike:
-                s3:prefix:
-                  - !Sub "${S3Folder}/*"
-      Roles:
-        - !Ref LambdaExecutionRole
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${MyS3Bucket}/*"
 
-  # endregion
+  MyCloudFrontDistributionForRootDomain:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        DefaultCacheBehavior:
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          TargetOriginId: !Ref IdForDomain
+          ViewerProtocolPolicy: redirect-to-https
+        Enabled: true
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+            DomainName: !Sub '${MyS3Bucket}.s3-website.${AWS::Region}.amazonaws.com'
+            Id: !Ref IdForDomain
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
 
 Outputs:
 
-  APIGatewayId:
-    Description: API gateway id
-    Value: !Sub 'https://${ApplicationApiGateway}.execute-api.${AWS::Region}.amazonaws.com/v2/'
-    Export:
-      Name: !Sub "${Project}-ApiGatewayId"
+  outputCloudFrontDistributionForRootDomainId:
+    Description: CloudFront distribution ID
+    Value: !Ref MyCloudFrontDistributionForRootDomain
 
-
-  LambdaExecutionRole:
-    Description: The ARN of the lambda execution role
-    Value: !GetAtt LambdaExecutionRole.Arn
-    Export:
-      Name: !Sub "${Project}-LambdaExecutionRoleArn"
-
-
-
+  outputCloudFrontDistributionDomainNameForRootDomain:
+    Description: CloudFront distribution domain name
+    Value: !GetAtt MyCloudFrontDistributionForRootDomain.DomainName
