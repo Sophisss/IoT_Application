@@ -15,8 +15,8 @@ def download_code(event, context):
     storage_service = StorageService(os.environ['BUCKET_NAME'])
     code_generated = generate_code(json.loads(event['body']))
     try:
-        storage_service.create_zip_and_upload_code(code_generated)
-        url = storage_service.create_url()
+        zip_created = storage_service.create_zip_and_upload_code(code_generated)
+        url = storage_service.create_url(zip_created)
 
         return http_status_code.ok(json_body=json.dumps({
             "message": "Object uploaded successfully",

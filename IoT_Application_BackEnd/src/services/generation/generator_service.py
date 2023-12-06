@@ -26,7 +26,7 @@ def generate_code(json: dict) -> dict:
     :param json: the json containing the data.
     :return: the code generated.
     """
-    code_generated = {'code_generated/README.md': generate_readme(json['projectName'])}
+    code_generated = {'README.md': generate_readme(json['projectName'])}
     __generate_templates(code_generated, json)
     __generate_deployment_guide(code_generated)
     __generate_requirements(code_generated)
@@ -35,6 +35,7 @@ def generate_code(json: dict) -> dict:
     __generate_response_manager(code_generated)
     __generate_event_parse_resources(code_generated, json)
     __generate_dal_resources(code_generated, json)
+    code_generated = {f'code_generated/{key}': value for key, value in code_generated.items()}
     return code_generated
 
 
@@ -44,8 +45,8 @@ def __generate_templates(codes_generated: dict, json: dict):
     :param codes_generated: the code that will be generated.
     :param json: the json with the data.
     """
-    codes_generated['code_generated/template/cognito.yaml'] = generate_cognito_template(json['awsConfig']['authentication']['cognito'])
-    codes_generated['code_generated/template/api.yaml'] = generate_api_template(json)
+    codes_generated['template/cognito.yaml'] = generate_cognito_template(json['awsConfig']['authentication']['cognito'])
+    codes_generated['template/api.yaml'] = generate_api_template(json)
 
 
 def __generate_deployment_guide(codes_generated: dict):
@@ -53,7 +54,7 @@ def __generate_deployment_guide(codes_generated: dict):
     This method generate the code for the deployment guide.
     :param codes_generated: the code that will be generated.
     """
-    codes_generated['code_generated/template/guide/deployment_guide.md'] = generate_deployment_guide()
+    codes_generated['template/guide/deployment_guide.md'] = generate_deployment_guide()
 
 
 def __generate_requirements(codes_generated: dict):
@@ -61,7 +62,7 @@ def __generate_requirements(codes_generated: dict):
     This method generate the code for the requirements.
     :param codes_generated: the code that will be generated.
     """
-    codes_generated['code_generated/src/requirements.txt'] = generate_requirements()
+    codes_generated['src/requirements.txt'] = generate_requirements()
 
 
 def __generate_graphql_resources(codes_generated: dict, json: dict):
@@ -70,8 +71,8 @@ def __generate_graphql_resources(codes_generated: dict, json: dict):
     :param codes_generated: the code that will be generated.
     :param json: the json with the data.
     """
-    codes_generated['code_generated/src/graphql/schema.graphql'] = generate_graphql_schema(json)
-    codes_generated['code_generated/src/graphql/invoker.js'] = generator_invoker()
+    codes_generated['src/graphql/schema.graphql'] = generate_graphql_schema(json)
+    codes_generated['src/graphql/invoker.js'] = generator_invoker()
 
 
 def __generate_models(codes_generated: dict, json: dict):
@@ -92,7 +93,7 @@ def __generate_entities_model(codes_generated: dict, json: dict):
     """
     for entity in json['entities']:
         entity_name = generate_resource_name(entity)
-        codes_generated[f'code_generated/src/model/{entity_name.lower()}.py'] = generate_model_entity(entity_name, entity['fields'])
+        codes_generated[f'src/model/{entity_name.lower()}.py'] = generate_model_entity(entity_name, entity['fields'])
 
 
 def __generate_links_model(codes_generated: dict, json: dict):
@@ -103,7 +104,7 @@ def __generate_links_model(codes_generated: dict, json: dict):
     """
     for link in json['links']:
         link_name = generate_resource_name(link)
-        codes_generated[f'code_generated/src/model/{link_name.lower()}.py'] = generate_model_link(link, json)
+        codes_generated[f'src/model/{link_name.lower()}.py'] = generate_model_link(link, json)
 
 
 def __generate_response_manager(codes_generated: dict):
@@ -111,8 +112,8 @@ def __generate_response_manager(codes_generated: dict):
     This method generate the code for the exception.
     :param codes_generated: the code that will be generated.
     """
-    codes_generated['code_generated/src/dal/response_manager/exception_class.py'] = generator_exception()
-    codes_generated['code_generated/src/dal/response_manager/response_manager.py'] = generate_response_manager()
+    codes_generated['src/dal/response_manager/exception_class.py'] = generator_exception()
+    codes_generated['src/dal/response_manager/response_manager.py'] = generate_response_manager()
 
 
 def __generate_event_parse_resources(code_generated: dict, json: dict):
@@ -120,8 +121,8 @@ def __generate_event_parse_resources(code_generated: dict, json: dict):
     This method generate the code for the event resources.
     :param code_generated: the code that will be generated.
     """
-    code_generated['code_generated/src/event/event_parse.py'] = generate_event_parse(json)
-    code_generated['code_generated/src/event/event.py'] = generate_event_class()
+    code_generated['src/event/event_parse.py'] = generate_event_parse(json)
+    code_generated['src/event/event.py'] = generate_event_class()
 
 
 def __generate_dal_resources(codes_generated: dict, json: dict):
@@ -130,7 +131,7 @@ def __generate_dal_resources(codes_generated: dict, json: dict):
     :param codes_generated: the code that will be generated.
     :param json: the json with the data.
     """
-    codes_generated['code_generated/src/dal/utility.py'] = generate_utility()
+    codes_generated['src/dal/utility.py'] = generate_utility()
     __generate_dynamo_manager_resources(codes_generated, json)
     __generate_lambdas_functions(codes_generated, json)
 
@@ -141,9 +142,9 @@ def __generate_dynamo_manager_resources(codes_generated: dict, json: dict):
     :param codes_generated: the code that will be generated.
     :param json: the json with the data.
     """
-    codes_generated['code_generated/src/dal/dynamo_manager/base_aws_service.py'] = generate_base_aws_service()
-    codes_generated['code_generated/src/dal/dynamo_manager/dynamo_manager.py'] = generate_dbmanager()
-    codes_generated['code_generated/src/dal/dynamo_manager/project_dynamo_manager.py'] = generator_project_dynamo_manager(json)
+    codes_generated['src/dal/dynamo_manager/base_aws_service.py'] = generate_base_aws_service()
+    codes_generated['src/dal/dynamo_manager/dynamo_manager.py'] = generate_dbmanager()
+    codes_generated['src/dal/dynamo_manager/project_dynamo_manager.py'] = generator_project_dynamo_manager(json)
 
 
 def __generate_lambdas_functions(codes_generated: dict, json: dict):
@@ -165,7 +166,7 @@ def __generate_lambdas_for_entities(codes_generated: dict, entities: dict, json:
     """
     for entity in entities:
         entity_name = generate_resource_name(entity)
-        codes_generated[f'code_generated/src/lambda_{entity_name.lower()}.py'] = generate_lambda_entity(entity, json)
+        codes_generated[f'src/lambda_{entity_name.lower()}.py'] = generate_lambda_entity(entity, json)
 
 
 def __generate_lambdas_for_links(codes_generated: dict, links: dict, json: dict):
@@ -177,4 +178,4 @@ def __generate_lambdas_for_links(codes_generated: dict, links: dict, json: dict)
     """
     for link in links:
         link_name = generate_resource_name(link)
-        codes_generated[f'code_generated/src/lambda_{link_name.lower()}.py'] = generate_lambda_link(link, json)
+        codes_generated[f'src/lambda_{link_name.lower()}.py'] = generate_lambda_link(link, json)
