@@ -42,7 +42,7 @@ export class DiagramComponent {
       this.drawerService.toggleDrawer();
     }
     if (commandName === 'generateCode') {
-      console.log(this.diagram.instance.getItems());
+      console.log(this.nodesEdgesService.exportConfiguration());
     }
   }
 
@@ -54,7 +54,8 @@ export class DiagramComponent {
 
   requestEditOperationHandler(e: any) {
     this.diagram.instance.focus();
-    this.nodesEdgesService.updateLists(this.diagram, e);
+    //TODO riattivare sotto per aggiornare le liste di nodi e link
+    //this.nodesEdgesService.updateLists(this.diagram, e);
     //console.log(e);
     if (e.operation === "changeConnection")
       //Connecting a shape to itself is not allowed
@@ -77,7 +78,6 @@ export class DiagramComponent {
   }
 
   private exportToJson() {
-    this.jsonDownload.setData(this.diagram.instance.export());
     this.jsonDownload.downloadJson('diagram');
   }
 }
