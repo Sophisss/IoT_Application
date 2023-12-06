@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Entity} from 'src/app/models/entity.model';
 import {Link} from 'src/app/models/link.model';
 import {JsonDownloadService} from './json-download.service';
-import {Table} from 'src/app/models/table.model';
 import {ConfigurationService} from "./configuration.service";
 
 @Injectable({

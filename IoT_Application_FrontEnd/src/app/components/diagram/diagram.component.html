@@ -1,5 +1,6 @@
 <!-- The diagram: simple view keeps an entire grid instead of only the part you're using. -->
 <dx-diagram (onCustomCommand)="onCustomCommand($event)"
+            (onDisposing)="onDisposing()"
             (onItemDblClick)="showPopup($event)"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
             (onSelectionChanged)="selectionChangedHandler($event)"
@@ -74,7 +75,7 @@
             [allowEditText]="true"
             [defaultHeight]="1"
             [defaultWidth]="1"
-            baseType="internalStorage"
+            baseType="database"
             category="iot-devq"
             defaultText="Table"
             title="Table"

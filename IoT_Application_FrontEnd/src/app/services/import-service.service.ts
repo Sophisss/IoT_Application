@@ -18,60 +18,46 @@ export class ImportServiceService {
    * Takes all the elements from the imported .json file and pushes them into the correspondent list.
    * @param jsonContent the content of the .json file
    */
-  parseToRightFormat(jsonContent: any) {
+  pushToConfiguration(jsonContent: any) {
     //read entities
     for (const entity of jsonContent.entities) {
-      let nodeEntity: DiagramNode = {
-        //assegna campi di entity
-        id: entity.id,
-        name: entity.name,
-        table: entity.table,
-        fields: entity.fields,
-        type: "entity"
-      }
+      let nodeEntity: DiagramNode = new DiagramNode(entity.id, entity.name, "entity", entity.fields, entity.table);
+      /*{
+         id: entity.id,
+         name: entity.name,
+         table: entity.table,
+         fields: entity.fields,
+         type: "entity"
+       }*/
       this.nodesEdgesService.getNodes().push(nodeEntity);
     }
-    /*
-    let node: FlowNode = {
-        id: entity.id,
-        text: entity.text,
-        type: entity.type
-      }
-     */
 
     //read tables
     for (const table of jsonContent.awsConfig.dynamo.tables) {
-      let nodeTable: DiagramNode = {
-        id: table.id,
-        name: table.tableName,
-        type: "table",
-        partition_key: "pk",
-        sort_Key: "sk",
-        fields: []
-      }
-      //assegna campi di table
+      let nodeTable: DiagramNode = new DiagramNode(table.id, table.tableName, "table", [], null, table.partition_key, table.sort_key);
+      /*{
+      id: table.id,
+      name: table.tableName,
+      type: "table",
+      partition_key: "pk",
+      sort_key: "sk",
+      fields: []
+    }*/
       this.nodesEdgesService.getNodes().push(nodeTable);
     }
 
+    //read links
     for (const link of jsonContent.links) {
-      let edge: Link = {
-        id: link.id,
-        first_entity: link.first_entity,
-        second_entity: link.second_entity,
-        fields: link.fields,
-        name: link.first_entity + " - " + link.second_entity,
-      }
-      //assegna campi di link
+      let edge: Link = new Link(link.id, link.first_entity + " - " + link.second_entity, link.first_entity, link.second_entity, link.fields);
+      /*{
+      id: link.id,
+      first_entity: link.first_entity,
+      second_entity: link.second_entity,
+      fields: link.fields,
+      name: link.first_entity + " - " + link.second_entity,
+    }*/
       this.nodesEdgesService.getLinks().push(edge);
     }
-    /*
-    let edge: FlowEdge = {
-        id: link.id,
-        fromId: link.fromId,
-        toId: link.toId,
-        text: link.text
-      }
-     */
   }
 
   /**

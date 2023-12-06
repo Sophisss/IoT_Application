@@ -1,5 +1,4 @@
 import {Field} from "./field.model";
-import {DiagramNode} from "./node.module";
 
 /**
  * This model represents a link.
@@ -7,12 +6,16 @@ import {DiagramNode} from "./node.module";
  */
 export class Link {
   id: number;
-
   name: string;
+  first_entity: string;
+  second_entity: string;
+  fields: Field[];
 
-  first_entity: DiagramNode;
-
-  second_entity: DiagramNode;
-
-  fields: Field[] = []
+  constructor(id: number, name: string, first_entity: string, second_entity: string, fields: Field[]) {
+    this.id = id;
+    this.name = name;
+    this.first_entity = first_entity;
+    this.second_entity = second_entity;
+    this.fields = fields;
+  }
 }

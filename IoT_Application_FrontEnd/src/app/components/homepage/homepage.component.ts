@@ -26,7 +26,7 @@ export class HomepageComponent {
   import(event: Event) {
     this.importService.onFileSelected(event)
       .then((jsonContent) => {
-        this.importService.parseToRightFormat(jsonContent);
+        this.importService.pushToConfiguration(jsonContent);
       })
       .then(() => {
         this.router.navigate(['/new']);

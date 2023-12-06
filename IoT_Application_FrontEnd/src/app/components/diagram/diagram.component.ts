@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
 import {JsonDownloadService} from "../../services/json-download.service";
 import {SideDrawerService} from "../../services/side-drawer.service";
@@ -10,7 +10,7 @@ import {ConfigurationService} from "../../services/configuration.service";
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss']
 })
-export class DiagramComponent implements OnDestroy {
+export class DiagramComponent {
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   popupVisible = false;
@@ -48,13 +48,22 @@ export class DiagramComponent implements OnDestroy {
 
   selectionChangedHandler(e: any) {
     this.selectedItems = e.items.filter((item: any) => item.itemType === 'shape' || item.itemType === 'connector');
+    this.diagram.instance.focus();
     console.log(this.selectedItems);
   }
 
   requestEditOperationHandler(e: any) {
+    this.diagram.instance.focus();
+    this.nodesEdgesService.updateLists(this.diagram, e);
+    //console.log(e);
     if (e.operation === "changeConnection")
+      //Connecting a shape to itself is not allowed
       if (e.args.connector && e.args.connector.fromId === e.args.connector.toId)
         e.allowed = false;
+
+    //Connecting a shape to another shape already connected to it is not allowed
+    //if (e.args.connector && e.args.connector.fromId === e.args.connector.toId)
+
   }
 
   showPopup(event: any) {
@@ -62,7 +71,7 @@ export class DiagramComponent implements OnDestroy {
     console.log(event);
   }
 
-  ngOnDestroy(): void {
+  onDisposing() {
     this.nodesEdgesService.clearLists();
     this.diagram.instance.dispose();
   }
