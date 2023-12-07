@@ -21,7 +21,6 @@ export class ToggleService {
     this.isPopupOpen = true;
     this.selectedItem = event.item;
     console.log(event)
-    console.log(this.selectedItem)
   }
 
   closePopup(): void {

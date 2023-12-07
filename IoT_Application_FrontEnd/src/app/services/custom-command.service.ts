@@ -20,7 +20,6 @@ export class CustomCommandService {
     }
     if (commandName === 'viewJson') {
       this.toggleService.toggleDrawer();
-      console.log(this.toggleService.isDrawerOpened());
     }
     if (commandName === 'generateCode') {
       console.log(this.configService.exportConfiguration());

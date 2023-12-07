@@ -68,5 +68,7 @@ export class DiagramComponent {
   onDisposing() {
     this.nodesEdgesService.clearLists();
     this.diagram.instance.dispose();
+    this.flowLinksDataSource.clear();
+    this.flowNodesDataSource.clear();
   }
 }
