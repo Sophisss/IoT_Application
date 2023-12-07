@@ -3,6 +3,7 @@ import {DxDiagramComponent} from "devextreme-angular";
 import ArrayStore from "devextreme/data/array_store";
 import {ConfigurationService} from "../../services/configuration.service";
 import {CustomCommandService} from "../../services/custom-command.service";
+import {ToggleService} from "../../services/toggle.service";
 
 @Component({
   selector: 'app-diagram',
@@ -17,7 +18,8 @@ export class DiagramComponent {
   flowLinksDataSource: ArrayStore;
   flowNodesDataSource: ArrayStore;
 
-  constructor(private nodesEdgesService: ConfigurationService, private customCommandService: CustomCommandService) {
+  constructor(private nodesEdgesService: ConfigurationService, private customCommandService: CustomCommandService,
+              private toggleService: ToggleService) {
 
     this.flowNodesDataSource = new ArrayStore({
       key: 'id',
@@ -55,13 +57,12 @@ export class DiagramComponent {
 
   }
 
-  showPopup(event: any) {
-    this.popupVisible = true;
-    console.log(event);
+  getPopupState(): boolean {
+    return this.toggleService.isPopupOpened();
   }
 
-  closePopup() {
-    this.popupVisible = false;
+  openPopup(e: any) {
+    this.toggleService.openPopup(e);
   }
 
   onDisposing() {

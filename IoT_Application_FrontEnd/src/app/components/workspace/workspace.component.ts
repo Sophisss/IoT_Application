@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {SideDrawerService} from "../../services/side-drawer.service";
+import {ToggleService} from "../../services/toggle.service";
 
 @Component({
   selector: 'app-workspace',
@@ -7,10 +7,10 @@ import {SideDrawerService} from "../../services/side-drawer.service";
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent {
-  constructor(private drawerService: SideDrawerService) {
+  constructor(private toggleService: ToggleService) {
   }
 
   getDrawerOpen(): boolean {
-    return this.drawerService.isDrawerOpened();
+    return this.toggleService.isDrawerOpened();
   }
 }

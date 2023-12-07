@@ -16,6 +16,7 @@ import {
   DxDiagramModule,
   DxDrawerModule,
   DxPopupModule,
+  DxTextBoxModule,
   DxToolbarModule,
   DxTooltipModule
 } from "devextreme-angular";
@@ -40,7 +41,8 @@ import {
     DxPopupModule,
     DxToolbarModule,
     DxDrawerModule,
-    DxTooltipModule
+    DxTooltipModule,
+    DxTextBoxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

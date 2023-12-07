@@ -1,7 +1,7 @@
 <!-- The diagram: simple view keeps an entire grid instead of only the part you're using. -->
 <dx-diagram (onCustomCommand)="onCustomCommand($event)"
             (onDisposing)="onDisposing()"
-            (onItemDblClick)="showPopup($event)"
+            (onItemDblClick)="openPopup($event)"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
             (onSelectionChanged)="selectionChangedHandler($event)"
             [simpleView]="true"
@@ -86,17 +86,12 @@
 
 <!-- The popup window that appears on double click to modify the fields of entities and tables. -->
 <dx-popup
-        [(visible)]="popupVisible"
-        [height]="320"
+        [dragEnabled]="true"
+        [height]="480"
         [hideOnOutsideClick]="false"
         [showCloseButton]="false"
-        [dragEnabled]="true"
-        [width]="360"
+        [visible]="getPopupState()"
+        [width]="400"
         title="Object properties">
     <app-content></app-content>
-    <div class="dx-fieldset buttons">
-        <dx-button text="Update" type="default" (click)="this.closePopup()">
-        </dx-button>
-        <dx-button text="Cancel" (click)="this.closePopup()"> </dx-button>
-    </div>
 </dx-popup>

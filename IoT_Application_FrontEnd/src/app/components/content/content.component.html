@@ -1,2 +1,73 @@
-<p>Content</p>
+<div *dxTemplate="let data of 'content'">
+    <div class="dx-fieldset">
+        <div class="dx-field">
+            <div class="dx-field-label">Name</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                        [(value)]="currentEmployee"
+                        [inputAttr]="{ 'aria-label': 'Name' }"
+                ></dx-text-box>
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Title</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                        [(value)]="currentEmployee"
+                        [inputAttr]="{ 'aria-label': 'Title' }"
+                ></dx-text-box>
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">City</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                        [(value)]="currentEmployee"
+                        [inputAttr]="{ 'aria-label': 'City' }"
+                ></dx-text-box>
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">State</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                        [(value)]="currentEmployee"
+                        [inputAttr]="{ 'aria-label': 'State' }"
+                ></dx-text-box>
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Email</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                        [(value)]="currentEmployee"
+                        [inputAttr]="{ 'aria-label': 'Email' }"
+                ></dx-text-box>
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Skype</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                        [(value)]="currentEmployee"
+                        [inputAttr]="{ 'aria-label': 'Skype' }"
+                ></dx-text-box>
+            </div>
+        </div>
+        <div class="dx-field">
+            <div class="dx-field-label">Phone</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                        [(value)]="currentEmployee"
+                        [inputAttr]="{ 'aria-label': 'Phone' }"
+                ></dx-text-box>
+            </div>
+        </div>
+    </div>
+    <div class="dx-fieldset buttons">
+        <dx-button (click)="closePopup()" text="Update" type="default">
+        </dx-button>
+        <dx-button (click)="closePopup()" text="Cancel"></dx-button>
+    </div>
+</div>
 

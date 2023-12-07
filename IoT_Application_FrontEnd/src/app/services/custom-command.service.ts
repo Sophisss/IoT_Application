@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {SideDrawerService} from "./side-drawer.service";
+import {ToggleService} from "./toggle.service";
 import {ConfigurationService} from "./configuration.service";
 import {JsonDownloadService} from "./json-download.service";
 
@@ -8,7 +8,7 @@ import {JsonDownloadService} from "./json-download.service";
 })
 export class CustomCommandService {
 
-  constructor(private drawerService: SideDrawerService, private configService: ConfigurationService,
+  constructor(private toggleService: ToggleService, private configService: ConfigurationService,
               private jsonDownload: JsonDownloadService) {
   }
 
@@ -19,7 +19,8 @@ export class CustomCommandService {
       this.exportToJson();
     }
     if (commandName === 'viewJson') {
-      this.drawerService.toggleDrawer();
+      this.toggleService.toggleDrawer();
+      console.log(this.toggleService.isDrawerOpened());
     }
     if (commandName === 'generateCode') {
       console.log(this.configService.exportConfiguration());
