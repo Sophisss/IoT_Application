@@ -88,9 +88,15 @@
 <dx-popup
         [(visible)]="popupVisible"
         [height]="320"
-        [hideOnOutsideClick]="true"
-        [showCloseButton]="true"
+        [hideOnOutsideClick]="false"
+        [showCloseButton]="false"
+        [dragEnabled]="true"
         [width]="360"
         title="Object properties">
     <app-content></app-content>
+    <div class="dx-fieldset buttons">
+        <dx-button text="Update" type="default" (click)="this.closePopup()">
+        </dx-button>
+        <dx-button text="Cancel" (click)="this.closePopup()"> </dx-button>
+    </div>
 </dx-popup>

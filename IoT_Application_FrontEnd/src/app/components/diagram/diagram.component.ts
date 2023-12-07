@@ -1,9 +1,8 @@
 import {Component, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
-import {JsonDownloadService} from "../../services/json-download.service";
-import {SideDrawerService} from "../../services/side-drawer.service";
 import ArrayStore from "devextreme/data/array_store";
 import {ConfigurationService} from "../../services/configuration.service";
+import {CustomCommandService} from "../../services/custom-command.service";
 
 @Component({
   selector: 'app-diagram',
@@ -18,8 +17,7 @@ export class DiagramComponent {
   flowLinksDataSource: ArrayStore;
   flowNodesDataSource: ArrayStore;
 
-  constructor(private jsonDownload: JsonDownloadService, private drawerService: SideDrawerService,
-              private nodesEdgesService: ConfigurationService) {
+  constructor(private nodesEdgesService: ConfigurationService, private customCommandService: CustomCommandService) {
 
     this.flowNodesDataSource = new ArrayStore({
       key: 'id',
@@ -33,17 +31,7 @@ export class DiagramComponent {
   }
 
   onCustomCommand(e: any) {
-    const commandName: string = e.name;
-
-    if (commandName === 'export') {
-      this.exportToJson();
-    }
-    if (commandName === 'viewJson') {
-      this.drawerService.toggleDrawer();
-    }
-    if (commandName === 'generateCode') {
-      console.log(this.nodesEdgesService.exportConfiguration());
-    }
+    this.customCommandService.customCommandHandler(e);
   }
 
   selectionChangedHandler(e: any) {
@@ -72,12 +60,12 @@ export class DiagramComponent {
     console.log(event);
   }
 
+  closePopup() {
+    this.popupVisible = false;
+  }
+
   onDisposing() {
     this.nodesEdgesService.clearLists();
     this.diagram.instance.dispose();
-  }
-
-  private exportToJson() {
-    this.jsonDownload.downloadJson('diagram');
   }
 }
