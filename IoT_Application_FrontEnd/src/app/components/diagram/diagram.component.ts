@@ -1,58 +1,83 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
-import {ActivatedRoute} from "@angular/router";
 import {JsonDownloadService} from "../../services/json-download.service";
+import {SideDrawerService} from "../../services/side-drawer.service";
+import ArrayStore from "devextreme/data/array_store";
+import {ConfigurationService} from "../../services/configuration.service";
 
 @Component({
-    selector: 'app-diagram',
-    templateUrl: './diagram.component.html',
-    styleUrls: ['./diagram.component.scss']
+  selector: 'app-diagram',
+  templateUrl: './diagram.component.html',
+  styleUrls: ['./diagram.component.scss']
 })
-export class DiagramComponent implements AfterViewInit {
-    @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
+export class DiagramComponent {
+  @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
-    popupVisible = false;
-    sidebarToggle: boolean = false;
-    private receivedData: any;
+  popupVisible = false;
+  selectedItems: any[];
+  flowLinksDataSource: ArrayStore;
+  flowNodesDataSource: ArrayStore;
 
-    constructor(private route: ActivatedRoute, private jsonDownload: JsonDownloadService) {
+  constructor(private jsonDownload: JsonDownloadService, private drawerService: SideDrawerService,
+              private nodesEdgesService: ConfigurationService) {
+
+    this.flowNodesDataSource = new ArrayStore({
+      key: 'id',
+      data: this.nodesEdgesService.getNodes(),
+    });
+
+    this.flowLinksDataSource = new ArrayStore({
+      key: 'id',
+      data: this.nodesEdgesService.getLinks(),
+    });
+  }
+
+  onCustomCommand(e: any) {
+    const commandName: string = e.name;
+
+    if (commandName === 'export') {
+      this.exportToJson();
     }
-
-    ngAfterViewInit() {
-        this.route.queryParams.subscribe(params => {
-            this.receivedData = params['file'];
-        });
-        this.diagram.instance.import(this.receivedData, false)
+    if (commandName === 'viewJson') {
+      this.drawerService.toggleDrawer();
     }
-
-    onCustomCommand(e: any) {
-        const commandName: string = e.name;
-
-        if (commandName === 'export') {
-            this.exportToJson();
-        }
-        if (commandName === 'viewJson') {
-            this.showJson();
-        }
+    if (commandName === 'generateCode') {
+      console.log(this.nodesEdgesService.exportConfiguration());
     }
+  }
 
-    requestEditOperationHandler(e: any) {
-        if (e.operation === "changeConnection")
-            if (e.args.connector && e.args.connector.fromId === e.args.connector.toId)
-                e.allowed = false;
-    }
+  selectionChangedHandler(e: any) {
+    this.selectedItems = e.items.filter((item: any) => item.itemType === 'shape' || item.itemType === 'connector');
+    this.diagram.instance.focus();
+    console.log(this.selectedItems);
+  }
 
-    showPopup(event: any) {
-        this.popupVisible = true;
-        console.log(event);
-    }
+  requestEditOperationHandler(e: any) {
+    this.diagram.instance.focus();
+    //TODO riattivare sotto per aggiornare le liste di nodi e link
+    //this.nodesEdgesService.updateLists(this.diagram, e);
+    //console.log(e);
+    if (e.operation === "changeConnection")
+      //Connecting a shape to itself is not allowed
+      if (e.args.connector && e.args.connector.fromId === e.args.connector.toId)
+        e.allowed = false;
 
-    private showJson() {
-        this.sidebarToggle = !this.sidebarToggle;
-    }
+    //Connecting a shape to another shape already connected to it is not allowed
+    //if (e.args.connector && e.args.connector.fromId === e.args.connector.toId)
 
-    private exportToJson() {
-        this.jsonDownload.setData(this.diagram.instance.export());
-        this.jsonDownload.downloadJson('diagram');
-    }
+  }
+
+  showPopup(event: any) {
+    this.popupVisible = true;
+    console.log(event);
+  }
+
+  onDisposing() {
+    this.nodesEdgesService.clearLists();
+    this.diagram.instance.dispose();
+  }
+
+  private exportToJson() {
+    this.jsonDownload.downloadJson('diagram');
+  }
 }

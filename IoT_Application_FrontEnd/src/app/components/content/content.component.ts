@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {WorkspaceComponent} from "../workspace/workspace.component";
 
 @Component({
   selector: 'app-content',

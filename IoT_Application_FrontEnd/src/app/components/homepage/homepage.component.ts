@@ -19,13 +19,20 @@ export class HomepageComponent {
   constructor(private importService: ImportServiceService, private router: Router) {
   }
 
-  importFromButton(event: Event) {
-    this.importService.manageImportedFile(event)
+  /**
+   * This method handles the import of a JSON file via the specified event.
+   * @param event file input event that contains the selected file.
+   */
+  import(event: Event) {
+    this.importService.onFileSelected(event)
+      .then((jsonContent) => {
+        this.importService.pushToConfiguration(jsonContent);
+      })
       .then(() => {
-        // Now, the file import is complete
-        let file = this.importService.getSavedFileContent();
-
-        this.router.navigate(['/new'], {queryParams: {file}});
+        this.router.navigate(['/new']);
+      })
+      .catch((error) => {
+        alert(error);
       });
   }
 }
