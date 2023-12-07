@@ -21,3 +21,5 @@ IoT_Application_BackEnd/samconfig.toml
 IoT_Application_BackEnd/.aws-sam/
 
 IoT_Application_FrontEnd/.editorconfig
+
+IoT_Application_FrontEnd/src/assets/diagram.json
