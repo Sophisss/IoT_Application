@@ -2,7 +2,7 @@ from services.generation.dal.lambda_functions.generate_case_get_link import gene
     generate_case_get_link_second_entity
 
 
-def generate_case_entity(entity, links, name_partition_key_table):
+def generate_case_entity(entity, links, name_partition_key_table, id_separator):
     entity_name = entity['name']
     partition_key = entity['primary_key'][0]
     link_associated_first_entity, link_associated_second_entity = get_links_associated(entity, links)
@@ -12,7 +12,7 @@ def generate_case_entity(entity, links, name_partition_key_table):
         'DELETE': lambda api: generator_case_delete(entity_name, api['name'], partition_key),
         'GET_ALL': lambda api: generator_case_get_all(entity_name, api['name']),
         'GET': lambda api: generator_case_get(entity_name, api['name'], partition_key, link_associated_first_entity,
-                                              link_associated_second_entity, name_partition_key_table),
+                                              link_associated_second_entity, name_partition_key_table, id_separator),
         'POST': lambda api: generator_case_post(entity_name, api['name']),
     }
 
@@ -68,15 +68,15 @@ def generator_case_post(entity_name, api_name):
 
 
 def generator_case_get(entity_name, api_name, partition_key, links_associated_first_entity,
-                       links_associated_second_entity, name_partition_key_table):
+                       links_associated_second_entity, name_partition_key_table, id_separator):
     return f"""
             case '{api_name}':
                 response = project_manager.get_{entity_name.lower()}(event_parse.arguments['{partition_key}'])
                 check_response_item(response)
                 check_response_status(response)
                 response = response['Item']
-                {generate_case_get_link_first_entity(links_associated_first_entity, name_partition_key_table) if links_associated_first_entity else ''}
-                {generate_case_get_link_second_entity(links_associated_second_entity, name_partition_key_table) if links_associated_second_entity else ''}
+                {generate_case_get_link_first_entity(links_associated_first_entity, name_partition_key_table, id_separator) if links_associated_first_entity else ''}
+                {generate_case_get_link_second_entity(links_associated_second_entity, name_partition_key_table, id_separator) if links_associated_second_entity else ''}
 """
 
 

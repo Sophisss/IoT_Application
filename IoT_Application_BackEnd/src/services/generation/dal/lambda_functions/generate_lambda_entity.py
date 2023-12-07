@@ -12,7 +12,7 @@ def generate_lambda_entity(entity, json):
     name = generate_resource_name(entity)
     return f"""{generate_header_lambda(name, json['projectName'])}
 {generate_lambda_definition(name, json['projectName'])}
-{generate_case_entity(entity, json['links'], table['partition_key']['name'])}
+{generate_case_entity(entity, json['links'], table['partition_key']['name'], table['parameters']['id_separator'])}
 {generate_exception_lambda()}
 {generate_return_lambda_entity(entity['primary_key'][0], table['partition_key']['name'], table['parameters']['id_separator'])}
 """
