@@ -10,7 +10,6 @@ import {DiagramComponent} from './components/diagram/diagram.component';
 
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
   DxButtonModule,
   DxDiagramModule,
@@ -20,6 +19,7 @@ import {
   DxToolbarModule,
   DxTooltipModule
 } from "devextreme-angular";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -28,21 +28,21 @@ import {
     HeaderComponent,
     WorkspaceComponent,
     ContentComponent,
-    DiagramComponent
+    DiagramComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
     DxButtonModule,
-    DxDiagramModule,
-    DxPopupModule,
+    DxTooltipModule,
     DxToolbarModule,
     DxDrawerModule,
-    DxTooltipModule,
-    DxTextBoxModule
+    DxDiagramModule,
+    DxPopupModule,
+    DxTextBoxModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

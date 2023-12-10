@@ -10,6 +10,7 @@ export class Link {
   first_entity: string;
   second_entity: string;
   fields: Field[];
+  type: 'link';
 
   constructor(id: number, name: string, first_entity: string, second_entity: string, fields: Field[]) {
     this.id = id;

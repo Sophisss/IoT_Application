@@ -12,6 +12,8 @@ import {Subscription} from "rxjs";
 export class ContentComponent implements OnInit, OnDestroy {
   currentEmployee: string;
   selectedItem: DiagramNode | Link;
+  itemType: string = 'table';
+
   private selectedItemSubscription: Subscription;
 
   constructor(private toggleService: ToggleService) {
@@ -20,6 +22,14 @@ export class ContentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.selectedItemSubscription = this.toggleService.getSelectedItemObservable().subscribe((selectedItem) => {
       this.selectedItem = selectedItem;
+      if (this.selectedItem) {
+        if (this.selectedItem.type !== undefined) {
+          console.log(this.selectedItem.type)
+        } else {
+          console.log('link')
+        }
+      }
+
       console.log("sel", this.selectedItem);
     });
   }

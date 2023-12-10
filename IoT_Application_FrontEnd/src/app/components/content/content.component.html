@@ -1,6 +1,15 @@
 <div *dxTemplate="let data of 'content'">
     <div class="dx-fieldset">
         <div class="dx-field">
+            <div class="dx-field-label">ID</div>
+            <div class="dx-field-value">
+                <dx-text-box
+                        [(value)]="currentEmployee"
+                        [inputAttr]="{ 'aria-label': 'ID' }"
+                ></dx-text-box>
+            </div>
+        </div>
+        <div class="dx-field">
             <div class="dx-field-label">Name</div>
             <div class="dx-field-value">
                 <dx-text-box
@@ -10,57 +19,70 @@
             </div>
         </div>
         <div class="dx-field">
-            <div class="dx-field-label">Title</div>
+            <div class="dx-field-label">Item type</div>
             <div class="dx-field-value">
                 <dx-text-box
-                        [(value)]="currentEmployee"
-                        [inputAttr]="{ 'aria-label': 'Title' }"
+                        [disabled]="true"
+                        [inputAttr]="{ 'aria-label': 'Item type' }"
+                        [value]="itemType | titlecase"
                 ></dx-text-box>
             </div>
         </div>
-        <div class="dx-field">
-            <div class="dx-field-label">City</div>
-            <div class="dx-field-value">
-                <dx-text-box
-                        [(value)]="currentEmployee"
-                        [inputAttr]="{ 'aria-label': 'City' }"
-                ></dx-text-box>
+
+        <div [ngSwitch]="this.selectedItem?.type">
+
+            <div *ngSwitchCase="'entity'" class="entityCondition">
+                <div class="dx-field">
+                    <div class="dx-field-label">Table</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                                [(value)]="currentEmployee"
+                                [inputAttr]="{ 'aria-label': 'Table' }"
+                        ></dx-text-box>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="dx-field">
-            <div class="dx-field-label">State</div>
-            <div class="dx-field-value">
-                <dx-text-box
-                        [(value)]="currentEmployee"
-                        [inputAttr]="{ 'aria-label': 'State' }"
-                ></dx-text-box>
+
+            <div *ngSwitchCase="'table'" class="tableCondition">
+                <div class="dx-field">
+                    <div class="dx-field-label">Partition Key</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                                [(value)]="currentEmployee"
+                                [inputAttr]="{ 'aria-label': 'Partition Key' }"
+                        ></dx-text-box>
+                    </div>
+                </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">Sort Key</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                                [(value)]="currentEmployee"
+                                [inputAttr]="{ 'aria-label': 'Sort Key' }"
+                        ></dx-text-box>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="dx-field">
-            <div class="dx-field-label">Email</div>
-            <div class="dx-field-value">
-                <dx-text-box
-                        [(value)]="currentEmployee"
-                        [inputAttr]="{ 'aria-label': 'Email' }"
-                ></dx-text-box>
-            </div>
-        </div>
-        <div class="dx-field">
-            <div class="dx-field-label">Skype</div>
-            <div class="dx-field-value">
-                <dx-text-box
-                        [(value)]="currentEmployee"
-                        [inputAttr]="{ 'aria-label': 'Skype' }"
-                ></dx-text-box>
-            </div>
-        </div>
-        <div class="dx-field">
-            <div class="dx-field-label">Phone</div>
-            <div class="dx-field-value">
-                <dx-text-box
-                        [(value)]="currentEmployee"
-                        [inputAttr]="{ 'aria-label': 'Phone' }"
-                ></dx-text-box>
+
+            <div *ngSwitchCase="null" class="linkCondition">
+                <div class="dx-field">
+                    <div class="dx-field-label">First Entity</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                                [(value)]="currentEmployee"
+                                [inputAttr]="{ 'aria-label': 'First Entity' }"
+                        ></dx-text-box>
+                    </div>
+                </div>
+                <div class="dx-field">
+                    <div class="dx-field-label">Second Entity</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                                [(value)]="currentEmployee"
+                                [inputAttr]="{ 'aria-label': 'Second Entity' }"
+                        ></dx-text-box>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -70,4 +92,3 @@
         <dx-button (click)="closePopup()" text="Cancel"></dx-button>
     </div>
 </div>
-
