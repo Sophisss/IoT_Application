@@ -19,7 +19,7 @@ export class Field {
   minimum?: number | undefined
   maximum?: number | undefined
   allowed_values?: string[] = []
-  
+
   constructor(name: string, type: string, required: boolean, minLength?: number, maxLength?: number, minimum?: number, maximum?: number, allowed_values?: string[]) {
     this.name = name
     this.type = type

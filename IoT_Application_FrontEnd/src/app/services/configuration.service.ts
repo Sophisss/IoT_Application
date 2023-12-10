@@ -33,7 +33,7 @@ export class ConfigurationService {
     const jsonTable = this.createTableJson()
     const jsonLinks = this.createLinkJson()
 
-    const jsonObject = {
+    return {
       projectName: "Prova",
       entities: jsonEntities,
       links: jsonLinks,
@@ -43,8 +43,6 @@ export class ConfigurationService {
         }
       }
     };
-
-    return jsonObject;
   }
 
   private createEntityJson() {

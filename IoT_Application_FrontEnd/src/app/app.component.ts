@@ -9,6 +9,6 @@ import {Router} from '@angular/router';
 export class AppComponent {
   title = 'IoT_Application_FrontEnd';
 
-  constructor(private router: Router) {
+  constructor() {
   }
 }
