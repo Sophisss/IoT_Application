@@ -5,7 +5,6 @@ import {AppComponent} from './app.component';
 import {HomepageComponent} from "./components/homepage/homepage.component";
 import {HeaderComponent} from "./components/header/header.component";
 import {WorkspaceComponent} from "./components/workspace/workspace.component";
-import {ContentComponent} from './components/content/content.component';
 import {DiagramComponent} from './components/diagram/diagram.component';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -27,7 +26,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     HomepageComponent,
     HeaderComponent,
     WorkspaceComponent,
-    ContentComponent,
     DiagramComponent,
   ],
   imports: [

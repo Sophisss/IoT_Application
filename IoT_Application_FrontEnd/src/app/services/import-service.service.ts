@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ConfigurationService} from "./configuration.service";
-import {Link} from "../models/link.model";
-import {DiagramNode} from "../models/node.module";
+import {Item} from "../models/item.model";
 
 @Injectable({
   providedIn: 'root'
@@ -21,42 +20,53 @@ export class ImportServiceService {
   pushToConfiguration(jsonContent: any) {
     //read entities
     for (const entity of jsonContent.entities) {
-      let nodeEntity: DiagramNode = new DiagramNode(entity.id, entity.name, "entity", entity.fields, entity.table);
-      /*{
-         id: entity.id,
-         name: entity.name,
-         table: entity.table,
-         fields: entity.fields,
-         type: "entity"
-       }*/
-      this.nodesEdgesService.getNodes().push(nodeEntity);
+      let nodeEntity: Item = {
+        ID: entity.id,
+        name: entity.name,
+        type: "entity",
+        //fields: entity.fields,
+        table: entity.table,
+        partition_key: null,
+        sort_key: null,
+        first_item: null,
+        second_item: null,
+      }
+      this.nodesEdgesService.getItems().push(nodeEntity);
     }
 
     //read tables
     for (const table of jsonContent.awsConfig.dynamo.tables) {
-      let nodeTable: DiagramNode = new DiagramNode(table.id, table.tableName, "table", [], null, table.partition_key, table.sort_key);
-      /*{
-      id: table.id,
-      name: table.tableName,
-      type: "table",
-      partition_key: "pk",
-      sort_key: "sk",
-      fields: []
-    }*/
-      this.nodesEdgesService.getNodes().push(nodeTable);
+      let nodeTable: Item = {
+        ID: table.id,
+        name: table.tableName,
+        type: "table",
+        //fields: entity.fields,
+        table: null,
+        partition_key: null,
+        sort_key: null,
+        first_item: null,
+        second_item: null,
+      }
+      console.log("nodeTable", nodeTable)
+      this.nodesEdgesService.getItems().push(nodeTable);
     }
 
     //read links
     for (const link of jsonContent.links) {
-      let edge: Link = new Link(link.id, link.first_entity + " - " + link.second_entity, link.first_entity, link.second_entity, link.fields);
-      /*{
-      id: link.id,
-      first_entity: link.first_entity,
-      second_entity: link.second_entity,
-      fields: link.fields,
-      name: link.first_entity + " - " + link.second_entity,
-    }*/
-      this.nodesEdgesService.getLinks().push(edge);
+      let edge: Item =
+        {
+
+          ID: link.id,
+          name: link.first_entity + " - " + link.second_entity,
+          type: 'link',
+          table: null,
+          partition_key: null,
+          sort_key: null,
+          first_item: link.first_entity,
+          second_item: link.second_entity,
+          //fields: link.fields,
+        }
+      this.nodesEdgesService.getItems().push(edge);
     }
   }
 

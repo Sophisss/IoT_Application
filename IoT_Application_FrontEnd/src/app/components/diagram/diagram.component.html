@@ -1,37 +1,39 @@
 <!-- The diagram: simple view keeps an entire grid instead of only the part you're using. -->
-<dx-diagram (onCustomCommand)="onCustomCommand($event)"
+<dx-diagram #diagram
+            (onCustomCommand)="onCustomCommand($event)"
             (onDisposing)="onDisposing()"
-            (onItemDblClick)="openPopup($event)"
+            (onItemDblClick)="editItem($event.item.dataItem)"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
+            (onRequestLayoutUpdate)="requestLayoutUpdateHandler($event)"
             (onSelectionChanged)="selectionChangedHandler($event)"
             [simpleView]="true"
-            autoZoomMode="fitContent"
-            id="diagram">
-
+            id="diagram"
+>
     <!-- The menu you get after left-clicking on an object or the diagram. -->
     <dxo-context-menu [enabled]="true"></dxo-context-menu>
 
     <!-- The little bar with the undo/redo button that gets covered so it's disabled and its buttons moved. -->
     <dxo-history-toolbar [visible]="false"></dxo-history-toolbar>
 
-    <!-- The list of entities coming from an uploaded file.
+    <!-- The totality of entities.
          There can only be one set of nodes, so all the items need to be stored in the same data source. -->
     <dxo-nodes
-            [dataSource]="flowNodesDataSource"
+            [customDataExpr]="itemCustomDataExpr"
+            [dataSource]="dataSource"
             keyExpr="name"
             textExpr="name"
             typeExpr="type"
     >
-        <dxo-auto-layout type="layered"></dxo-auto-layout>
+        <dxo-auto-layout type="tree"></dxo-auto-layout>
     </dxo-nodes>
 
-    <!-- The list of links coming from an uploaded file. -->
+    <!-- The totality of links. -->
     <dxo-edges
-            [dataSource]="flowLinksDataSource"
-            fromExpr="first_entity"
+            [dataSource]="linksDataSource"
+            fromExpr="first_item"
             keyExpr="id"
             textExpr="name"
-            toExpr="second_entity"
+            toExpr="second_item"
     ></dxo-edges>
 
     <!-- The toolbar on the left-bottom corner. -->
@@ -40,9 +42,8 @@
         <dxi-command name="separator"></dxi-command>
         <dxi-command name="undo"></dxi-command>
         <dxi-command name="redo"></dxi-command>
-        <dxi-command name="selectAll"></dxi-command>
-        <dxi-command name="delete"></dxi-command>
         <dxi-command name="separator"></dxi-command>
+        <dxi-command name="selectAll"></dxi-command>
         <dxi-command name='layoutTreeTopToBottom'></dxi-command>
         <dxi-command name="separator"></dxi-command>
         <dxi-command icon="export" name='export' text="Export JSON"></dxi-command>
@@ -55,43 +56,126 @@
     <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
 
     <!-- The list of possible shapes to drag on the diagram, with a custom group of objects. -->
-    <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false" role="banner">
+    <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false">
         <dxi-group [expanded]="true" category="iot-devq" displayMode="texts" title="IoT"></dxi-group>
     </dxo-toolbox>
 
     <!-- The entity custom shape. -->
     <dxi-custom-shape
-            [allowEditText]="true"
+            [allowEditText]="false"
             [defaultHeight]="1"
-            [defaultWidth]="1"
+            [defaultWidth]="1.5"
+            [maxHeight]="2"
+            [maxWidth]="3"
+            [minHeight]="1"
+            [minWidth]="1.5"
+            [toolboxWidthToHeightRatio]="2"
             baseType="ellipse"
             category="iot-devq"
-            title="Entity"
-            type="entity">
+            title="New Entity"
+            type="entity"
+    >
     </dxi-custom-shape>
 
     <!-- The table custom shape. -->
     <dxi-custom-shape
-            [allowEditText]="true"
+            [allowEditText]="false"
             [defaultHeight]="1"
-            [defaultWidth]="1"
+            [defaultWidth]="1.5"
+            [maxHeight]="2"
+            [maxWidth]="3"
+            [minHeight]="1"
+            [minWidth]="1.5"
+            [toolboxWidthToHeightRatio]="2"
             baseType="database"
             category="iot-devq"
-            defaultText="Table"
-            title="Table"
-            type="table">
+            defaultText="New Table"
+            title="New Table"
+            type="table"
+    >
     </dxi-custom-shape>
 
+    <!-- The menu that appears at the end of a connector that leads to nothing to create a new object. -->
+    <dxo-context-toolbox [enabled]="false">
+    </dxo-context-toolbox>
 </dx-diagram>
 
-<!-- The popup window that appears on double click to modify the fields of entities and tables. -->
 <dx-popup
+        [(visible)]="popupVisible"
         [dragEnabled]="true"
         [height]="480"
         [hideOnOutsideClick]="false"
         [showCloseButton]="false"
-        [visible]="getPopupState()"
+        [showTitle]="true"
         [width]="400"
-        title="Object properties">
-    <app-content></app-content>
+        title="Edit {{currentItem.type | titlecase}}"
+>
+    <div *dxTemplate="let data of 'content'">
+        <div class="dx-fieldset">
+            <div class="dx-field">
+                <div class="dx-field-label">ID</div>
+                <div class="dx-field-value">
+                    <dx-text-box
+                            [disabled]="true"
+                            [inputAttr]="{ 'aria-label': 'ID' }"
+                            value="{{currentItem.ID}}"
+                    ></dx-text-box>
+                </div>
+            </div>
+            <div class="dx-field">
+                <div class="dx-field-label">Name</div>
+                <div class="dx-field-value">
+                    <dx-text-box
+                            [(value)]="currentItem.name"
+                            [inputAttr]="{ 'aria-label': 'Name' }"
+                    ></dx-text-box>
+                </div>
+            </div>
+
+            <div [ngSwitch]="this.currentItem.type">
+
+                <div *ngSwitchCase="'entity'" class="entityCondition">
+                    <div class="dx-field">
+                        <div class="dx-field-label">Table</div>
+                        <div class="dx-field-value">
+                            <dx-text-box
+                                    [(value)]="currentItem.table"
+                                    [inputAttr]="{ 'aria-label': 'Table' }"
+                            ></dx-text-box>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngSwitchCase="'table'" class="tableCondition">
+                    <div class="dx-field">
+                        <div class="dx-field-label">Partition Key</div>
+                        <div class="dx-field-value">
+                            <dx-text-box
+                                    [(value)]="currentItem.partition_key"
+                                    [inputAttr]="{ 'aria-label': 'Partition Key' }"
+                            ></dx-text-box>
+                        </div>
+                    </div>
+                    <div class="dx-field">
+                        <div class="dx-field-label">Sort Key</div>
+                        <div class="dx-field-value">
+                            <dx-text-box
+                                    [(value)]="currentItem.sort_key"
+                                    [inputAttr]="{ 'aria-label': 'Sort Key' }"
+                            ></dx-text-box>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dx-fieldset buttons">
+            <dx-button (click)="this.updateItem()" text="Update" type="default">
+            </dx-button>
+            <dx-button (click)="this.cancelEditItem()" text="Cancel"></dx-button>
+            <dx-button (click)="deleteItem(currentItem)" style="background-color: crimson; color: #f1f1f1"
+                       text="DELETE"
+                       y></dx-button>
+        </div>
+    </div>
 </dx-popup>
