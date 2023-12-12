@@ -46,23 +46,28 @@ export class ConfigurationService {
     };
   }
 
-  /**
-   * This method is called when the user performs any action in the diagram and updates the lists of nodes and links.
-   * @param diagram the diagram where the action is taking place
-   * @param e the event that triggered the action
-   */
-  updateLists(diagram: DxDiagramComponent, e: any) {
-    let items = diagram.instance.getItems();
+  updateConfiguration(nodes: ArrayStore, links: ArrayStore) {
     this.clearList();
-    for (const itemKey in items) {
-      const item = items[itemKey];
-      if (item.itemType === 'shape') {
-        //nodes.push();
-      }
-      if (item.itemType === 'connector') {
-        //links.push();
-      }
+    console.log("updateConfiguration")
+    for (let i = this.getFirstID(); i <= this.getCurrentID(); i++) {
+      console.log("nodes", i)
+      nodes.byKey(i).then((data) => {
+
+        items.push(data);
+        console.log(data)
+      });
     }
+
+    for (let i = this.getFirstID(); i <= this.getCurrentID(); i++) {
+      console.log("links", i)
+      links.byKey(i).then((data) => {
+
+        items.push(data);
+        console.log(data)
+      });
+    }
+
+    console.log(items)
   }
 
   private createEntityJson() {

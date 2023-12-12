@@ -167,7 +167,7 @@ export class DiagramComponent {
   }
 
   onCustomCommand(e: any) {
-    this.customCommandService.customCommandHandler(e);
+    this.customCommandService.customCommandHandler(e, this.dataSource, this.linksDataSource);
   }
 
   /**
