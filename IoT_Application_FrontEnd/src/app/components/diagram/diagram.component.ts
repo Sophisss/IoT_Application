@@ -29,7 +29,7 @@ export class DiagramComponent {
       key: 'ID',
       data: this.configService.getItems().filter((item) => this.isTable(item) || this.isEntity(item)),
       onInserting(values) {
-        values.ID = values.ID || that.generatedID++;
+        values.ID = values.ID || that.configService.assignID();
         values.name = values.name || "Entity's Name";
       },
     });
@@ -38,7 +38,7 @@ export class DiagramComponent {
       data: this.configService.getItems().filter((item) => item.type === 'link'),
       onInserting(values) {
         console.log("values", values)
-        values.ID = values.ID || that.generatedID++;
+        values.ID = values.ID || that.configService.assignID();
         values.name = values.name || that.getLinkName(values);
         values.type = 'link';
       },
@@ -113,15 +113,24 @@ export class DiagramComponent {
     });*/
 
     const items: Item[] = [];
-    for (let i = 1; i <= this.generatedID; i++) {
-      console.log(i)
-      this.linksDataSource.byKey(i).then((data) => {
-        if (data.type === 'link') {
-          items.push(data);
-          console.log(data)
-        }
+    for (let i = 100; i <= this.configService.getCurrentID(); i++) {
+      console.log("nodes", i)
+      this.dataSource.byKey(i).then((data) => {
+
+        items.push(data);
+        //console.log(data)
       });
     }
+
+    for (let i = 100; i <= this.configService.getCurrentID(); i++) {
+      console.log("links", i)
+      this.linksDataSource.byKey(i).then((data) => {
+
+        items.push(data);
+        //console.log(data)
+      });
+    }
+
     console.log(items)
   }
 

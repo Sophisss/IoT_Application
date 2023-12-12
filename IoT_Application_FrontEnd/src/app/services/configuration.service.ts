@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {DxDiagramComponent} from "devextreme-angular";
 import {Item} from "../models/item.model";
+import ArrayStore from "devextreme/data/array_store";
 
 const items: Item[] = [];
 
@@ -8,6 +8,14 @@ const items: Item[] = [];
   providedIn: 'root'
 })
 export class ConfigurationService {
+  firstID: number = 100;
+  generatedID: number = 100;
+
+  assignID() {
+    console.log("generatedID", this.generatedID)
+    return this.generatedID++;
+  }
+
   getItems(): Item[] {
     return items;
   }
@@ -59,7 +67,6 @@ export class ConfigurationService {
 
   private createEntityJson() {
     return this.getItems().filter(entity => entity.type === 'entity').map(entity => ({
-      id: entity.ID,
       name: entity.name,
       //fields: entity.fields,
       table: entity.table,
@@ -69,7 +76,6 @@ export class ConfigurationService {
 
   private createTableJson() {
     return this.getItems().filter(entity => entity.type === 'table').map(table => ({
-      id: table.ID,
       tableName: table.name,
       partition_key: table.partition_key,
       sort_key: table.sort_key
@@ -82,5 +88,12 @@ export class ConfigurationService {
       second_entity: link.second_item,
       //fields: link.fields
     }));
+  }
+
+  getCurrentID() {
+    return this.generatedID;
+  }
+  getFirstID() {
+    return this.firstID;
   }
 }

@@ -10,7 +10,7 @@ import {Item} from "../models/item.model";
  */
 export class ImportServiceService {
 
-  constructor(private nodesEdgesService: ConfigurationService) {
+  constructor(private configService: ConfigurationService) {
   }
 
   /**
@@ -21,7 +21,7 @@ export class ImportServiceService {
     //read entities
     for (const entity of jsonContent.entities) {
       let nodeEntity: Item = {
-        ID: entity.id,
+        ID: this.configService.assignID(),
         name: entity.name,
         type: "entity",
         //fields: entity.fields,
@@ -31,13 +31,13 @@ export class ImportServiceService {
         first_item: null,
         second_item: null,
       }
-      this.nodesEdgesService.getItems().push(nodeEntity);
+      this.configService.getItems().push(nodeEntity);
     }
 
     //read tables
     for (const table of jsonContent.awsConfig.dynamo.tables) {
       let nodeTable: Item = {
-        ID: table.id,
+        ID: this.configService.assignID(),
         name: table.tableName,
         type: "table",
         //fields: entity.fields,
@@ -47,16 +47,14 @@ export class ImportServiceService {
         first_item: null,
         second_item: null,
       }
-      console.log("nodeTable", nodeTable)
-      this.nodesEdgesService.getItems().push(nodeTable);
+      this.configService.getItems().push(nodeTable);
     }
 
     //read links
     for (const link of jsonContent.links) {
       let edge: Item =
         {
-
-          ID: link.id,
+          ID: this.configService.assignID(),
           name: link.first_entity + " - " + link.second_entity,
           type: 'link',
           table: null,
@@ -66,7 +64,7 @@ export class ImportServiceService {
           second_item: link.second_entity,
           //fields: link.fields,
         }
-      this.nodesEdgesService.getItems().push(edge);
+      this.configService.getItems().push(edge);
     }
   }
 

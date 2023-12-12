@@ -2,7 +2,6 @@
   "projectName": "Prova",
   "entities": [
     {
-      "id": 109,
       "name": "Device",
       "table": "IoT",
       "fields": [
@@ -74,7 +73,6 @@
       ]
     },
     {
-      "id": 110,
       "name": "Building",
       "table": "IoT",
       "fields": [
@@ -168,7 +166,6 @@
     "dynamo": {
       "tables": [
         {
-          "id": 210,
           "tableName": "IoT",
           "partition_key": {
             "name": "PK",
