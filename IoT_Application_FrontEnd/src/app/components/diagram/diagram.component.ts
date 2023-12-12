@@ -20,7 +20,6 @@ export class DiagramComponent {
   linksDataSource: ArrayStore;
 
   popupVisible = false;
-  generatedID = 100;
 
   constructor(private customCommandService: CustomCommandService, private configService: ConfigurationService) {
     const that = this;
@@ -105,33 +104,6 @@ export class DiagramComponent {
 
     this.currentItem = new Item();
     this.popupVisible = false;
-
-
-    /*let len = 0;
-    this.dataSource.totalCount({}).then((count) => {
-      len = count;
-    });*/
-
-    const items: Item[] = [];
-    for (let i = 100; i <= this.configService.getCurrentID(); i++) {
-      console.log("nodes", i)
-      this.dataSource.byKey(i).then((data) => {
-
-        items.push(data);
-        //console.log(data)
-      });
-    }
-
-    for (let i = 100; i <= this.configService.getCurrentID(); i++) {
-      console.log("links", i)
-      this.linksDataSource.byKey(i).then((data) => {
-
-        items.push(data);
-        //console.log(data)
-      });
-    }
-
-    console.log(items)
   }
 
   onDisposing() {

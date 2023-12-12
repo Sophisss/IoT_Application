@@ -20,11 +20,11 @@
     <dxo-nodes
             [customDataExpr]="itemCustomDataExpr"
             [dataSource]="dataSource"
-            keyExpr="name"
+            keyExpr="ID"
             textExpr="name"
             typeExpr="type"
     >
-        <dxo-auto-layout type="tree"></dxo-auto-layout>
+        <dxo-auto-layout type="layered"></dxo-auto-layout>
     </dxo-nodes>
 
     <!-- The totality of links. -->
@@ -72,6 +72,7 @@
             [toolboxWidthToHeightRatio]="2"
             baseType="ellipse"
             category="iot-devq"
+            defaultText="Entity's Name"
             title="New Entity"
             type="entity"
     >
@@ -89,7 +90,7 @@
             [toolboxWidthToHeightRatio]="2"
             baseType="database"
             category="iot-devq"
-            defaultText="New Table"
+            defaultText="Table's Name"
             title="New Table"
             type="table"
     >
