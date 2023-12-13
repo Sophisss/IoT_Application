@@ -1,6 +1,6 @@
-a {
-  text-decoration: none;
-  color: #444444
+.externalLink {
+  text-decoration: underline;
+  color: #0565af;
 }
 
 .logo a img {
@@ -53,21 +53,21 @@ a {
   left: 2%;
 }
 
-#new-diagram-button {
-  color: black;
-}
-
 .child-button {
-  background-color: lightgrey;
-  margin-right: 10px;
+  border-radius: 30px;
+  background-color: #0565af;
+  margin-right: 15px;
 }
 
 #openInput:hover {
   cursor: pointer;
 }
 
-/*
-::ng-deep .dx-fa-button.dx-fa-button-main .dx-overlay-content {
-  box-shadow: none !important;
+dx-button {
+  height: 50px;
+  width: 50px;
 }
-*/
+
+::ng-deep .dx-button-mode-contained .dx-icon {
+  color: #f1f1f1 !important;
+}

@@ -1,7 +1,14 @@
-app-header {
-  width: 100%;
+#header {
+  height: 8%;
+  display: grid;
+  align-content: center;
 }
 
-app-diagram {
-  width: 100%;
+#body {
+  height: 92%;
+}
+
+#devq-simple-logo {
+  height: 40px;
+  width: auto;
 }

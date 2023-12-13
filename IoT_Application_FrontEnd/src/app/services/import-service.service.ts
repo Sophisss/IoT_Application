@@ -1,4 +1,6 @@
 import {Injectable} from '@angular/core';
+import {ConfigurationService} from "./configuration.service";
+import {Item} from "../models/item.model";
 
 @Injectable({
   providedIn: 'root'
@@ -8,15 +10,61 @@ import {Injectable} from '@angular/core';
  */
 export class ImportServiceService {
 
-  private savedFileContent: string | null = null;
+  constructor(private configService: ConfigurationService) {
+  }
 
-  async manageImportedFile(event: Event): Promise<void> {
-    try {
-      const fileContent = await this.onFileSelected(event);
-      // Save the file content for later use
-      this.savedFileContent = fileContent;
-    } catch (error) {
-      console.error('Error:', error);
+  /**
+   * Takes all the elements from the imported .json file and pushes them into the list.
+   * @param jsonContent the content of the .json file
+   */
+  pushToConfiguration(jsonContent: any) {
+    //read entities
+    for (const entity of jsonContent.entities) {
+      let nodeEntity: Item = {
+        ID: this.configService.assignID(),
+        name: entity.name,
+        type: "entity",
+        //fields: entity.fields,
+        table: entity.table,
+        partition_key: null,
+        sort_key: null,
+        first_item: null,
+        second_item: null,
+      }
+      this.configService.getItems().push(nodeEntity);
+    }
+
+    //read tables
+    for (const table of jsonContent.awsConfig.dynamo.tables) {
+      let nodeTable: Item = {
+        ID: this.configService.assignID(),
+        name: table.tableName,
+        type: "table",
+        //fields: entity.fields,
+        table: null,
+        partition_key: null,
+        sort_key: null,
+        first_item: null,
+        second_item: null,
+      }
+      this.configService.getItems().push(nodeTable);
+    }
+
+    //read links
+    for (const link of jsonContent.links) {
+      let edge: Item =
+        {
+          ID: this.configService.assignID(),
+          name: link.first_entity + " - " + link.second_entity,
+          type: 'link',
+          table: null,
+          partition_key: null,
+          sort_key: null,
+          first_item: link.first_entity,
+          second_item: link.second_entity,
+          //fields: link.fields,
+        }
+      this.configService.getItems().push(edge);
     }
   }
 
@@ -25,39 +73,39 @@ export class ImportServiceService {
    * @param event event triggered when a file is selected.
    * @returns a Promise that resolves with the content of the selected JSON file.
    */
-  onFileSelected(event: Event): Promise<string> {
+  onFileSelected(event: Event) {
     return new Promise((resolve, reject) => {
       const fileInput = event.target as HTMLInputElement;
-      const file: File | null = fileInput.files?.[0] || null;
+      const selectedFile = fileInput?.files?.[0];
 
-      if (!file) {
-        console.log('No file selected');
-        reject('No file selected');
-        return;
+      try {
+        if (selectedFile) this.readFileContent(selectedFile)
+          .then(resolve)
+          .catch(reject);
+      } catch (error) {
+        reject(error);
       }
-
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        // 'result' contains the contents of the file as a data URL
-        const content: string | ArrayBuffer | null = event.target?.result;
-
-        if (typeof content === 'string') {
-          resolve(content);
-        } else {
-          reject('Failed to read file content');
-        }
-      };
-
-      // Read the file as text
-      reader.readAsText(file);
     });
   }
 
   /**
-   * Getter method to retrieve the saved file content
+   * This method reads the content of a selected file and resolves with its JSON data.
+   * @param selectedFile file to read as a Blob.
+   * @returns a Promise that resolves with the JSON data from the file.
    */
-  getSavedFileContent(): string | null {
-    return this.savedFileContent;
+  readFileContent(selectedFile: Blob) {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+
+      fileReader.onload = (e) => {
+        if (e.target) {
+          const jsonContent = JSON.parse(e.target.result as string);
+          resolve(jsonContent);
+        } else {
+          reject('Errore nell\'evento di caricamento del file.');
+        }
+      };
+      fileReader.readAsText(selectedFile);
+    });
   }
 }

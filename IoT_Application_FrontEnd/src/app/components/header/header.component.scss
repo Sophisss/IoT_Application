@@ -1,19 +1,18 @@
-mat-toolbar {
-  height: auto;
-}
-
-#project-title {
-  margin-left: 1%;
-  overflow: clip;
+#title {
+  margin-left: 20px;
+  font-size: 20px;
 }
 
 #devq-simple-logo {
-  display: inline-block;
-  height: 2.5em;
+  height: 40px;
   width: auto;
-  margin-left: auto;
-  margin-right: 50%;
 }
 
+#title > #project-title > #project-title-textbox {
+  width: 15em;
+}
 
-
+b {
+  font-size: 25px;
+  color: #0565af;
+}
