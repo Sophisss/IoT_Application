@@ -1,39 +1,54 @@
 <div class="content" id="drop-area">
 
-  <div class="logo" id="devq-text-logo">
-    <a href="https://www.devq.it/">
-      <img alt="DevQ Logo" src="assets/images/logos/logo-devq.svg">
-    </a>
-  </div>
+    <div class="logo" id="devq-text-logo">
+        <a href="https://www.devq.it/">
+            <img alt="DevQ Logo" src="assets/images/logos/logo-devq.svg">
+        </a>
+    </div>
 
-  <div class="open-create" id="open-create-text">
-    <label for="textInput" id="openInput">Apri</label>
-    <input #jsonInput (change)="importFromButton($event)" accept=".json" class="inputJSON" hidden id="textInput"
-           type="file">
-    o
-    <a id="create" routerLink="new">crea</a>
-    un nuovo diagramma BPMN per iniziare
-  </div>
+    <div class="open-create" id="open-create-text">
+        <label class="externalLink" for="textInput">Apri</label>
+        <input #jsonInput (change)="import($event)" accept=".json" hidden id="textInput"
+               type="file">
+        o
+        <a class="externalLink" routerLink="new">crea</a>
+        un nuovo diagramma per iniziare
+    </div>
 
-  <div class="description" id="caption">
+    <div class="description" id="caption">
     <span>
       Modella e crea facilmente il tuo sistema IoT
     </span>
-    <p>{{descriptionText}}</p>
-  </div>
+        <p>{{ descriptionText }}</p>
+    </div>
 
-  <div class="open-create" id="open-create-icons">
-    <a id="new-diagram-button" routerLink="/new">
-      <button aria-label="Create a new project" class="child-button" mat-icon-button
-              matTooltip="Create a new project">
-        <mat-icon>add</mat-icon>
-      </button>
-    </a>
+    <div class="open-create" id="open-create-icons">
+        <a id="new-diagram-button" routerLink="/new">
+            <dx-button class="child-button" icon="plus" id="newButton"></dx-button>
+        </a>
 
-    <button (click)="jsonInput.click()" aria-label="Open a pre existing project" class="child-button"
-            mat-icon-button matTooltip="Open a pre existing project">
-      <mat-icon>upload_file</mat-icon>
-    </button>
-  </div>
+        <dx-button (onClick)="jsonInput.click()" class="child-button" icon="attach" id="attachButton"></dx-button>
+    </div>
+
+    <dx-tooltip
+            [hideOnOutsideClick]="false"
+            hideEvent="mouseleave"
+            showEvent="mouseenter"
+            target="#newButton">
+        <div *dxTemplate="let data = data; of: 'content'">
+            <p>Create a new project</p>
+        </div>
+    </dx-tooltip>
+
+    <dx-tooltip
+            [hideOnOutsideClick]="false"
+            hideEvent="mouseleave"
+            showEvent="mouseenter"
+            target="#attachButton">
+
+        <div *dxTemplate="let data = data; of: 'content'">
+            <p>Open a pre existing project</p>
+        </div>
+    </dx-tooltip>
 
 </div>
