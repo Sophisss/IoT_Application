@@ -9,6 +9,8 @@ const items: Item[] = [];
 })
 export class ConfigurationService {
 
+  projectTitle: string = "IoT Application";
+
   //Since the ID is generated automatically, we need to keep track of the first and last ID.
   firstID: number = 100;
   generatedID: number = 100;
@@ -23,6 +25,10 @@ export class ConfigurationService {
 
   getItems(): Item[] {
     return items;
+  }
+
+  getTitle(): string {
+    return this.projectTitle;
   }
 
   /**
@@ -41,7 +47,7 @@ export class ConfigurationService {
     const jsonLinks = this.createLinkJson()
 
     return {
-      projectName: "Prova",
+      projectName: this.projectTitle,
       entities: jsonEntities,
       links: jsonLinks,
       awsConfig: {

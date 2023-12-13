@@ -14,10 +14,10 @@ export class JsonDownloadService {
 
   /**
    * Download data as JSON file.
-   * @param fileName file name to save.
    */
-  downloadJson(fileName: string) {
+  downloadJson() {
     const jsonData: any = this.configService.exportConfiguration();
+    let fileName: string = this.configService.getTitle().trim();
 
     if (jsonData) {
       const blob = new Blob([JSON.stringify(jsonData)], {type: 'application/json'});

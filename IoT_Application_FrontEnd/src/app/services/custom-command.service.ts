@@ -42,6 +42,6 @@ export class CustomCommandService {
    * Downloads the current configuration as a json file and sets the name of the file.
    */
   private downloadJsonFile() {
-    this.jsonDownload.downloadJson('diagram');
+    this.jsonDownload.downloadJson();
   }
 }

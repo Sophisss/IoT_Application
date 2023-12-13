@@ -1,7 +1,22 @@
 <dx-toolbar id="toolbar">
     <dxi-item locateInMenu="never" location="before">
         <div id="title">
-            <div id="project-title"><b>IoT Application</b></div>
+            <div id="project-title">
+                <ng-template *ngIf="isModifiable; then modifiable else justText"></ng-template>
+                <ng-template #modifiable>
+                    <dx-text-box [(value)]="configurationService.projectTitle"
+                                 [inputAttr]="{ 'aria-label': 'Project Title' }"
+                                 [maxLength]="25"
+                                 (onFocusOut)="isModifiable = false"
+                                 (onEnterKey)="isModifiable = false"
+                                 id="project-title-textbox"
+                                 stylingMode="filled"
+                    ></dx-text-box>
+                </ng-template>
+                <ng-template #justText>
+                    <span (click)="isModifiable = true" id="project-title-text"><b>{{ configurationService.projectTitle }}</b></span>
+                </ng-template>
+            </div>
         </div>
     </dxi-item>
     <dxi-item locateInMenu="never" location="center">
