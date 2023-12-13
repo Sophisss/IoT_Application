@@ -14,7 +14,7 @@ export class ImportServiceService {
   }
 
   /**
-   * Takes all the elements from the imported .json file and pushes them into the correspondent list.
+   * Takes all the elements from the imported .json file and pushes them into the list.
    * @param jsonContent the content of the .json file
    */
   pushToConfiguration(jsonContent: any) {

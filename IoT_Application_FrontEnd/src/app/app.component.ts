@@ -6,8 +6,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'IoT_Application_FrontEnd';
-
   constructor() {
   }
 }

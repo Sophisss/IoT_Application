@@ -6,7 +6,7 @@
             (onRequestEditOperation)="requestEditOperationHandler($event)"
             (onRequestLayoutUpdate)="requestLayoutUpdateHandler($event)"
             (onSelectionChanged)="selectionChangedHandler($event)"
-            [simpleView]="true"
+            [simpleView]="false"
             id="diagram"
 >
     <!-- The menu you get after left-clicking on an object or the diagram. -->
@@ -171,12 +171,9 @@
         </div>
 
         <div class="dx-fieldset buttons">
-            <dx-button (click)="this.updateItem()" text="Update" type="default">
-            </dx-button>
+            <dx-button (click)="this.updateItem()" id="update" text="Update" type="default"></dx-button>
             <dx-button (click)="this.cancelEditItem()" text="Cancel"></dx-button>
-            <dx-button (click)="deleteItem(currentItem)" style="background-color: crimson; color: #f1f1f1"
-                       text="DELETE"
-                       y></dx-button>
+            <dx-button (click)="deleteItem(currentItem)" id="delete" text="Delete"></dx-button>
         </div>
     </div>
 </dx-popup>

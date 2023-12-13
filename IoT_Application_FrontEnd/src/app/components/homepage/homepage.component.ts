@@ -20,7 +20,7 @@ export class HomepageComponent {
   }
 
   /**
-   * This method handles the import of a JSON file via the specified event.
+   * This method handles the import of a JSON file via the specified event and redirects to the diagram component.
    * @param event file input event that contains the selected file.
    */
   import(event: Event) {

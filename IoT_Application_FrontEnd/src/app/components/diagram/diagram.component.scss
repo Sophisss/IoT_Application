@@ -31,5 +31,14 @@
 }
 
 ::ng-deep .dx-popup-content .dx-fieldset.buttons > * {
-  margin-left: 8px;
+  margin-left: 10px;
+}
+
+::ng-deep .dx-popup-content .dx-fieldset.buttons > #update {
+  background-color: #0565af;
+}
+
+::ng-deep .dx-popup-content .dx-fieldset.buttons > #delete {
+  background-color: firebrick;
+  color: #ffffff;
 }

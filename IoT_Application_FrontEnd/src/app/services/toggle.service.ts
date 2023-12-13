@@ -6,6 +6,9 @@ import {Injectable} from '@angular/core';
 export class ToggleService {
   isDrawerOpen: boolean = false;
 
+  /**
+   * Toggles the drawer.
+   */
   toggleDrawer(): void {
     this.isDrawerOpen = !this.isDrawerOpen;
   }

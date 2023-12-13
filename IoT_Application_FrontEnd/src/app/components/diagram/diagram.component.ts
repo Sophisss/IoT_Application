@@ -21,6 +21,12 @@ export class DiagramComponent {
 
   popupVisible = false;
 
+  /**
+   * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
+   * configuration service which contains the items of an eventual uploaded json file.
+   * @param customCommandService the service that handles the custom commands of the diagram
+   * @param configService the service that handles the configuration aspects of the diagram
+   */
   constructor(private customCommandService: CustomCommandService, private configService: ConfigurationService) {
     const that = this;
     this.items = this.configService.getItems();
@@ -44,6 +50,11 @@ export class DiagramComponent {
     });
   }
 
+  /**
+   * ???
+   * @param obj
+   * @param value
+   */
   // @ts-ignore
   itemCustomDataExpr(obj, value) {
     if (value === undefined) {
@@ -57,17 +68,30 @@ export class DiagramComponent {
     obj.name = value.name;
   }
 
+  /**
+   * The methods that opens the popup window to edit an item, setting the currentItem to the item to edit.
+   * @param item the item to edit
+   */
   editItem(item: Item) {
     this.currentItem = {...item};
     this.popupVisible = true;
   }
 
+  /**
+   * The method called from the 'delete' button that deletes the current item from
+   * the diagram, removes it from the data source and closes the popup window.
+   * @param item the item to delete
+   */
   deleteItem(item: Item) {
     this.dataSource.push([{type: 'remove', key: item.ID}]);
     this.cancelEditItem();
     console.log(this.dataSource);
   }
 
+  /**
+   * The method called from the 'update' button that updates the current item, applies the changes to the
+   * data source based on the type of the item and closes the popup window.
+   */
   updateItem() {
     console.log(this.currentItem.type)
     if (this.currentItem.type === 'link') {
@@ -95,6 +119,10 @@ export class DiagramComponent {
     //TODO aggiungi aggiorna json
   }
 
+  /**
+   * The method called from the 'cancel' button that simply closes the popup window without applying any
+   * changes to the current item.
+   */
   cancelEditItem() {
     if (this.currentItem.type === 'entity' || this.currentItem.type === 'table') {
       console.log(this.currentItem.type, this.dataSource);
@@ -106,6 +134,9 @@ export class DiagramComponent {
     this.popupVisible = false;
   }
 
+  /**
+   *  Handles the resources disposal of the diagram component.
+   */
   onDisposing() {
     this.configService.clearList();
     this.dataSource.clear();
@@ -113,7 +144,12 @@ export class DiagramComponent {
     this.diagram.instance.dispose();
   }
 
-  //The deleteShape operation is possible only by opening the popup window
+  /**
+   * Handles the various edit requests of the diagram in a custom way.
+   * - deleteShape: the delete operation is possible only by opening the popup window;
+   * - changeConnection: the connection between a shape and itself is not allowed.
+   * @param event
+   */
   requestEditOperationHandler(event: any) {
     if (event.operation === "deleteShape") {
       event.allowed = false;
@@ -126,20 +162,28 @@ export class DiagramComponent {
     //TODO aggiungi aggiorna json
   }
 
-  requestLayoutUpdateHandler(e: any) {
-    for (let i = 0; i < e.changes.length; i++) {
-      if (e.changes[i].type === 'remove') {
-        e.allowed = true;
+  /**
+   * Handles the various layout update requests of the diagram in a custom way.
+   * @param event
+   */
+  requestLayoutUpdateHandler(event: any) {
+    for (let i = 0; i < event.changes.length; i++) {
+      if (event.changes[i].type === 'remove') {
+        event.allowed = true;
       }
     }
   }
 
-  selectionChangedHandler(e: any) {
-    console.log(e.items)
+  selectionChangedHandler(event: any) {
+    console.log(event.items)
   }
 
-  onCustomCommand(e: any) {
-    this.customCommandService.customCommandHandler(e, this.dataSource, this.linksDataSource);
+  /**
+   * Calls the custom command service to handle the custom commands of the diagram.
+   * @param event
+   */
+  onCustomCommand(event: any) {
+    this.customCommandService.customCommandHandler(event, this.dataSource, this.linksDataSource);
   }
 
   /**
@@ -162,10 +206,18 @@ export class DiagramComponent {
     return linkName;
   }
 
+  /**
+   * Checks if the item is a table.
+   * @param item the item to check
+   */
   isTable(item: any): boolean {
     return item.type === 'table' && item.table === null
   }
 
+  /**
+   * Checks if the item is an entity.
+   * @param item the item to check
+   */
   isEntity(item: any): boolean {
     return item.type === 'entity' && item.partition_key === null && item.sort_key === null
   }

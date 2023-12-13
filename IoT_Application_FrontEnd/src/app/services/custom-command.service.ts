@@ -13,13 +13,22 @@ export class CustomCommandService {
               private jsonDownload: JsonDownloadService) {
   }
 
+  /**
+   * Custom command handler:
+   * - export: update the current configuration and export it to json;
+   * - viewJson: toggle the json view;
+   * - generateCode: generate the code from the current configuration;
+   * @param e the current event
+   * @param nodes the data source of the nodes
+   * @param links the data source of the links
+   */
   customCommandHandler(e: any, nodes: ArrayStore, links: ArrayStore) {
     const commandName: string = e.name;
 
     if (commandName === 'export') {
       console.log("export")
       this.configService.updateConfiguration(nodes, links);
-      this.exportToJson();
+      this.downloadJsonFile();
     }
     if (commandName === 'viewJson') {
       this.toggleService.toggleDrawer();
@@ -29,7 +38,10 @@ export class CustomCommandService {
     }
   }
 
-  private exportToJson() {
+  /**
+   * Downloads the current configuration as a json file and sets the name of the file.
+   */
+  private downloadJsonFile() {
     this.jsonDownload.downloadJson('diagram');
   }
 }

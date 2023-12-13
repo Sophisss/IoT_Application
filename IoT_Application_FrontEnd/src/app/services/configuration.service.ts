@@ -8,9 +8,14 @@ const items: Item[] = [];
   providedIn: 'root'
 })
 export class ConfigurationService {
+
+  //Since the ID is generated automatically, we need to keep track of the first and last ID.
   firstID: number = 100;
   generatedID: number = 100;
 
+  /**
+   * This method increments the ID by 1 and returns it to assign it to a new item.
+   */
   assignID() {
     console.log("generatedID", this.generatedID)
     return this.generatedID++;
@@ -20,14 +25,15 @@ export class ConfigurationService {
     return items;
   }
 
+  /**
+   * Clears the list of items.
+   */
   clearList() {
     items.splice(0, items.length);
-    //this.testService.getItems().splice(0, this.testService.getItems().length);
   }
 
   /**
-   * This method creates a new configuration with a basic structure, updating it from time to time
-   * based on the needs requested by the customer regarding entities, links...
+   * This method creates a new configuration with a basic structure.
    */
   exportConfiguration() {
     const jsonEntities = this.createEntityJson();
@@ -46,6 +52,12 @@ export class ConfigurationService {
     };
   }
 
+  /**
+   * Reset the list of items and updates the configuration with the new entities,tables and links by
+   * iterating over the nodes and links data sources.
+   * @param nodes the list of the nodes coming from the diagram
+   * @param links the list of the links coming from the diagram
+   */
   updateConfiguration(nodes: ArrayStore, links: ArrayStore) {
     this.clearList();
     console.log("updateConfiguration")
@@ -70,6 +82,9 @@ export class ConfigurationService {
     console.log(items)
   }
 
+  /**
+   * Iterates over the list of items and creates a list of entities ready to be exported.
+   */
   private createEntityJson() {
     return this.getItems().filter(entity => entity.type === 'entity').map(entity => ({
       name: entity.name,
@@ -79,6 +94,9 @@ export class ConfigurationService {
     }));
   }
 
+  /**
+   * Iterates over the list of items and creates a list of tables ready to be exported.
+   */
   private createTableJson() {
     return this.getItems().filter(entity => entity.type === 'table').map(table => ({
       tableName: table.name,
@@ -87,6 +105,9 @@ export class ConfigurationService {
     }))
   }
 
+  /**
+   * Iterates over the list of items and creates a list of links ready to be exported.
+   */
   private createLinkJson() {
     return this.getItems().filter(entity => entity.type === 'link').map(link => ({
       first_entity: link.first_item,
@@ -95,10 +116,11 @@ export class ConfigurationService {
     }));
   }
 
-  getCurrentID() {
+  private getCurrentID() {
     return this.generatedID;
   }
-  getFirstID() {
+
+  private getFirstID() {
     return this.firstID;
   }
 }
