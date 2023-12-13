@@ -6,7 +6,7 @@ def generate_case_get_link_first_entity(links, name_partition_key_field, id_sepa
         'one-to-one': generate_case_many_to_one_or_one_to_one_first_entity
     }
 
-    return ''.join([mapping[link['numerosity']](link, name_partition_key_field) for link in links])
+    return ''.join([mapping[link['numerosity']](link, name_partition_key_field, id_separator) for link in links])
 
 
 def generate_case_get_link_second_entity(links, name_partition_key_field, id_separator):

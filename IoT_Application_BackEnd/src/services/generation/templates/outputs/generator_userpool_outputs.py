@@ -4,6 +4,7 @@ def generate_user_pool_outputs() -> str:
     :return: The user pool outputs.
     """
     return f"""{__generate_user_pool_id()}
+{__generate_secret_id()}    
     """
 
 
@@ -17,5 +18,18 @@ def __generate_user_pool_id() -> str:
     Description: IoT Application User Pool Id
     Value: !Ref IoTApplicationUserPool
     Export:
-      Name: !Sub "${Project}-IoTApplicationUserPoolId"
+      Name: !Sub "${Project}-IoTApplicationUserPoolId" """
+
+
+def __generate_secret_id() -> str:
+    """
+    This function generates the secret id output.
+    :return: The secret id output.
+    """
+    return """
+  ClientSecret:
+    Description: IoT Application User Pool Client Secret
+    Value: !GetAtt UserPoolWebClient.ClientSecret
+    Export:
+      Name: !Sub "${Project}-IoTApplicationUserPoolClientSecret"
     """

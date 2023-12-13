@@ -42,7 +42,7 @@ def __generate_table_attributes(resource: dict) -> str:
     :param resource: the resource.
     :return: the DynamoDB table attributes.
     """
-    attribute_mappings = {"String": "S", "Number": "N", "Binary": "B"}
+    attribute_mappings = {"string": "S", "number": "N", "binary": "B"}
     return f"""
         - AttributeName: {resource['partition_key']['name']}
           AttributeType: {attribute_mappings[resource['partition_key']['type']]}

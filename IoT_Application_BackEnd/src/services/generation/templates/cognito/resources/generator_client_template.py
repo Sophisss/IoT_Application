@@ -20,6 +20,7 @@ def __generate_client_properties() -> str:
       ClientName: "WebClient"
       RefreshTokenValidity: 365
       ExplicitAuthFlows: {__generate_explicit_auth_flows()}
+      GenerateSecret: true
       CallbackURLs:
         - "devq://"
       LogoutURLs:
