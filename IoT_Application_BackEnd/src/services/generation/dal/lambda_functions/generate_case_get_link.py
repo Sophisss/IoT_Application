@@ -38,7 +38,7 @@ def generate_case_one_to_many_or_many_to_many_first_entity(link, name_partition_
                 if '{second_entity}' in event_parse.projection:
                     res = project_manager.get_all_{second_entity.lower()}_for_{first_entity.lower()}(event_parse.arguments['{link['primary_key'][0]}'])
                     if res:
-                        for item in response:
+                        for item in res:
                             check_response_status(item)
                     response['{second_entity}'] = list(
                         map(lambda {second_entity.lower()}: change_name_keys({second_entity.lower()}['Item'], ('{link['primary_key'][1]}', '{name_partition_key_field}', '{id_separator}')), res))"""
@@ -62,7 +62,7 @@ def generate_case_many_to_one_or_many_to_many_second_entity(link, name_partition
                 if '{first_entity}' in event_parse.projection:
                     res = project_manager.get_all_{first_entity.lower()}_for_{second_entity.lower()}(event_parse.arguments['{link['primary_key'][1]}'])
                     if res:
-                        for item in response:
+                        for item in res:
                             check_response_status(item)
                     response['{first_entity}'] = list(
                         map(lambda {first_entity.lower()}: change_name_keys({first_entity.lower()}['Item'], ('{link['primary_key'][0]}', '{name_partition_key_field}', '{id_separator}')), res))"""
