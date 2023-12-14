@@ -37,17 +37,30 @@ export class DiagramComponent {
         values.ID = values.ID || that.configService.assignID();
         values.name = values.name || "Entity's Name";
       },
+      onModified() {
+        that.drawerUpdateMethods();
+      }
     });
     this.linksDataSource = new ArrayStore({
       key: 'ID',
       data: this.configService.getItems().filter((item) => item.type === 'link'),
       onInserting(values) {
-        console.log("values", values)
         values.ID = values.ID || that.configService.assignID();
         values.name = values.name || that.getLinkName(values);
         values.type = 'link';
       },
+      onModified() {
+        that.drawerUpdateMethods();
+      }
     });
+  }
+
+  /**
+   * Calls for the update of the content of the drawer.
+   */
+  drawerUpdateMethods() {
+    this.configService.updateConfiguration(this.dataSource, this.linksDataSource);
+    this.configService.updateContent();
   }
 
   /**
@@ -85,7 +98,7 @@ export class DiagramComponent {
   deleteItem(item: Item) {
     this.dataSource.push([{type: 'remove', key: item.ID}]);
     this.cancelEditItem();
-    console.log(this.dataSource);
+    //TODO rimuovi link corrispondenti se entity
   }
 
   /**
@@ -93,7 +106,6 @@ export class DiagramComponent {
    * data source based on the type of the item and closes the popup window.
    */
   updateItem() {
-    console.log(this.currentItem.type)
     if (this.currentItem.type === 'link') {
       this.linksDataSource.push([{
         type: 'update',
@@ -116,7 +128,7 @@ export class DiagramComponent {
     }
     this.popupVisible = false;
 
-    //TODO aggiungi aggiorna json
+    this.drawerUpdateMethods();
   }
 
   /**
@@ -124,12 +136,6 @@ export class DiagramComponent {
    * changes to the current item.
    */
   cancelEditItem() {
-    if (this.currentItem.type === 'entity' || this.currentItem.type === 'table') {
-      console.log(this.currentItem.type, this.dataSource);
-    } else {
-      console.log(this.currentItem.type, this.linksDataSource);
-    }
-
     this.currentItem = new Item();
     this.popupVisible = false;
   }
@@ -159,7 +165,7 @@ export class DiagramComponent {
       if (event.args.connector && event.args.connector.fromId === event.args.connector.toId)
         event.allowed = false;
 
-    //TODO aggiungi aggiorna json
+    //TODO vieta di creare più link tra stesse entità e di collegare entità e tabelle
   }
 
   /**
@@ -167,6 +173,7 @@ export class DiagramComponent {
    * @param event
    */
   requestLayoutUpdateHandler(event: any) {
+    this.drawerUpdateMethods();
     for (let i = 0; i < event.changes.length; i++) {
       if (event.changes[i].type === 'remove') {
         event.allowed = true;
@@ -175,7 +182,7 @@ export class DiagramComponent {
   }
 
   selectionChangedHandler(event: any) {
-    console.log(event.items)
+    //console.log(event.items)
   }
 
   /**

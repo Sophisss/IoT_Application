@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Item} from "../models/item.model";
 import ArrayStore from "devextreme/data/array_store";
+import {BehaviorSubject} from "rxjs";
 
 const items: Item[] = [];
 
@@ -15,11 +16,21 @@ export class ConfigurationService {
   firstID: number = 100;
   generatedID: number = 100;
 
+  private updateSignalSubject = new BehaviorSubject<void>(null);
+  updateSignal$ = this.updateSignalSubject.asObservable();
+
+  /**
+   * Signals to the drawer the necessity to update its content.
+   */
+  updateContent() {
+    this.updateSignalSubject.next();
+  }
+
   /**
    * This method increments the ID by 1 and returns it to assign it to a new item.
    */
   assignID() {
-    console.log("generatedID", this.generatedID)
+    //console.log("generatedID", this.generatedID)
     return this.generatedID++;
   }
 
@@ -68,7 +79,7 @@ export class ConfigurationService {
     this.clearList();
     console.log("updateConfiguration")
     for (let i = this.getFirstID(); i <= this.getCurrentID(); i++) {
-      console.log("nodes", i)
+      //console.log("nodes", i)
       nodes.byKey(i).then((data) => {
 
         items.push(data);
@@ -77,15 +88,14 @@ export class ConfigurationService {
     }
 
     for (let i = this.getFirstID(); i <= this.getCurrentID(); i++) {
-      console.log("links", i)
+      //console.log("links", i)
       links.byKey(i).then((data) => {
 
         items.push(data);
-        console.log(data)
+        //console.log(data)
       });
     }
-
-    console.log(items)
+    //console.log(items)
   }
 
   /**
