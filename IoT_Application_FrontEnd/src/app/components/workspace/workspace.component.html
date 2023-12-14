@@ -4,13 +4,17 @@
 
 <div id="body">
     <dx-drawer
-            [closeOnOutsideClick]=true
+            [closeOnOutsideClick]=false
             [opened]="getDrawerOpen()"
             openedStateMode="shrink"
             position="right"
             revealMode="slide"
-            template="template">
+            template="template"
+    >
         <app-diagram></app-diagram>
-        <div *dxTemplate="let data of 'template'">Test drawer</div>
+        <div *dxTemplate="let data of 'template'" class="title">
+            <h2 id="drawer-title"><b>JSON configuration</b></h2>
+            <app-drawer-content></app-drawer-content>
+        </div>
     </dx-drawer>
 </div>

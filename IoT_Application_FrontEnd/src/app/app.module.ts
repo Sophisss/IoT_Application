@@ -19,6 +19,7 @@ import {
   DxTooltipModule
 } from "devextreme-angular";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {DrawerContentComponent} from './components/drawer-content/drawer-content.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     HeaderComponent,
     WorkspaceComponent,
     DiagramComponent,
+    DrawerContentComponent,
   ],
   imports: [
     BrowserModule,
