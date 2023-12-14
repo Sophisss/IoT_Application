@@ -2,6 +2,7 @@
   height: 8%;
   display: grid;
   align-content: center;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2)
 }
 
 #body {
@@ -11,4 +12,16 @@
 #devq-simple-logo {
   height: 40px;
   width: auto;
+}
+
+#drawer-title {
+  margin-bottom: 0;
+  margin-left: 10px;
+  color: #0565af;
+}
+
+.title {
+  width: 350px;
+  height: 100%;
+  background-color: white;
 }
