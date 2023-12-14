@@ -11,4 +11,9 @@ export class HeaderComponent {
 
   constructor(protected configurationService: ConfigurationService) {
   }
+
+  switchToText() {
+    this.isModifiable = false;
+    this.configurationService.updateContent();
+  }
 }

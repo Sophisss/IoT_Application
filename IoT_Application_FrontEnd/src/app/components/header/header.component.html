@@ -7,8 +7,8 @@
                     <dx-text-box [(value)]="configurationService.projectTitle"
                                  [inputAttr]="{ 'aria-label': 'Project Title' }"
                                  [maxLength]="25"
-                                 (onFocusOut)="isModifiable = false"
-                                 (onEnterKey)="isModifiable = false"
+                                 (onFocusOut)="switchToText()"
+                                 (onEnterKey)="switchToText()"
                                  id="project-title-textbox"
                                  stylingMode="filled"
                     ></dx-text-box>
