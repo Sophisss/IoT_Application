@@ -17,16 +17,5 @@ export class Item {
 
   second_item: string;
 
-  fields: Field[] = [
-    {
-      name: 'Field 1',
-      type: 'text',
-      required: true
-    },
-    {
-      name: 'Field 2',
-      type: 'number',
-      required: true
-    },
-  ];
+  fields: Field[];
 }

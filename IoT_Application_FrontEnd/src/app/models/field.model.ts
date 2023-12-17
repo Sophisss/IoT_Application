@@ -18,5 +18,5 @@ export class Field {
   maxLength?: number | undefined
   minimum?: number | undefined
   maximum?: number | undefined
-  allowed_values?: string[] = []
+  allowedValues?: string[] | undefined
 }

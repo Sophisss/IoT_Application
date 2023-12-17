@@ -180,7 +180,7 @@
                 <div class="dx-field-value">
                     <dx-text-box
                             [inputAttr]="{ 'aria-label': 'name' }"
-                            value="{{field.name}}"
+                            [(value)]="field.name"
                     ></dx-text-box>
                 </div>
             </div>
@@ -190,7 +190,7 @@
                 <div class="dx-field-value">
                     <dx-text-box
                             [inputAttr]="{ 'aria-label': 'type' }"
-                            value="{{field.type}}"
+                            [(value)]="field.type"
                     ></dx-text-box>
                 </div>
             </div>

@@ -77,7 +77,6 @@ export class ConfigurationService {
    */
   updateConfiguration(nodes: ArrayStore, links: ArrayStore) {
     this.clearList();
-    console.log("updateConfiguration")
     for (let i = this.getFirstID(); i <= this.getCurrentID(); i++) {
       //console.log("nodes", i)
       nodes.byKey(i).then((data) => {

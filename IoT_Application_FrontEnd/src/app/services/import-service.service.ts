@@ -41,13 +41,12 @@ export class ImportServiceService {
         ID: this.configService.assignID(),
         name: table.tableName,
         type: "table",
-        //fields: entity.fields,
         table: null,
-        partition_key: null,
-        sort_key: null,
+        partition_key: null, // table.partition_key,
+        sort_key: null, //table.sort_key,
         first_item: null,
         second_item: null,
-        fields: null
+        fields: null //table.fields,
       }
       this.configService.getItems().push(nodeTable);
     }
@@ -64,7 +63,7 @@ export class ImportServiceService {
           sort_key: null,
           first_item: link.first_entity,
           second_item: link.second_entity,
-          fields: null,
+          fields: null, // link.fields,
         }
       this.configService.getItems().push(edge);
     }
