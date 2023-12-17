@@ -42,3 +42,7 @@
   background-color: firebrick;
   color: #ffffff;
 }
+
+::ng-deep .dx-popup-content .dx-fieldset.buttons.bottom > * {
+  margin-bottom: 10px;
+}

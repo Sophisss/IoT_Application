@@ -19,26 +19,4 @@ export class Field {
   minimum?: number | undefined
   maximum?: number | undefined
   allowed_values?: string[] = []
-
-  constructor(name: string, type: string, required: boolean, minLength?: number, maxLength?: number, minimum?: number, maximum?: number, allowed_values?: string[]) {
-    this.name = name
-    this.type = type
-    this.required = required
-    this.minLength = (minLength === null || minLength === undefined) ? null : minLength;
-    this.maxLength = (maxLength === null || maxLength === undefined) ? null : maxLength;
-    this.minimum = (minimum === null || minimum === undefined) ? null : minimum;
-    this.maximum = (maximum === null || maximum === undefined) ? null : maximum;
-    this.allowed_values = (allowed_values === null || allowed_values === undefined) ? null : allowed_values;
-    if (this.notAString() && this.notANumber() && this.type !== 'boolean') {
-      throw new Error("The field is neither a string nor a number");
-    }
-  }
-
-  notANumber(): boolean {
-    return (this.minimum === null || this.maximum === null) && this.type !== 'number';
-  }
-
-  notAString(): boolean {
-    return (this.minLength === null || this.maxLength === null) && this.type !== 'string';
-  }
 }

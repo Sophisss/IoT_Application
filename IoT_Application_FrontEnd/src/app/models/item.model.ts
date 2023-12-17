@@ -1,3 +1,5 @@
+import {Field} from "./field.model";
+
 export class Item {
   ID: number;
 
@@ -15,4 +17,16 @@ export class Item {
 
   second_item: string;
 
+  fields: Field[] = [
+    {
+      name: 'Field 1',
+      type: 'text',
+      required: true
+    },
+    {
+      name: 'Field 2',
+      type: 'number',
+      required: true
+    },
+  ];
 }

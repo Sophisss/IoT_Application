@@ -104,7 +104,7 @@ export class ConfigurationService {
   private createEntityJson() {
     return this.getItems().filter(entity => entity.type === 'entity').map(entity => ({
       name: entity.name,
-      //fields: entity.fields,
+      fields: entity.fields,
       table: entity.table,
       primary_key: []
     }));

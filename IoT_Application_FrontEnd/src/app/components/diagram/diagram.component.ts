@@ -4,6 +4,7 @@ import ArrayStore from "devextreme/data/array_store";
 import {ConfigurationService} from "../../services/configuration.service";
 import {CustomCommandService} from "../../services/custom-command.service";
 import {Item} from "../../models/item.model";
+import {Field} from "../../models/field.model";
 
 @Component({
   selector: 'app-diagram',
@@ -36,6 +37,7 @@ export class DiagramComponent {
       onInserting(values) {
         values.ID = values.ID || that.configService.assignID();
         values.name = values.name || "Entity's Name";
+        values.fields = values.fields || [];
       },
       onModified() {
         that.drawerUpdateMethods();
@@ -53,6 +55,10 @@ export class DiagramComponent {
         that.drawerUpdateMethods();
       }
     });
+  }
+
+  newField() {
+    this.currentItem.fields.push(new Field());
   }
 
   /**
@@ -74,6 +80,7 @@ export class DiagramComponent {
       return {
         name: obj.name,
         table: obj.table,
+        fields: obj.fields,
         partition_key: obj.partition_key,
         sort_key: obj.sort_key,
       };
@@ -121,6 +128,7 @@ export class DiagramComponent {
         data: {
           name: this.currentItem.name,
           table: this.currentItem.table,
+          fields: this.currentItem.fields,
           partition_key: this.currentItem.partition_key,
           sort_key: this.currentItem.sort_key,
         },

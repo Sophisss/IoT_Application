@@ -104,11 +104,11 @@
 <dx-popup
         [(visible)]="popupVisible"
         [dragEnabled]="true"
-        [height]="480"
+        [height]="500"
         [hideOnOutsideClick]="false"
         [showCloseButton]="false"
         [showTitle]="true"
-        [width]="400"
+        [width]="480"
         title="Edit {{currentItem.type | titlecase}}"
 >
     <div *dxTemplate="let data of 'content'">
@@ -168,9 +168,36 @@
                     </div>
                 </div>
             </div>
+
+            <hr>
+            <h3>Fields</h3>
         </div>
 
-        <div class="dx-fieldset buttons">
+        <div *ngFor="let field of currentItem.fields" class="dx-fieldset">
+            <h4>Field</h4>
+            <div class="dx-field">
+                <div class="dx-field-label">Name</div>
+                <div class="dx-field-value">
+                    <dx-text-box
+                            [inputAttr]="{ 'aria-label': 'name' }"
+                            value="{{field.name}}"
+                    ></dx-text-box>
+                </div>
+            </div>
+
+            <div class="dx-field">
+                <div class="dx-field-label">Type</div>
+                <div class="dx-field-value">
+                    <dx-text-box
+                            [inputAttr]="{ 'aria-label': 'type' }"
+                            value="{{field.type}}"
+                    ></dx-text-box>
+                </div>
+            </div>
+        </div>
+
+        <div class="dx-fieldset buttons bottom">
+            <dx-button (click)="this.newField()" text="Add new Field"></dx-button>
             <dx-button (click)="this.updateItem()" id="update" text="Update" type="default"></dx-button>
             <dx-button (click)="this.cancelEditItem()" text="Cancel"></dx-button>
             <dx-button (click)="deleteItem(currentItem)" id="delete" text="Delete"></dx-button>

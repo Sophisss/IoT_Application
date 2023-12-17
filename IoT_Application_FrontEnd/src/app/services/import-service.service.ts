@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ConfigurationService} from "./configuration.service";
 import {Item} from "../models/item.model";
+import {Field} from "../models/field.model";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class ImportServiceService {
         ID: this.configService.assignID(),
         name: entity.name,
         type: "entity",
-        //fields: entity.fields,
+        fields: entity.fields,
         table: entity.table,
         partition_key: null,
         sort_key: null,
@@ -46,6 +47,7 @@ export class ImportServiceService {
         sort_key: null,
         first_item: null,
         second_item: null,
+        fields: null
       }
       this.configService.getItems().push(nodeTable);
     }
@@ -62,7 +64,7 @@ export class ImportServiceService {
           sort_key: null,
           first_item: link.first_entity,
           second_item: link.second_entity,
-          //fields: link.fields,
+          fields: null,
         }
       this.configService.getItems().push(edge);
     }
