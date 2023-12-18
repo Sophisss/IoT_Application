@@ -177,7 +177,7 @@ export class DiagramComponent {
         event.allowed = false;
       }
       //Connecting an entity to a table is not allowed
-      if (event.args.connector && event.args.newShape && event.args.newShape.dataItem.type === 'entity') {
+      if (event.args.connector && event.args.newShape && event.args.newShape.dataItem.type === 'table') {
         event.allowed = false;
       }
     }
