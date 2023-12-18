@@ -210,6 +210,10 @@ export class DiagramComponent implements OnInit {
       event.allowed = false;
     }
     if (event.operation === "changeConnection") {
+      //Drawing a connector without connecting it to another shape is not allowed
+      if (event.args.connector && event.args.newShape === undefined && event.args.oldShape === undefined) {
+        event.allowed = false;
+      }
       //Connecting a shape to itself is not allowed
       if (event.args.connector && event.args.connector.fromId === event.args.connector.toId)
         event.allowed = false;
