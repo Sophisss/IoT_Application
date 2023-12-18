@@ -82,7 +82,7 @@ export class ConfigurationService {
       nodes.byKey(i).then((data) => {
 
         items.push(data);
-        console.log(data)
+        //console.log(data)
       });
     }
 

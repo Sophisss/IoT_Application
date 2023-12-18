@@ -168,12 +168,33 @@ export class DiagramComponent {
     if (event.operation === "deleteShape") {
       event.allowed = false;
     }
-    if (event.operation === "changeConnection")
+    if (event.operation === "changeConnection") {
       //Connecting a shape to itself is not allowed
       if (event.args.connector && event.args.connector.fromId === event.args.connector.toId)
         event.allowed = false;
+      //Connecting two shapes more than once is not allowed
+      if (event.args.connector && this.linkAlreadyExists(event.args.connector.fromKey, event.args.connector.toKey)) {
+        event.allowed = false;
+      }
+      //Connecting an entity to a table is not allowed
+      if (event.args.connector && event.args.newShape && event.args.newShape.dataItem.type === 'entity') {
+        event.allowed = false;
+      }
+    }
+  }
 
-    //TODO vieta di creare più link tra stesse entità e di collegare entità e tabelle
+  /**
+   * Checks if a link between two shapes already exists.
+   * @param fromKey the name of the first shape (the one from which the link starts)
+   * @param toKey the name of the second shape (the one to which the link arrives)
+   */
+  linkAlreadyExists(fromKey: string, toKey: string): boolean {
+    const items = this.configService.getItems();
+
+    let links = items.filter((item) => item.type === 'link' &&
+      (item.first_item === fromKey && item.second_item === toKey || item.first_item === toKey && item.second_item === fromKey))
+
+    return links.length > 0;
   }
 
   /**
@@ -208,15 +229,14 @@ export class DiagramComponent {
   getLinkName(values: any): string {
     let linkName: string, firstItem: string, secondItem: string;
     //usare questo se si vuole usare l'ID come key
-    /*this.dataSource.byKey(values.first_item).then((data) => {
+    this.dataSource.byKey(values.first_item).then((data) => {
       firstItem = data.name;
     });
     this.dataSource.byKey(values.second_item).then((data) => {
       secondItem = data.name;
     });
-    linkName = firstItem + ' - ' + secondItem;*/
+    linkName = firstItem + ' - ' + secondItem;
 
-    linkName = values.first_item + ' - ' + values.second_item;
     console.log(linkName)
     return linkName;
   }

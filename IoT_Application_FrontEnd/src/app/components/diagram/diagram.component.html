@@ -20,7 +20,7 @@
     <dxo-nodes
             [customDataExpr]="itemCustomDataExpr"
             [dataSource]="dataSource"
-            keyExpr="ID"
+            keyExpr="name"
             textExpr="name"
             typeExpr="type"
     >
@@ -179,8 +179,8 @@
                 <div class="dx-field-label">Name</div>
                 <div class="dx-field-value">
                     <dx-text-box
-                            [inputAttr]="{ 'aria-label': 'name' }"
                             [(value)]="field.name"
+                            [inputAttr]="{ 'aria-label': 'name' }"
                     ></dx-text-box>
                 </div>
             </div>
@@ -189,8 +189,8 @@
                 <div class="dx-field-label">Type</div>
                 <div class="dx-field-value">
                     <dx-text-box
-                            [inputAttr]="{ 'aria-label': 'type' }"
                             [(value)]="field.type"
+                            [inputAttr]="{ 'aria-label': 'type' }"
                     ></dx-text-box>
                 </div>
             </div>
