@@ -62,6 +62,9 @@ export class DiagramComponent implements OnInit {
     });
   }
 
+  /**
+   * Returns the form group of the popup window based on the type of the current item.
+   */
   getFormGroup() {
     switch (this.currentItem.type) {
       case 'entity':
@@ -75,6 +78,9 @@ export class DiagramComponent implements OnInit {
     }
   }
 
+  /**
+   * Initializes the form groups of the popup window.
+   */
   ngOnInit() {
     this.entityForm = new FormGroup({
       name: new FormControl(this.currentItem.name, Validators.required),
@@ -213,6 +219,13 @@ export class DiagramComponent implements OnInit {
       }
       //Connecting an entity to a table is not allowed
       if (event.args.connector && event.args.newShape && event.args.newShape.dataItem.type === 'table') {
+        event.allowed = false;
+      }
+    }
+    if (event.operation === "addShape") {
+      //Adding a new blank shape before updating the existing one is not allowed
+      if (this.configService.getItems().filter((item) => item.name === "Entity's Name").length > 0 ||
+        this.configService.getItems().filter((item) => item.name === "Table's Name").length > 0) {
         event.allowed = false;
       }
     }
