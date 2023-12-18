@@ -224,8 +224,10 @@ export class DiagramComponent implements OnInit {
     }
     if (event.operation === "addShape") {
       //Adding a new blank shape before updating the existing one is not allowed
-      if (this.configService.getItems().filter((item) => item.name === "Entity's Name").length > 0 ||
-        this.configService.getItems().filter((item) => item.name === "Table's Name").length > 0) {
+      if ((event.args.shape.type === 'entity' &&
+          this.configService.getItems().filter((item) => item.name === "Entity's Name").length > 0) ||
+        (event.args.shape.type === 'table' &&
+          this.configService.getItems().filter((item) => item.name === "Table's Name").length > 0)) {
         event.allowed = false;
       }
     }
