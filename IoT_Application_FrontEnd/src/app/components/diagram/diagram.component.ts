@@ -48,7 +48,6 @@ export class DiagramComponent {
       data: this.configService.getItems().filter((item) => item.type === 'link'),
       onInserting(values) {
         values.ID = values.ID || that.configService.assignID();
-        values.name = values.name || that.getLinkName(values);
         values.type = 'link';
       },
       onModified() {
@@ -117,9 +116,7 @@ export class DiagramComponent {
       this.linksDataSource.push([{
         type: 'update',
         key: this.currentItem.ID,
-        data: {
-          name: this.currentItem.name,
-        },
+        data: {},
       }]);
     } else {
       this.dataSource.push([{
@@ -220,25 +217,6 @@ export class DiagramComponent {
    */
   onCustomCommand(event: any) {
     this.customCommandService.customCommandHandler(event, this.dataSource, this.linksDataSource);
-  }
-
-  /**
-   * Builds the string for the name of the link.
-   * @param values the link's values
-   */
-  getLinkName(values: any): string {
-    let linkName: string, firstItem: string, secondItem: string;
-    //usare questo se si vuole usare l'ID come key
-    this.dataSource.byKey(values.first_item).then((data) => {
-      firstItem = data.name;
-    });
-    this.dataSource.byKey(values.second_item).then((data) => {
-      secondItem = data.name;
-    });
-    linkName = firstItem + ' - ' + secondItem;
-
-    console.log(linkName)
-    return linkName;
   }
 
   /**

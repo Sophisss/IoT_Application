@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ConfigurationService} from "./configuration.service";
 import {Item} from "../models/item.model";
-import {Field} from "../models/field.model";
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +55,7 @@ export class ImportServiceService {
       let edge: Item =
         {
           ID: this.configService.assignID(),
-          name: link.first_entity + " - " + link.second_entity,
+          name: null,
           type: 'link',
           table: null,
           partition_key: null,
