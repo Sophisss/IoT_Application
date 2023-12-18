@@ -96,8 +96,7 @@
     </dxi-custom-shape>
 
     <!-- The menu that appears at the end of a connector that leads to nothing to create a new object. -->
-    <dxo-context-toolbox [enabled]="false">
-    </dxo-context-toolbox>
+    <dxo-context-toolbox [enabled]="false"></dxo-context-toolbox>
 </dx-diagram>
 
 <dx-popup
@@ -111,95 +110,106 @@
         title="Edit {{currentItem.type | titlecase}}"
 >
     <div *dxTemplate="let data of 'content'">
-        <div class="dx-fieldset">
-            <div class="dx-field">
-                <div class="dx-field-label">ID</div>
-                <div class="dx-field-value">
-                    <dx-text-box
-                            [disabled]="true"
-                            [inputAttr]="{ 'aria-label': 'ID' }"
-                            value="{{currentItem.ID}}"
-                    ></dx-text-box>
+        <form (submit)="updateItem()" [formGroup]="getFormGroup()">
+            <div class="dx-fieldset">
+                <div class="dx-field">
+                    <div class="dx-field-label">ID</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                                [disabled]="true"
+                                [inputAttr]="{ 'aria-label': 'ID' }"
+                                value="{{currentItem.ID}}"
+                        ></dx-text-box>
+                    </div>
                 </div>
-            </div>
-            <div class="dx-field">
-                <div class="dx-field-label">Name</div>
-                <div class="dx-field-value">
-                    <dx-text-box
-                            [(value)]="currentItem.name"
-                            [inputAttr]="{ 'aria-label': 'Name' }"
-                    ></dx-text-box>
+                <div class="dx-field">
+                    <div class="dx-field-label">Name</div>
+                    <div class="dx-field-value">
+                        <dx-text-box
+                                [(value)]="currentItem.name"
+                                [inputAttr]="{ 'aria-label': 'Name' }"
+                                formControlName="name"
+                        ></dx-text-box>
+                    </div>
                 </div>
-            </div>
 
-            <div [ngSwitch]="this.currentItem.type">
+                <div [ngSwitch]="this.currentItem.type">
 
-                <div *ngSwitchCase="'entity'" class="entityCondition">
-                    <div class="dx-field">
-                        <div class="dx-field-label">Table</div>
-                        <div class="dx-field-value">
-                            <dx-text-box
-                                    [(value)]="currentItem.table"
-                                    [inputAttr]="{ 'aria-label': 'Table' }"
-                            ></dx-text-box>
+                    <div *ngSwitchCase="'entity'" class="entityCondition">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Table</div>
+                            <div class="dx-field-value">
+                                <dx-text-box
+                                        [(value)]="currentItem.table"
+                                        [inputAttr]="{ 'aria-label': 'Table' }"
+                                        formControlName="table"
+                                ></dx-text-box>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngSwitchCase="'table'" class="tableCondition">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Partition Key</div>
+                            <div class="dx-field-value">
+                                <dx-text-box
+                                        [(value)]="currentItem.partition_key"
+                                        [inputAttr]="{ 'aria-label': 'Partition Key' }"
+                                        formControlName="partition_key"
+                                ></dx-text-box>
+                            </div>
+                        </div>
+                        <div class="dx-field">
+                            <div class="dx-field-label">Sort Key</div>
+                            <div class="dx-field-value">
+                                <dx-text-box
+                                        [(value)]="currentItem.sort_key"
+                                        [inputAttr]="{ 'aria-label': 'Sort Key' }"
+                                        formControlName="sort_key"
+                                ></dx-text-box>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div *ngSwitchCase="'table'" class="tableCondition">
+                <div *ngIf="currentItem.type !== 'table'">
+                    <hr>
+                    <h3>Fields</h3>
+                </div>
+            </div>
+            <div *ngIf="currentItem.type !== 'table'">
+                <div *ngFor="let field of currentItem.fields" class="dx-fieldset">
+                    <h4>Field</h4>
                     <div class="dx-field">
-                        <div class="dx-field-label">Partition Key</div>
+                        <div class="dx-field-label">Name</div>
                         <div class="dx-field-value">
                             <dx-text-box
-                                    [(value)]="currentItem.partition_key"
-                                    [inputAttr]="{ 'aria-label': 'Partition Key' }"
+                                    [(value)]="field.name"
+                                    [inputAttr]="{ 'aria-label': 'name' }"
                             ></dx-text-box>
                         </div>
                     </div>
+
                     <div class="dx-field">
-                        <div class="dx-field-label">Sort Key</div>
+                        <div class="dx-field-label">Type</div>
                         <div class="dx-field-value">
                             <dx-text-box
-                                    [(value)]="currentItem.sort_key"
-                                    [inputAttr]="{ 'aria-label': 'Sort Key' }"
+                                    [(value)]="field.type"
+                                    [inputAttr]="{ 'aria-label': 'type' }"
                             ></dx-text-box>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <hr>
-            <h3>Fields</h3>
-        </div>
-
-        <div *ngFor="let field of currentItem.fields" class="dx-fieldset">
-            <h4>Field</h4>
-            <div class="dx-field">
-                <div class="dx-field-label">Name</div>
-                <div class="dx-field-value">
-                    <dx-text-box
-                            [(value)]="field.name"
-                            [inputAttr]="{ 'aria-label': 'name' }"
-                    ></dx-text-box>
-                </div>
-            </div>
-
-            <div class="dx-field">
-                <div class="dx-field-label">Type</div>
-                <div class="dx-field-value">
-                    <dx-text-box
-                            [(value)]="field.type"
-                            [inputAttr]="{ 'aria-label': 'type' }"
-                    ></dx-text-box>
-                </div>
-            </div>
-        </div>
+        </form>
 
         <div class="dx-fieldset buttons bottom">
-            <dx-button (click)="this.newField()" text="Add new Field"></dx-button>
-            <dx-button (click)="this.updateItem()" id="update" text="Update" type="default"></dx-button>
-            <dx-button (click)="this.cancelEditItem()" text="Cancel"></dx-button>
-            <dx-button (click)="deleteItem(currentItem)" id="delete" text="Delete"></dx-button>
+            <dx-button (onClick)="this.newField()" *ngIf="currentItem.type !== 'table'" icon="add"
+                       text="Add new Field"></dx-button>
+            <dx-button (onClick)="this.updateItem()" [disabled]="getFormGroup()?.invalid" id="update" text="Update"
+                       type="default"></dx-button>
+            <dx-button (onClick)="this.cancelEditItem()" text="Cancel"></dx-button>
+            <dx-button (onClick)="deleteItem(currentItem)" id="delete" text="Delete"></dx-button>
         </div>
     </div>
 </dx-popup>

@@ -1,17 +1,18 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
 import ArrayStore from "devextreme/data/array_store";
 import {ConfigurationService} from "../../services/configuration.service";
 import {CustomCommandService} from "../../services/custom-command.service";
 import {Item} from "../../models/item.model";
 import {Field} from "../../models/field.model";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-diagram',
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss']
 })
-export class DiagramComponent {
+export class DiagramComponent implements OnInit {
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   items: Item[];
@@ -21,6 +22,10 @@ export class DiagramComponent {
   linksDataSource: ArrayStore;
 
   popupVisible = false;
+
+  entityForm: FormGroup;
+  tableForm: FormGroup;
+  linkForm: FormGroup;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -53,6 +58,36 @@ export class DiagramComponent {
       onModified() {
         that.drawerUpdateMethods();
       }
+    });
+  }
+
+  getFormGroup() {
+    switch (this.currentItem.type) {
+      case 'entity':
+        return this.entityForm;
+      case 'table':
+        return this.tableForm;
+      case 'link':
+        return this.linkForm;
+      default:
+        return this.entityForm;
+    }
+  }
+
+  ngOnInit() {
+    this.entityForm = new FormGroup({
+      name: new FormControl(this.currentItem.name, Validators.required),
+      table: new FormControl(this.currentItem.table, Validators.required),
+    });
+    this.tableForm = new FormGroup({
+      name: new FormControl(this.currentItem.name, Validators.required),
+      partition_key: new FormControl(this.currentItem.partition_key, Validators.required),
+      sort_key: new FormControl(this.currentItem.sort_key, Validators.required),
+    });
+    this.linkForm = new FormGroup({
+      name: new FormControl(this.currentItem.name, Validators.required),
+      first_item: new FormControl(this.currentItem.first_item, Validators.required),
+      second_item: new FormControl(this.currentItem.second_item, Validators.required),
     });
   }
 
@@ -104,7 +139,6 @@ export class DiagramComponent {
   deleteItem(item: Item) {
     this.dataSource.push([{type: 'remove', key: item.ID}]);
     this.cancelEditItem();
-    //TODO rimuovi link corrispondenti se entity
   }
 
   /**
