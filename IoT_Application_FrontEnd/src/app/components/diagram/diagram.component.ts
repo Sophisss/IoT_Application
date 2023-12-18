@@ -26,6 +26,7 @@ export class DiagramComponent implements OnInit {
   entityForm: FormGroup;
   tableForm: FormGroup;
   linkForm: FormGroup;
+  placeholderForm: FormGroup;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -70,7 +71,7 @@ export class DiagramComponent implements OnInit {
       case 'link':
         return this.linkForm;
       default:
-        return this.entityForm;
+        return this.placeholderForm;
     }
   }
 
@@ -88,6 +89,9 @@ export class DiagramComponent implements OnInit {
       name: new FormControl(this.currentItem.name, Validators.required),
       first_item: new FormControl(this.currentItem.first_item, Validators.required),
       second_item: new FormControl(this.currentItem.second_item, Validators.required),
+    });
+    this.placeholderForm = new FormGroup({
+      name: new FormControl()
     });
   }
 
