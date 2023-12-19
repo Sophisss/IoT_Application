@@ -204,12 +204,12 @@
         </form>
 
         <div class="dx-fieldset buttons bottom">
-            <dx-button (onClick)="this.newField()" *ngIf="currentItem.type !== 'table'" icon="add"
+            <dx-button (onClick)="newField()" *ngIf="currentItem.type !== 'table'" icon="add"
                        text="Add new Field"></dx-button>
-            <dx-button (onClick)="this.updateItem()" [disabled]="getFormGroup()?.invalid" id="update" text="Update"
+            <dx-button (onClick)="updateItem()" [disabled]="getFormGroup()?.invalid" id="update" text="Update"
                        type="default"></dx-button>
-            <dx-button (onClick)="this.cancelEditItem()" text="Cancel"></dx-button>
-            <dx-button (onClick)="deleteItem(currentItem)" id="delete" text="Delete"></dx-button>
+            <dx-button (onClick)="cancelEditItem()" text="Cancel"></dx-button>
+            <dx-button (onClick)="deleteItem()" id="delete" text="Delete"></dx-button>
         </div>
     </div>
 </dx-popup>

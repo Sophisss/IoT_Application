@@ -92,9 +92,7 @@ export class DiagramComponent implements OnInit {
       sort_key: new FormControl(this.currentItem.sort_key, Validators.required),
     });
     this.linkForm = new FormGroup({
-      name: new FormControl(this.currentItem.name, Validators.required),
-      first_item: new FormControl(this.currentItem.first_item, Validators.required),
-      second_item: new FormControl(this.currentItem.second_item, Validators.required),
+      name: new FormControl(this.currentItem.name)
     });
     this.placeholderForm = new FormGroup({
       name: new FormControl()
@@ -144,10 +142,13 @@ export class DiagramComponent implements OnInit {
   /**
    * The method called from the 'delete' button that deletes the current item from
    * the diagram, removes it from the data source and closes the popup window.
-   * @param item the item to delete
    */
-  deleteItem(item: Item) {
-    this.dataSource.push([{type: 'remove', key: item.ID}]);
+  deleteItem() {
+    if (this.currentItem.type === 'link') {
+      this.linksDataSource.push([{type: 'remove', key: this.currentItem.ID}]);
+    } else {
+      this.dataSource.push([{type: 'remove', key: this.currentItem.ID}]);
+    }
     this.cancelEditItem();
   }
 
