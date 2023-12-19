@@ -119,7 +119,7 @@ export class DiagramComponent {
     this.popupVisible = true;
 
     this.entityForm = new FormGroup({
-      name: new FormControl("Nicola", Validators.required),
+      name: new FormControl(this.currentItem.name, Validators.required),
       table: new FormControl(this.currentItem.table, Validators.required),
     });
     this.tableForm = new FormGroup({
