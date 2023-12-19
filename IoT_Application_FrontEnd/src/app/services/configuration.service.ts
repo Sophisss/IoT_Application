@@ -127,6 +127,7 @@ export class ConfigurationService {
     return this.getItems().filter(entity => entity.type === 'link').map(link => ({
       first_entity: link.first_item,
       second_entity: link.second_item,
+      numerosity: link.numerosity,
       //fields: link.fields
     }));
   }

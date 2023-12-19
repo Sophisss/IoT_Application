@@ -15,6 +15,7 @@ import {
   DxDrawerModule,
   DxFormModule,
   DxPopupModule,
+  DxRadioGroupModule,
   DxTextBoxModule,
   DxToolbarModule,
   DxTooltipModule
@@ -44,7 +45,8 @@ import {DrawerContentComponent} from './components/drawer-content/drawer-content
     DxTextBoxModule,
     FormsModule,
     ReactiveFormsModule,
-    DxFormModule
+    DxFormModule,
+    DxRadioGroupModule
   ],
   providers: [],
   bootstrap: [AppComponent]

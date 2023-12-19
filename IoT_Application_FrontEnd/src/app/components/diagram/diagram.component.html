@@ -170,6 +170,18 @@
                             </div>
                         </div>
                     </div>
+
+                    <div *ngSwitchCase="'link'">
+                        <div class="dx-field">
+                            <div class="dx-field-label">Numerosity</div>
+                            <div class="dx-field-value">
+                                <dx-radio-group [(value)]="currentItem.numerosity" [items]="numerosityOptions"
+                                                formControlName="numerosity"
+                                                layout="horizontal">
+                                </dx-radio-group>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div *ngIf="currentItem.type !== 'table'">

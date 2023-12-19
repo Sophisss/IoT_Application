@@ -30,6 +30,7 @@ export class ImportServiceService {
         sort_key: null,
         first_item: null,
         second_item: null,
+        numerosity: null
       }
       this.configService.getItems().push(nodeEntity);
     }
@@ -45,7 +46,8 @@ export class ImportServiceService {
         sort_key: null, //table.sort_key,
         first_item: null,
         second_item: null,
-        fields: null //table.fields,
+        fields: null, //table.fields,
+        numerosity: null
       }
       this.configService.getItems().push(nodeTable);
     }
@@ -62,6 +64,7 @@ export class ImportServiceService {
           sort_key: null,
           first_item: link.first_entity,
           second_item: link.second_entity,
+          numerosity: link.numerosity,
           fields: null, // link.fields,
         }
       this.configService.getItems().push(edge);

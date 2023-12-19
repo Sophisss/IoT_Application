@@ -17,5 +17,7 @@ export class Item {
 
   second_item: string;
 
+  numerosity: 'one-to-one' | 'one-to-many' | 'many-to-many';
+
   fields: Field[];
 }

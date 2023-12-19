@@ -27,6 +27,7 @@ export class DiagramComponent implements OnInit {
   tableForm: FormGroup;
   linkForm: FormGroup;
   placeholderForm: FormGroup;
+  numerosityOptions: string[] = ['one-to-one', 'one-to-many', 'many-to-many'];
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -55,6 +56,7 @@ export class DiagramComponent implements OnInit {
       onInserting(values) {
         values.ID = values.ID || that.configService.assignID();
         values.type = 'link';
+        values.numerosity = values.numerosity || 'many-to-many';
       },
       onModified() {
         that.drawerUpdateMethods();
@@ -92,7 +94,8 @@ export class DiagramComponent implements OnInit {
       sort_key: new FormControl(this.currentItem.sort_key, Validators.required),
     });
     this.linkForm = new FormGroup({
-      name: new FormControl(this.currentItem.name)
+      name: new FormControl(this.currentItem.name),
+      numerosity: new FormControl(this.currentItem.numerosity, Validators.required),
     });
     this.placeholderForm = new FormGroup({
       name: new FormControl()
@@ -161,7 +164,10 @@ export class DiagramComponent implements OnInit {
       this.linksDataSource.push([{
         type: 'update',
         key: this.currentItem.ID,
-        data: {},
+        data: {
+          name: this.currentItem.name,
+          numerosity: this.currentItem.numerosity,
+        },
       }]);
     } else {
       this.dataSource.push([{
