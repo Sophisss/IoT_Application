@@ -106,7 +106,7 @@
         [hideOnOutsideClick]="false"
         [showCloseButton]="false"
         [showTitle]="true"
-        [width]="480"
+        [width]="550"
         title="Edit {{currentItem.type | titlecase}}"
 >
     <div *dxTemplate="let data of 'content'">
@@ -189,28 +189,88 @@
                     <h3>Fields</h3>
                 </div>
             </div>
+
             <div *ngIf="currentItem.type !== 'table'">
                 <div *ngFor="let field of currentItem.fields" class="dx-fieldset">
                     <h4>Field</h4>
-                    <div class="dx-field">
-                        <div class="dx-field-label">Name</div>
-                        <div class="dx-field-value">
-                            <dx-text-box
-                                    [(value)]="field.name"
-                                    [inputAttr]="{ 'aria-label': 'name' }"
-                            ></dx-text-box>
-                        </div>
-                    </div>
-
-                    <div class="dx-field">
-                        <div class="dx-field-label">Type</div>
-                        <div class="dx-field-value">
-                            <dx-text-box
-                                    [(value)]="field.type"
-                                    [inputAttr]="{ 'aria-label': 'type' }"
-                            ></dx-text-box>
-                        </div>
-                    </div>
+                    <dx-box [height]="200" direction="row" width="99%">
+                        <dxi-item [ratio]="1" class="rect demo-dark">
+                            <div class="dx-field">
+                                <div class="dx-field-label">Name</div>
+                                <div class="dx-field-value">
+                                    <dx-text-box
+                                            [(value)]="field.name"
+                                            [inputAttr]="{ 'aria-label': 'name' }"
+                                    ></dx-text-box>
+                                </div>
+                            </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label">Required</div>
+                                <div class="dx-field-value">
+                                    <dx-text-box
+                                            [(value)]="field.name"
+                                            [inputAttr]="{ 'aria-label': 'name' }"
+                                    ></dx-text-box>
+                                </div>
+                            </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label">Min length</div>
+                                <div class="dx-field-value">
+                                    <dx-number-box
+                                            [(value)]="field.minLength"
+                                            [inputAttr]="{ 'aria-label': 'Minimum length' }"
+                                    ></dx-number-box>
+                                </div>
+                            </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label">Min value</div>
+                                <div class="dx-field-value">
+                                    <dx-number-box
+                                            [(value)]="field.minimum"
+                                            [inputAttr]="{ 'aria-label': 'Minimum value' }"
+                                    ></dx-number-box>
+                                </div>
+                            </div>
+                        </dxi-item>
+                        <dxi-item [ratio]="1" class="rect demo-light">
+                            <div class="dx-field">
+                                <div class="dx-field-label">Type</div>
+                                <div class="dx-field-value">
+                                    <dx-text-box
+                                            [(value)]="field.type"
+                                            [inputAttr]="{ 'aria-label': 'type' }"
+                                    ></dx-text-box>
+                                </div>
+                            </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label">Allowed values</div>
+                                <div class="dx-field-value">
+                                    <dx-text-box
+                                            [(value)]="field.type"
+                                            [inputAttr]="{ 'aria-label': 'Allowed values' }"
+                                    ></dx-text-box>
+                                </div>
+                            </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label">Max length</div>
+                                <div class="dx-field-value">
+                                    <dx-number-box
+                                            [(value)]="field.maxLength"
+                                            [inputAttr]="{ 'aria-label': 'Maximum length' }"
+                                    ></dx-number-box>
+                                </div>
+                            </div>
+                            <div class="dx-field">
+                                <div class="dx-field-label">Max value</div>
+                                <div class="dx-field-value">
+                                    <dx-number-box
+                                            [(value)]="field.maximum"
+                                            [inputAttr]="{ 'aria-label': 'Maximum value' }"
+                                    ></dx-number-box>
+                                </div>
+                            </div>
+                        </dxi-item>
+                    </dx-box>
                 </div>
             </div>
         </form>

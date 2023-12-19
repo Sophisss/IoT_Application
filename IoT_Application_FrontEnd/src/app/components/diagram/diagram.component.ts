@@ -40,7 +40,7 @@ export class DiagramComponent implements OnInit {
     this.items = this.configService.getItems();
     this.dataSource = new ArrayStore({
       key: 'ID',
-      data: this.configService.getItems().filter((item) => this.isTable(item) || this.isEntity(item)),
+      data: this.configService.getItems().filter((item) => item.type !== 'link'),
       onInserting(values) {
         values.ID = values.ID || that.configService.assignID();
         values.name = values.name || "Entity's Name";
@@ -119,18 +119,19 @@ export class DiagramComponent implements OnInit {
    * @param obj
    * @param value
    */
-  // @ts-ignore
-  itemCustomDataExpr(obj, value) {
+  itemCustomDataExpr(obj: Item, value: Item) {
     if (value === undefined) {
+      console.log(obj.table)
       return {
-        name: obj.name,
+        name: obj.table,
         table: obj.table,
         fields: obj.fields,
         partition_key: obj.partition_key,
         sort_key: obj.sort_key,
       };
+    } else {
+      return null
     }
-    obj.name = value.name;
   }
 
   /**
@@ -213,7 +214,7 @@ export class DiagramComponent implements OnInit {
    * @param event
    */
   requestEditOperationHandler(event: any) {
-    if (event.operation === "deleteShape") {
+    if (event.operation === "deleteShape" || event.operation === "deleteConnector") {
       event.allowed = false;
     }
     if (event.operation === "changeConnection") {
@@ -283,19 +284,4 @@ export class DiagramComponent implements OnInit {
     this.customCommandService.customCommandHandler(event, this.dataSource, this.linksDataSource);
   }
 
-  /**
-   * Checks if the item is a table.
-   * @param item the item to check
-   */
-  isTable(item: any): boolean {
-    return item.type === 'table' && item.table === null
-  }
-
-  /**
-   * Checks if the item is an entity.
-   * @param item the item to check
-   */
-  isEntity(item: any): boolean {
-    return item.type === 'entity' && item.partition_key === null && item.sort_key === null
-  }
 }

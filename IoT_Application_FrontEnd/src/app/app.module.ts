@@ -10,10 +10,11 @@ import {DiagramComponent} from './components/diagram/diagram.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
+  DxBoxModule,
   DxButtonModule,
   DxDiagramModule,
   DxDrawerModule,
-  DxFormModule,
+  DxFormModule, DxNumberBoxModule,
   DxPopupModule,
   DxRadioGroupModule,
   DxTextBoxModule,
@@ -46,7 +47,9 @@ import {DrawerContentComponent} from './components/drawer-content/drawer-content
     FormsModule,
     ReactiveFormsModule,
     DxFormModule,
-    DxRadioGroupModule
+    DxRadioGroupModule,
+    DxBoxModule,
+    DxNumberBoxModule
   ],
   providers: [],
   bootstrap: [AppComponent]
