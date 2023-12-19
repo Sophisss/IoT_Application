@@ -1,5 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
-import {DxDiagramComponent} from "devextreme-angular";
+import {Component} from '@angular/core';
 import ArrayStore from "devextreme/data/array_store";
 import {ConfigurationService} from "../../services/configuration.service";
 import {CustomCommandService} from "../../services/custom-command.service";
@@ -13,7 +12,6 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./diagram.component.scss']
 })
 export class DiagramComponent {
-  @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   items: Item[];
   currentItem: Item = new Item();
@@ -199,7 +197,6 @@ export class DiagramComponent {
     this.configService.clearList();
     this.dataSource.clear();
     this.linksDataSource.clear();
-    this.diagram.instance.dispose();
   }
 
   /**
