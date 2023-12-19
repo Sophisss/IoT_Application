@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {DxDiagramComponent} from "devextreme-angular";
 import ArrayStore from "devextreme/data/array_store";
 import {ConfigurationService} from "../../services/configuration.service";
@@ -12,7 +12,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
   templateUrl: './diagram.component.html',
   styleUrls: ['./diagram.component.scss']
 })
-export class DiagramComponent implements OnInit {
+export class DiagramComponent {
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   items: Item[];
@@ -80,28 +80,6 @@ export class DiagramComponent implements OnInit {
     }
   }
 
-  /**
-   * Initializes the form groups of the popup window.
-   */
-  ngOnInit() {
-    this.entityForm = new FormGroup({
-      name: new FormControl(this.currentItem.name, Validators.required),
-      table: new FormControl(this.currentItem.table, Validators.required),
-    });
-    this.tableForm = new FormGroup({
-      name: new FormControl(this.currentItem.name, Validators.required),
-      partition_key: new FormControl(this.currentItem.partition_key, Validators.required),
-      sort_key: new FormControl(this.currentItem.sort_key, Validators.required),
-    });
-    this.linkForm = new FormGroup({
-      name: new FormControl(this.currentItem.name),
-      numerosity: new FormControl(this.currentItem.numerosity, Validators.required),
-    });
-    this.placeholderForm = new FormGroup({
-      name: new FormControl()
-    });
-  }
-
   newField() {
     this.currentItem.fields.push(new Field());
   }
@@ -121,7 +99,6 @@ export class DiagramComponent implements OnInit {
    */
   itemCustomDataExpr(obj: Item, value: Item) {
     if (value === undefined) {
-      console.log(obj.table)
       return {
         name: obj.table,
         table: obj.table,
@@ -136,11 +113,29 @@ export class DiagramComponent implements OnInit {
 
   /**
    * The methods that opens the popup window to edit an item, setting the currentItem to the item to edit.
+   * It also initializes the form groups of the popup window.
    * @param item the item to edit
    */
   editItem(item: Item) {
     this.currentItem = {...item};
     this.popupVisible = true;
+
+    this.entityForm = new FormGroup({
+      name: new FormControl("Nicola", Validators.required),
+      table: new FormControl(this.currentItem.table, Validators.required),
+    });
+    this.tableForm = new FormGroup({
+      name: new FormControl(this.currentItem.name, Validators.required),
+      partition_key: new FormControl(this.currentItem.partition_key, Validators.required),
+      sort_key: new FormControl(this.currentItem.sort_key, Validators.required),
+    });
+    this.linkForm = new FormGroup({
+      name: new FormControl(this.currentItem.name),
+      numerosity: new FormControl(this.currentItem.numerosity, Validators.required),
+    });
+    this.placeholderForm = new FormGroup({
+      name: new FormControl()
+    });
   }
 
   /**
@@ -283,5 +278,4 @@ export class DiagramComponent implements OnInit {
   onCustomCommand(event: any) {
     this.customCommandService.customCommandHandler(event, this.dataSource, this.linksDataSource);
   }
-
 }
