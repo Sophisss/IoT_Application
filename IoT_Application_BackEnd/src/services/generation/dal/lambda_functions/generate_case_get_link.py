@@ -26,9 +26,12 @@ def generate_case_many_to_one_or_one_to_one_first_entity(link, name_partition_ke
     return f"""
                 if '{second_entity}' in event_parse.projection:
                     res = project_manager.get_{second_entity.lower()}_for_{first_entity.lower()}(event_parse.arguments['{link['primary_key'][0]}'])
-                    chck_response_item(res)
-                    check_response_status(res)
-                    response['{second_entity}'] = change_name_keys(res['Item'], ('{link['primary_key'][1]}', '{name_partition_key_field}', '{id_separator}'))"""
+                    if res:
+                        check_response_item(res)
+                        check_response_status(res)
+                        response['{second_entity}'] = change_name_keys(res['Item'], ('{link['primary_key'][1]}', '{name_partition_key_field}', '{id_separator}'))
+                    else:
+                        response['{second_entity}'] = None"""
 
 
 def generate_case_one_to_many_or_many_to_many_first_entity(link, name_partition_key_field, id_separator):
@@ -50,9 +53,12 @@ def generate_case_one_to_many_or_one_to_one_second_entity(link, name_partition_k
     return f"""
                 if '{first_entity}' in event_parse.projection:
                     res = project_manager.get_{first_entity.lower()}_for_{second_entity.lower()}(event_parse.arguments['{link['primary_key'][1]}'])
-                    check_response_item(res)
-                    check_response_status(res)
-                    response['{first_entity}'] = change_name_keys(res['Item'], ('{link['primary_key'][0]}', '{name_partition_key_field}', '{id_separator}'))"""
+                    if res:
+                        check_response_item(res)
+                        check_response_status(res)
+                        response['{first_entity}'] = change_name_keys(res['Item'], ('{link['primary_key'][0]}', '{name_partition_key_field}', '{id_separator}'))
+                    else:
+                        response['{first_entity}'] = None"""
 
 
 def generate_case_many_to_one_or_many_to_many_second_entity(link, name_partition_key_field, id_separator):
