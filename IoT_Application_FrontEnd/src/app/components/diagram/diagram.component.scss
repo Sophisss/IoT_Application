@@ -69,3 +69,8 @@ h3 {
 ::ng-deep .demo-dark {
   //background: rgba(148, 215, 199, 0.5);
 }
+
+::ng-deep span.dx-checkbox-icon {
+  border-color: #0565af;
+  color: #0565af;
+}

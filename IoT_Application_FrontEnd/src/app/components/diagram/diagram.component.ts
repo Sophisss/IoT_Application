@@ -13,6 +13,23 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class DiagramComponent {
 
+  tables: Item[] = [
+    {
+      ID: 1,
+      name: "Nicola",
+      type: "table",
+      table: null,
+      partition_key: "aaa",
+      sort_key: "aaa",
+      first_item: null,
+      second_item: null,
+      numerosity: null,
+      fields: null,
+    }
+  ];
+
+  fieldTypes: string[] = ['string', 'integer', 'double', 'boolean', 'date'];
+
   items: Item[];
   currentItem: Item = new Item();
 
@@ -231,9 +248,9 @@ export class DiagramComponent {
     if (event.operation === "addShape") {
       //Adding a new blank shape before updating the existing one is not allowed
       if ((event.args.shape.type === 'entity' &&
-          this.configService.getItems().filter((item) => item.name === "Entity's Name").length > 0) ||
+          this.configService.getItems().filter((item) => item.name === "Entity").length > 0) ||
         (event.args.shape.type === 'table' &&
-          this.configService.getItems().filter((item) => item.name === "Table's Name").length > 0)) {
+          this.configService.getItems().filter((item) => item.name === "Table").length > 0)) {
         event.allowed = false;
       }
     }

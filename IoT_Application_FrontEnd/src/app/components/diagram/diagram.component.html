@@ -30,6 +30,8 @@
     <!-- The totality of links. -->
     <dxo-edges
             [dataSource]="linksDataSource"
+            [fromLineEndExpr]="'none'"
+            [toLineEndExpr]="'none'"
             fromExpr="first_item"
             keyExpr="id"
             toExpr="second_item"
@@ -71,7 +73,7 @@
             [toolboxWidthToHeightRatio]="2"
             baseType="ellipse"
             category="iot-devq"
-            defaultText="Entity's Name"
+            defaultText="Entity"
             title="New Entity"
             type="entity"
     >
@@ -89,7 +91,7 @@
             [toolboxWidthToHeightRatio]="2"
             baseType="database"
             category="iot-devq"
-            defaultText="Table's Name"
+            defaultText="Table"
             title="New Table"
             type="table"
     >
@@ -138,12 +140,18 @@
                     <div *ngSwitchCase="'entity'" class="entityCondition">
                         <div class="dx-field">
                             <div class="dx-field-label">Table</div>
+                            <!-- TODO crea edge quando cambio -->
                             <div class="dx-field-value">
-                                <dx-text-box
+                                <dx-select-box
                                         [(value)]="currentItem.table"
+                                        [dataSource]="tables"
                                         [inputAttr]="{ 'aria-label': 'Table' }"
+                                        [searchEnabled]="true"
+                                        displayExpr="name"
                                         formControlName="table"
-                                ></dx-text-box>
+                                        searchMode='contains'
+                                        valueExpr="name"
+                                ></dx-select-box>
                             </div>
                         </div>
                     </div>
@@ -175,9 +183,11 @@
                         <div class="dx-field">
                             <div class="dx-field-label">Numerosity</div>
                             <div class="dx-field-value">
-                                <dx-radio-group [(value)]="currentItem.numerosity" [items]="numerosityOptions"
-                                                formControlName="numerosity"
-                                                layout="horizontal">
+                                <dx-radio-group
+                                        [(value)]="currentItem.numerosity"
+                                        [items]="numerosityOptions"
+                                        formControlName="numerosity"
+                                        layout="horizontal">
                                 </dx-radio-group>
                             </div>
                         </div>
@@ -193,6 +203,7 @@
             <div *ngIf="currentItem.type !== 'table'">
                 <div *ngFor="let field of currentItem.fields" class="dx-fieldset">
                     <h4>Field</h4>
+                    <!-- TODO metti Data Grid -->
                     <dx-box [height]="200" direction="row" width="99%">
                         <dxi-item [ratio]="1" class="rect demo-dark">
                             <div class="dx-field">
@@ -206,11 +217,12 @@
                             </div>
                             <div class="dx-field">
                                 <div class="dx-field-label">Required</div>
-                                <div class="dx-field-value">
-                                    <dx-text-box
-                                            [(value)]="field.name"
-                                            [inputAttr]="{ 'aria-label': 'name' }"
-                                    ></dx-text-box>
+                                <!-- TODO metti Check Box -->
+                                <div>
+                                    <dx-check-box
+                                            [(value)]="field.required"
+                                            [text]="field.required ? 'Required' : 'Not required' ">
+                                    </dx-check-box>
                                 </div>
                             </div>
                             <div class="dx-field">
@@ -236,17 +248,19 @@
                             <div class="dx-field">
                                 <div class="dx-field-label">Type</div>
                                 <div class="dx-field-value">
-                                    <dx-text-box
+                                    <dx-select-box
                                             [(value)]="field.type"
-                                            [inputAttr]="{ 'aria-label': 'type' }"
-                                    ></dx-text-box>
+                                            [dataSource]="fieldTypes"
+                                            [inputAttr]="{ 'aria-label': 'Type' }"
+                                            [searchEnabled]="true"
+                                            searchMode='contains'
+                                    ></dx-select-box>
                                 </div>
                             </div>
                             <div class="dx-field">
                                 <div class="dx-field-label">Allowed values</div>
                                 <div class="dx-field-value">
                                     <dx-text-box
-                                            [(value)]="field.type"
                                             [inputAttr]="{ 'aria-label': 'Allowed values' }"
                                     ></dx-text-box>
                                 </div>

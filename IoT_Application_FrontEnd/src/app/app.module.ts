@@ -12,11 +12,14 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   DxBoxModule,
   DxButtonModule,
+  DxCheckBoxModule,
   DxDiagramModule,
   DxDrawerModule,
-  DxFormModule, DxNumberBoxModule,
+  DxFormModule,
+  DxNumberBoxModule,
   DxPopupModule,
   DxRadioGroupModule,
+  DxSelectBoxModule,
   DxTextBoxModule,
   DxToolbarModule,
   DxTooltipModule
@@ -49,7 +52,9 @@ import {DrawerContentComponent} from './components/drawer-content/drawer-content
     DxFormModule,
     DxRadioGroupModule,
     DxBoxModule,
-    DxNumberBoxModule
+    DxNumberBoxModule,
+    DxSelectBoxModule,
+    DxCheckBoxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

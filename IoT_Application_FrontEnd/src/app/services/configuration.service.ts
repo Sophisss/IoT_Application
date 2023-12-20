@@ -63,7 +63,8 @@ export class ConfigurationService {
       links: jsonLinks,
       awsConfig: {
         dynamo: {
-          tables: jsonTable
+          tables: jsonTable,
+          authentication: {}
         }
       }
     };
@@ -128,7 +129,7 @@ export class ConfigurationService {
       first_entity: link.first_item,
       second_entity: link.second_item,
       numerosity: link.numerosity,
-      //fields: link.fields
+      fields: link.fields
     }));
   }
 
