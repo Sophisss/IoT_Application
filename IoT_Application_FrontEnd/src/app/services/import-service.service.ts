@@ -65,7 +65,7 @@ export class ImportServiceService {
           first_item: link.first_entity,
           second_item: link.second_entity,
           numerosity: link.numerosity,
-          fields: null, // link.fields,
+          fields: link.fields,
         }
       this.configService.getItems().push(edge);
     }

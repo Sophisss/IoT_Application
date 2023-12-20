@@ -55,6 +55,7 @@ export class DiagramComponent {
         values.ID = values.ID || that.configService.assignID();
         values.type = 'link';
         values.numerosity = values.numerosity || 'many-to-many';
+        values.fields = values.fields || [];
       },
       onModified() {
         that.drawerUpdateMethods();
@@ -115,6 +116,7 @@ export class DiagramComponent {
    * @param item the item to edit
    */
   editItem(item: Item) {
+    console.log(this.currentItem)
     this.currentItem = {...item};
     this.popupVisible = true;
 
