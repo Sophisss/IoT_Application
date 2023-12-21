@@ -71,7 +71,7 @@ Resources:
           Properties:
             RestApiId: !Ref ApplicationApiGateway
             Path: /download
-            Method: GET
+            Method: POST
 
 
   # region Lambda functions roles and policies
