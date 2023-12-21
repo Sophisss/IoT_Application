@@ -8,7 +8,7 @@ import {Subscription} from "rxjs";
   styleUrls: ['./drawer-content.component.scss']
 })
 export class DrawerContentComponent implements OnInit, OnDestroy {
-  drawerContent: string = "Drawer content";
+  drawerContent: any;
   private updateContentSubscription: Subscription;
 
   constructor(private configService: ConfigurationService) {

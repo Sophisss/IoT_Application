@@ -4,6 +4,7 @@ import {ConfigurationService} from "./configuration.service";
 import {JsonDownloadService} from "./json-download.service";
 import ArrayStore from "devextreme/data/array_store";
 import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environments";
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,11 @@ export class CustomCommandService {
     }
     if (commandName === 'generateCode') {
       console.log(this.configService.exportConfiguration());
-
+      const jsonFile = this.configService.exportConfiguration();
+      console.log(jsonFile)
+      this.httpClient.post(`${environment.baseUrl}/download`, jsonFile).subscribe(response => {
+        console.log(response);
+      });
     }
   }
 

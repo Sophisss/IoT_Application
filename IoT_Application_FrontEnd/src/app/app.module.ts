@@ -26,6 +26,8 @@ import {
 } from "devextreme-angular";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DrawerContentComponent} from './components/drawer-content/drawer-content.component';
+import {HttpClientModule} from '@angular/common/http';
+import {JsonPipe} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -54,9 +56,12 @@ import {DrawerContentComponent} from './components/drawer-content/drawer-content
     DxBoxModule,
     DxNumberBoxModule,
     DxSelectBoxModule,
-    DxCheckBoxModule
+    DxCheckBoxModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    JsonPipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
