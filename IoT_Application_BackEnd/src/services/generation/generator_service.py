@@ -4,8 +4,8 @@ from services.generation.configuration_application.generator_configuration_appli
 
 def generate_code(json: dict) -> dict:
     """
-    This function generate the code.
-    :param json: the json containing the data.
+    This function generates the code for the application.
+    :param json: the json with the information of the application.
     :return: the code generated.
     """
     code_generated = {}

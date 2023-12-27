@@ -1,17 +1,25 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 Description: Template for describing resources related to application deployment
 
+# region parameters
+
 Parameters:
+
   BucketName:
     Type: String
     Description: Name of the S3 bucket to create
     Default: devq.iot.iot-platform
+
   IdForDomain:
     Type: String
     Description: Id of the domain for the CloudFront distribution
     Default: S3-iot-platform.devq.it
 
+# endregion
+
 Resources:
+
   MyS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -26,11 +34,11 @@ Resources:
         RestrictPublicBuckets: false
       LifecycleConfiguration:
         Rules:
-          - Id: ExpireOldZips
+          - Id: DeleteOldFiles
             Status: Enabled
             ExpirationInDays: 1
             TagFilters:
-              - Key: FileExtension
+              - Key: file-type
                 Value: zip
 
   MyBucketPolicy:

@@ -1,7 +1,7 @@
 from services.generation.utility_methods import generate_resource_name
 
 
-def generate_kotlin_model(item: dict) -> str:
+def generate_model(item: dict) -> str:
     return f"""package model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
