@@ -8,14 +8,14 @@ class BaseS3Manager(BaseAWSService):
     s3_client = None
 
     def __init__(self):
-        BaseAWSService.__init__(self, "StorageService")  # base class constructor
+        super().__init__("StorageService")
         self.s3_client = boto3.client('s3')
 
-    def get_object(self, bucket_name: str, key: str):
+    def get_object(self, bucket_name: str, key: str) -> dict:
         self.__validate_bucket_name(bucket_name)
         return self.s3_client.get_object(Bucket=bucket_name, Key=key)
 
-    def put_object(self, bucket_name: str, key: str, body: bytes):
+    def put_object(self, bucket_name: str, key: str, body: bytes) -> dict:
         self.__validate_bucket_name(bucket_name)
         if not key or not isinstance(key, str):
             raise Exception("key is mandatory and it must be a string")
@@ -26,7 +26,7 @@ class BaseS3Manager(BaseAWSService):
         BaseAWSService.validate_aws_response(self, response, "put_object")
         return response
 
-    def create_and_upload_zip(self, bucket_name: str, code: dict, zip_key: str):
+    def create_and_upload_zip(self, bucket_name: str, code: dict, zip_key: str) -> dict:
         self.__validate_bucket_name(bucket_name)
         zip_buffer = BytesIO()
 
@@ -42,7 +42,8 @@ class BaseS3Manager(BaseAWSService):
         if not zip_key or not isinstance(zip_key, str):
             raise Exception("zip_key is mandatory and it must be a string")
 
-        return self.s3_client.generate_presigned_url('get_object', Params={'Bucket': bucket_name, 'Key': zip_key}, ExpiresIn=3600)
+        return self.s3_client.generate_presigned_url('get_object', Params={'Bucket': bucket_name, 'Key': zip_key},
+                                                     ExpiresIn=3600)
 
     @staticmethod
     def __validate_bucket_name(bucket_name: str):

@@ -7,7 +7,8 @@ from services.storage.storage_service import StorageService
 
 def download_code(event, context):
     """
-    Lambda function to generate a code, put it into an S3 bucket, and return the URL of the generated code.
+    Lambda function to generate a code, put it into an S3 bucket,
+    and return the URL of the generated code.
     :param event: input event that triggers the Lambda function.
     :param context: context information about the execution environment.
     :return: a response containing the URL of the generated code.
