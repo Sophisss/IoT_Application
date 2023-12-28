@@ -109,6 +109,29 @@
         [width]="550"
         title="Edit {{currentItem.type | titlecase}}"
 >
+    <dxi-toolbar-item [options]="saveButtonOptions"
+                      cssClass="saveButton"
+                      locateInMenu="never"
+                      location="after"
+                      toolbar="top"
+                      widget="dxButton">
+    </dxi-toolbar-item>
+
+    <dxi-toolbar-item [options]="cancelButtonOptions"
+                      locateInMenu="never"
+                      location="after"
+                      toolbar="top"
+                      widget="dxButton">
+    </dxi-toolbar-item>
+
+    <dxi-toolbar-item [options]="deleteButtonOptions"
+                      cssClass="deleteButton"
+                      locateInMenu="never"
+                      location="after"
+                      toolbar="top"
+                      widget="dxButton">
+    </dxi-toolbar-item>
+
     <div *dxTemplate="let data of 'content'">
         <form (submit)="updateItem()" [formGroup]="getFormGroup()">
             <div class="dx-fieldset">
@@ -286,14 +309,5 @@
                 </div>
             </div>
         </form>
-
-        <div class="dx-fieldset buttons bottom">
-            <dx-button (onClick)="newField()" *ngIf="currentItem.type !== 'table'" icon="add"
-                       text="Add new Field"></dx-button>
-            <dx-button (onClick)="updateItem()" [disabled]="getFormGroup()?.invalid" id="update" text="Update"
-                       type="default"></dx-button>
-            <dx-button (onClick)="cancelEditItem()" text="Cancel"></dx-button>
-            <dx-button (onClick)="deleteItem()" id="delete" text="Delete"></dx-button>
-        </div>
     </div>
 </dx-popup>

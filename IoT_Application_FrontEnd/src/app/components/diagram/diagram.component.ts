@@ -43,6 +43,9 @@ export class DiagramComponent {
   linkForm: FormGroup;
   placeholderForm: FormGroup;
   numerosityOptions: string[] = ['one-to-one', 'one-to-many', 'many-to-many'];
+  cancelButtonOptions: any;
+  saveButtonOptions: any;
+  deleteButtonOptions: any;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -78,6 +81,24 @@ export class DiagramComponent {
         that.drawerUpdateMethods();
       }
     });
+    this.cancelButtonOptions = {
+      icon: 'close',
+      onClick: () => {
+        this.cancelEditItem();
+      },
+    };
+    this.saveButtonOptions = {
+      icon: 'save',
+      onClick: () => {
+        this.updateItem();
+      },
+    };
+    this.deleteButtonOptions = {
+      icon: 'trash',
+      onClick: () => {
+        this.deleteItem();
+      },
+    };
   }
 
   /**
