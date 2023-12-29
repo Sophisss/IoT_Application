@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import ArrayStore from "devextreme/data/array_store";
 import {ConfigurationService} from "../../services/configuration.service";
 import {CustomCommandService} from "../../services/custom-command.service";
 import {Item} from "../../models/item.model";
-import {Field} from "../../models/field.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {DxDataGridComponent} from "devextreme-angular";
 
 @Component({
   selector: 'app-diagram',
@@ -13,6 +13,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class DiagramComponent {
 
+  //TODO implementa vere tabelle
   tables: Item[] = [
     {
       ID: 1,
@@ -35,6 +36,7 @@ export class DiagramComponent {
 
   dataSource: ArrayStore;
   linksDataSource: ArrayStore;
+  fieldsDataSource: ArrayStore;
 
   popupVisible = false;
 
@@ -46,6 +48,10 @@ export class DiagramComponent {
   cancelButtonOptions: any;
   saveButtonOptions: any;
   deleteButtonOptions: any;
+
+  selectedItemKeys: any[] = [];
+
+  @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -101,6 +107,47 @@ export class DiagramComponent {
     };
   }
 
+  onSelectionChanged(data: any) {
+    this.selectedItemKeys = data.selectedRowKeys;
+  }
+
+  deleteRecords() {
+    this.selectedItemKeys.forEach((key) => {
+      this.fieldsDataSource.remove(key);
+    });
+    this.dataGrid.instance.refresh();
+  }
+
+  checkCell(event: any) {
+    console.log(event);
+    if (this.typeNotChosen(event) || this.isNumericValue(event) || this.isTextualValue(event)) {
+      event.cancel = true;
+    }
+    if (this.isNumericValue(event)) {
+      event.data.maxLength = undefined;
+      event.data.minLength = undefined;
+    } else if (this.isTextualValue(event)) {
+      event.data.maximum = undefined;
+      event.data.minimum = undefined;
+    }
+  }
+
+  typeNotChosen(event: any): boolean {
+    const field = event.column.dataField;
+    return (field === 'minLength' || field === 'maxLength' || field === 'maximum' || field === 'minimum')
+      && (!("type" in event.data) || event.data.type === '');
+  }
+
+  isNumericValue(event: any) {
+    const field = event.column.dataField;
+    return (field === 'minLength' || field === 'maxLength') && (event.data.type === 'integer' || event.data.type === 'double')
+  }
+
+  isTextualValue(event: any) {
+    const field = event.column.dataField;
+    return (field === 'minimum' || field === 'maximum') && event.data.type === 'string'
+  }
+
   /**
    * Returns the form group of the popup window based on the type of the current item.
    */
@@ -115,10 +162,6 @@ export class DiagramComponent {
       default:
         return this.placeholderForm;
     }
-  }
-
-  newField() {
-    this.currentItem.fields.push(new Field());
   }
 
   /**
@@ -154,8 +197,15 @@ export class DiagramComponent {
    * @param item the item to edit
    */
   editItem(item: Item) {
-    console.log(this.currentItem)
     this.currentItem = {...item};
+
+    this.fieldsDataSource = new ArrayStore(
+      {
+        key: 'name',
+        data: this.currentItem.fields,
+      }
+    );
+
     this.popupVisible = true;
 
     this.entityForm = new FormGroup({

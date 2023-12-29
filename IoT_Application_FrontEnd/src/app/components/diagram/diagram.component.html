@@ -214,99 +214,60 @@
                         </div>
                     </div>
                 </div>
-
-                <div *ngIf="currentItem.type !== 'table'">
-                    <hr>
-                    <h3>Fields</h3>
-                </div>
             </div>
 
             <div *ngIf="currentItem.type !== 'table'">
-                <div *ngFor="let field of currentItem.fields" class="dx-fieldset">
-                    <h4>Field</h4>
-                    <!-- TODO metti Data Grid -->
-                    <dx-box [height]="200" direction="row" width="99%">
-                        <dxi-item [ratio]="1" class="rect demo-dark">
-                            <div class="dx-field">
-                                <div class="dx-field-label">Name</div>
-                                <div class="dx-field-value">
-                                    <dx-text-box
-                                            [(value)]="field.name"
-                                            [inputAttr]="{ 'aria-label': 'name' }"
-                                    ></dx-text-box>
-                                </div>
-                            </div>
-                            <div class="dx-field">
-                                <div class="dx-field-label">Required</div>
-                                <!-- TODO metti Check Box -->
-                                <div>
-                                    <dx-check-box
-                                            [(value)]="field.required"
-                                            [text]="field.required ? 'Required' : 'Not required' ">
-                                    </dx-check-box>
-                                </div>
-                            </div>
-                            <div class="dx-field">
-                                <div class="dx-field-label">Min length</div>
-                                <div class="dx-field-value">
-                                    <dx-number-box
-                                            [(value)]="field.minLength"
-                                            [inputAttr]="{ 'aria-label': 'Minimum length' }"
-                                    ></dx-number-box>
-                                </div>
-                            </div>
-                            <div class="dx-field">
-                                <div class="dx-field-label">Min value</div>
-                                <div class="dx-field-value">
-                                    <dx-number-box
-                                            [(value)]="field.minimum"
-                                            [inputAttr]="{ 'aria-label': 'Minimum value' }"
-                                    ></dx-number-box>
-                                </div>
+                <hr>
+                <dx-data-grid
+                        (onEditingStart)="checkCell($event)"
+                        (onSelectionChanged)="onSelectionChanged($event)"
+                        [columnAutoWidth]="true"
+                        [columnMinWidth]=20
+                        [dataSource]="fieldsDataSource"
+                        [showBorders]="true"
+                        id="gridContainer"
+                >
+                    <dxo-paging [enabled]="false"></dxo-paging>
+                    <dxo-editing
+                            [allowAdding]="true"
+                            [allowDeleting]="true"
+                            [allowUpdating]="true"
+                            [confirmDelete]="false"
+                            [useIcons]="true"
+                            mode="cell"
+                    >
+                    </dxo-editing>
+                    <dxo-selection mode="none"></dxo-selection>
+
+                    <dxi-column dataField="name"></dxi-column>
+                    <dxi-column [width]="75" dataField="type">
+                        <dxo-lookup [dataSource]="fieldTypes"></dxo-lookup>
+                    </dxi-column>
+                    <dxi-column [width]="75" dataField="required" dataType="boolean"></dxi-column>
+                    <dxi-column [width]="90" dataField="minLength" dataType="number"></dxi-column>
+                    <dxi-column [width]="92" dataField="maxLength" dataType="number"></dxi-column>
+                    <dxi-column [width]="79" dataField="minimum" dataType="number"></dxi-column>
+                    <dxi-column [width]="81" dataField="maximum" dataType="number"></dxi-column>
+
+                    <dxo-toolbar>
+                        <dxi-item location="before" name="Title">
+                            <div class="gridTitle">
+                                Fields
                             </div>
                         </dxi-item>
-                        <dxi-item [ratio]="1" class="rect demo-light">
-                            <div class="dx-field">
-                                <div class="dx-field-label">Type</div>
-                                <div class="dx-field-value">
-                                    <dx-select-box
-                                            [(value)]="field.type"
-                                            [dataSource]="fieldTypes"
-                                            [inputAttr]="{ 'aria-label': 'Type' }"
-                                            [searchEnabled]="true"
-                                            searchMode='contains'
-                                    ></dx-select-box>
-                                </div>
-                            </div>
-                            <div class="dx-field">
-                                <div class="dx-field-label">Allowed values</div>
-                                <div class="dx-field-value">
-                                    <dx-text-box
-                                            [inputAttr]="{ 'aria-label': 'Allowed values' }"
-                                    ></dx-text-box>
-                                </div>
-                            </div>
-                            <div class="dx-field">
-                                <div class="dx-field-label">Max length</div>
-                                <div class="dx-field-value">
-                                    <dx-number-box
-                                            [(value)]="field.maxLength"
-                                            [inputAttr]="{ 'aria-label': 'Maximum length' }"
-                                    ></dx-number-box>
-                                </div>
-                            </div>
-                            <div class="dx-field">
-                                <div class="dx-field-label">Max value</div>
-                                <div class="dx-field-value">
-                                    <dx-number-box
-                                            [(value)]="field.maximum"
-                                            [inputAttr]="{ 'aria-label': 'Maximum value' }"
-                                    ></dx-number-box>
-                                </div>
-                            </div>
+                        <dxi-item name="addRowButton" showText="always">
                         </dxi-item>
-                    </dx-box>
-                </div>
+                        <dxi-item location="after">
+                            <dx-button
+                                    (onClick)="deleteRecords()"
+                                    [disabled]="!selectedItemKeys.length"
+                                    icon="trash"
+                                    text="Delete Selected Records"
+                            >
+                            </dx-button>
+                        </dxi-item>
+                    </dxo-toolbar>
+                </dx-data-grid>
             </div>
         </form>
     </div>

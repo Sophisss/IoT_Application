@@ -13,6 +13,7 @@ import {
   DxBoxModule,
   DxButtonModule,
   DxCheckBoxModule,
+  DxDataGridModule,
   DxDiagramModule,
   DxDrawerModule,
   DxFormModule,
@@ -58,6 +59,7 @@ import {JsonPipe} from "@angular/common";
     DxSelectBoxModule,
     DxCheckBoxModule,
     HttpClientModule
+    DxDataGridModule,
   ],
   providers: [
     JsonPipe

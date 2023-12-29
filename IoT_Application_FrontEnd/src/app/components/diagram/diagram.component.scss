@@ -90,3 +90,12 @@ h3 {
   height: unset;
   width: unset;
 }
+
+::ng-deep .gridTitle {
+  padding-left: 10px;
+  font-size: 20px;
+}
+
+#gridContainer {
+  margin: 5px;
+}
