@@ -6,7 +6,7 @@ from services.generation.configuration_application.graphql_resources.schema.reso
     search_types_primary_key_field
 
 
-def generate_inputs(entities, links) -> str:
+def generate_inputs(entities: list, links: list) -> str:
     """
     This function generates the inputs of the schema.
     :param entities: entities in the schema.
