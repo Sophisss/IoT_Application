@@ -272,6 +272,29 @@ export class DiagramComponent {
           sort_key: this.currentItem.sort_key,
         },
       }]);
+      
+      const allLinkedEntities = this.configService.getAllLinkedEntities(this.currentItem.ID);
+      for (let entityID of allLinkedEntities) {
+        this.dataSource.push([{
+          type: 'update',
+          key: entityID,
+          data: {
+            table: this.currentItem.name,
+          },
+        }]);
+      }
+
+      const allLinksToEntities = this.configService.getAllSpecialIDsForTable(this.currentItem.ID);
+      for (let sID of allLinksToEntities) {
+        console.log(sID)
+        this.linksDataSource.push([{
+          type: 'update',
+          key: sID,
+          data: {
+            second_item: this.currentItem.name,
+          },
+        }]);
+      }
 
       //console.log("special",this.configService.getAllSpecialIDsForTable(this.currentItem.ID));
     } else if (this.currentItem.type === 'entity') {
