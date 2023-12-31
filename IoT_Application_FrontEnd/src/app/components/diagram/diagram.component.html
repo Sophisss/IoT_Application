@@ -10,7 +10,7 @@
             id="diagram"
 >
     <!-- The menu you get after left-clicking on an object or the diagram. -->
-    <dxo-context-menu [enabled]="true"></dxo-context-menu>
+    <dxo-context-menu [commands]="['bringToFront', 'sendToBack', 'copy', 'paste']" [enabled]="true"></dxo-context-menu>
 
     <!-- The little bar with the undo/redo button that gets covered so it's disabled and its buttons moved. -->
     <dxo-history-toolbar [visible]="false"></dxo-history-toolbar>
