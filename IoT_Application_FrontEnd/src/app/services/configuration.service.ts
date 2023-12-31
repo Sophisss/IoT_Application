@@ -15,6 +15,7 @@ export class ConfigurationService {
   //Since the ID is generated automatically, we need to keep track of the first and last ID.
   firstID: number = 100;
   generatedID: number = 100;
+  specialIDs: number[] = [];
 
   private updateSignalSubject = new BehaviorSubject<void>(null);
   updateSignal$ = this.updateSignalSubject.asObservable();
@@ -95,9 +96,39 @@ export class ConfigurationService {
         //console.log(data)
       });
     }
+    for (let id of this.specialIDs) {
+      links.byKey(id).then((data) => {
+        items.push(data);
+      });
+    }
     //console.log(items)
   }
 
+  getCurrentID() {
+    return this.generatedID;
+  }
+
+  getFirstID() {
+    return this.firstID;
+  }
+
+  getSpecialID(tableID: number, entityID: number) {
+    let temp = tableID.toString() + entityID.toString();
+    return parseInt(temp);
+  }
+
+  getAllSpecialIDsForTable(tableID: number): number[] {
+    const prefixString = tableID.toString();
+    return this.specialIDs.filter(number => number.toString().startsWith(prefixString));
+  }
+
+  assignSpecialID(sID: number) {
+    this.specialIDs.push(sID);
+  }
+
+  tableAlreadyLinked(sID: number) {
+    return this.specialIDs.includes(sID);
+  }
   /**
    * Iterates over the list of items and creates a list of entities ready to be exported.
    */
@@ -131,13 +162,5 @@ export class ConfigurationService {
       numerosity: link.numerosity,
       fields: link.fields
     }));
-  }
-
-  private getCurrentID() {
-    return this.generatedID;
-  }
-
-  private getFirstID() {
-    return this.firstID;
   }
 }

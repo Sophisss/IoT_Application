@@ -37,11 +37,12 @@ export class CustomCommandService {
     }
     if (commandName === 'generateCode') {
       console.log(this.configService.exportConfiguration());
-      const jsonFile = this.configService.exportConfiguration();
+      /*const jsonFile = this.configService.exportConfiguration();
       console.log(jsonFile)
       this.httpClient.post(`${environment.baseUrl}/download`, jsonFile).subscribe(response => {
         console.log(response);
-      });
+      });*/
+      //console.log(this.configService.specialIDs);
     }
   }
 

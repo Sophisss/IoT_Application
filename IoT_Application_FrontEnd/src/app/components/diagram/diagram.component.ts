@@ -4,7 +4,7 @@ import {ConfigurationService} from "../../services/configuration.service";
 import {CustomCommandService} from "../../services/custom-command.service";
 import {Item} from "../../models/item.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {DxDataGridComponent} from "devextreme-angular";
+import {DxDataGridComponent, DxDiagramComponent} from "devextreme-angular";
 
 @Component({
   selector: 'app-diagram',
@@ -12,22 +12,7 @@ import {DxDataGridComponent} from "devextreme-angular";
   styleUrls: ['./diagram.component.scss']
 })
 export class DiagramComponent {
-
-  //TODO implementa vere tabelle
-  tables: Item[] = [
-    {
-      ID: 1,
-      name: "Nicola",
-      type: "table",
-      table: null,
-      partition_key: "aaa",
-      sort_key: "aaa",
-      first_item: null,
-      second_item: null,
-      numerosity: null,
-      fields: null,
-    }
-  ];
+  tables: Item[] = [];
 
   fieldTypes: string[] = ['string', 'integer', 'double', 'boolean', 'date'];
 
@@ -52,6 +37,7 @@ export class DiagramComponent {
   selectedItemKeys: any[] = [];
 
   @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
+  @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -64,7 +50,7 @@ export class DiagramComponent {
     this.items = this.configService.getItems();
     this.dataSource = new ArrayStore({
       key: 'ID',
-      data: this.configService.getItems().filter((item) => item.type !== 'link'),
+      data: this.items.filter((item) => item.type !== 'link'),
       onInserting(values) {
         values.ID = values.ID || that.configService.assignID();
         values.name = values.name || "Entity's Name";
@@ -76,7 +62,7 @@ export class DiagramComponent {
     });
     this.linksDataSource = new ArrayStore({
       key: 'ID',
-      data: this.configService.getItems().filter((item) => item.type === 'link'),
+      data: this.items.filter((item) => item.type === 'link'),
       onInserting(values) {
         values.ID = values.ID || that.configService.assignID();
         values.type = 'link';
@@ -197,7 +183,16 @@ export class DiagramComponent {
    * @param item the item to edit
    */
   editItem(item: Item) {
+    this.tables = [];
     this.currentItem = {...item};
+
+    for (let i = this.configService.getFirstID(); i <= this.configService.getCurrentID(); i++) {
+      this.dataSource.byKey(i).then((data) => {
+        if (data.type === 'table') {
+          this.tables.push(data);
+        }
+      });
+    }
 
     this.fieldsDataSource = new ArrayStore(
       {
@@ -232,8 +227,21 @@ export class DiagramComponent {
    */
   deleteItem() {
     if (this.currentItem.type === 'link') {
+      if (this.configService.specialIDs.includes(this.currentItem.ID)) {
+        this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(this.currentItem.ID), 1);
+      }
       this.linksDataSource.push([{type: 'remove', key: this.currentItem.ID}]);
-    } else {
+    } else if (this.currentItem.type === 'table') {
+      this.dataSource.push([{type: 'remove', key: this.currentItem.ID}]);
+
+      for (let sID of this.configService.getAllSpecialIDsForTable(this.currentItem.ID)) {
+        this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(sID), 1);
+      }
+
+    } else if (this.currentItem.type === 'entity') {
+      const tableLinkID = this.configService.getSpecialID((this.tables.filter((table) => table.name === this.currentItem.table)[0].ID), this.currentItem.ID);
+      this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(tableLinkID), 1);
+
       this.dataSource.push([{type: 'remove', key: this.currentItem.ID}]);
     }
     this.cancelEditItem();
@@ -251,9 +259,22 @@ export class DiagramComponent {
         data: {
           name: this.currentItem.name,
           numerosity: this.currentItem.numerosity,
+          fields: this.currentItem.fields,
         },
       }]);
-    } else {
+    } else if (this.currentItem.type === 'table') {
+      this.dataSource.push([{
+        type: 'update',
+        key: this.currentItem.ID,
+        data: {
+          name: this.currentItem.name,
+          partition_key: this.currentItem.partition_key,
+          sort_key: this.currentItem.sort_key,
+        },
+      }]);
+
+      //console.log("special",this.configService.getAllSpecialIDsForTable(this.currentItem.ID));
+    } else if (this.currentItem.type === 'entity') {
       this.dataSource.push([{
         type: 'update',
         key: this.currentItem.ID,
@@ -261,10 +282,45 @@ export class DiagramComponent {
           name: this.currentItem.name,
           table: this.currentItem.table,
           fields: this.currentItem.fields,
-          partition_key: this.currentItem.partition_key,
-          sort_key: this.currentItem.sort_key,
         },
       }]);
+
+      const linkWithTable = this.configService.getSpecialID((this.tables.filter((table) => table.name === this.currentItem.table)[0].ID), this.currentItem.ID);
+
+      const newLink: Item = {
+        ID: linkWithTable,
+        name: this.currentItem.name + " - " + this.currentItem.table,
+        type: "link",
+        fields: null,
+        table: null,
+        partition_key: null,
+        sort_key: null,
+        first_item: this.currentItem.name,
+        second_item: this.currentItem.table,
+        numerosity: 'one-to-one'
+      }
+
+      if (this.configService.tableAlreadyLinked(linkWithTable)) {
+        console.log("already linked")
+        //update link
+        this.linksDataSource.push([{
+          type: 'update',
+          key: linkWithTable,
+          data: {
+            name: this.currentItem.name,
+            first_item: this.currentItem.name,
+            second_item: this.currentItem.table,
+          },
+        }]);
+      } else {
+        console.log("new")
+        //create link
+        this.configService.assignSpecialID(linkWithTable);
+        this.linksDataSource.push([{
+          type: 'insert',
+          data: newLink,
+        }]);
+      }
     }
     this.popupVisible = false;
 
@@ -311,8 +367,8 @@ export class DiagramComponent {
       if (event.args.connector && this.linkAlreadyExists(event.args.connector.fromKey, event.args.connector.toKey)) {
         event.allowed = false;
       }
-      //Connecting an entity to a table is not allowed
-      if (event.args.connector && event.args.newShape && event.args.newShape.dataItem.type === 'table') {
+      //Connecting a table to an entity is not allowed, only an entity to a table
+      if (event.args.connector && event.args.newShape && event.args.newShape.dataItem.type === 'entity' && event.args.connectorPosition === 'end') {
         event.allowed = false;
       }
     }
