@@ -3,17 +3,15 @@ from services.generation.attribute_type import AttributeType
 
 def generate_model(item: dict, item_name: str) -> str:
     """
-    This method generate a kotlin model.
+    This method generate a swift model.
     :param item: Item which generate the model.
     :param item_name: Name of the item.
     :return: The model generated.
     """
-    return f"""package models
+    return f"""import Foundation
     
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-
+    
+    
 {__generate_class(item, item_name)}
     """
 
@@ -25,12 +23,17 @@ def __generate_class(item: dict, item_name: str) -> str:
     :param item_name: Name of the item.
     :return: The class generated.
     """
-    return f"""@Serializable
-data class {item_name}(
+    return f"""struct {item_name}: Codable {{
+    
 {__generate_fields(item['fields'])}
-) {{
+
+    enum CodingKeys: String, CodingKey {{
+{__generate_CodingKeys(item['fields'])}
+    }}
+
 {__generate_enum(item['fields'])}
 }}
+
     """
 
 
@@ -40,7 +43,7 @@ def __generate_fields(fields: dict) -> str:
     :param fields: The fields to generate.
     :return: The fields generated.
     """
-    return ",\n".join(__create_field(field) for field in fields)
+    return "\n".join(__create_field(field) for field in fields)
 
 
 def __create_field(field: dict) -> str:
@@ -52,13 +55,32 @@ def __create_field(field: dict) -> str:
     is_required = field["required"]
     field_name = field["name"]
     field_type = AttributeType[field["type"]].value if "allowedValues" not in field else f"Allowed{field_name}"
-    return f"""    @SerialName("{field_name}") val {field_name}: {field_type}{'? = null' if not is_required else ''}"""
+    return f"""    var {field_name}: {field_type}{'?' if not is_required else ''}"""
+
+
+def __generate_CodingKeys(fields: dict) -> str:
+    """
+    This method generate the CodingKeys for a model.
+    :param fields: The fields to generate.
+    :return: The CodingKeys generated.
+    """
+    return "\n".join(__create_CodingKeys(field) for field in fields)
+
+
+def __create_CodingKeys(field: dict) -> str:
+    """
+    This method creates a CodingKeys for a model.
+    :param field: The field to create.
+    :return: The CodingKeys created.
+    """
+    field_name = field["name"]
+    return f"""        case {field_name} = \"{field_name}\""""
 
 
 def __generate_enum(fields: dict) -> str:
     """
     This method generates the enums for a model.
-    :param fields: The fields which generate the enums.
+    :param fields: The fields to generate.
     :return: The enums generated.
     """
     return "\n".join(__create_enum(field) for field in fields if "allowedValues" in field)
@@ -72,8 +94,8 @@ def __create_enum(field: dict) -> str:
     """
     field_name = field["name"]
     field_type = AttributeType[field["type"]].value
-    enum_values = ',\n'.join(f"        {value.upper()}(\"{value}\")" for value in field['allowedValues'])
-    return f"""    enum class Allowed{field_name}(val {field_name}: {field_type}) {{
+    enum_values = '\n'.join(f"        case {value.upper()} = \"{value}\"" for value in field['allowedValues'])
+    return f"""    public enum Allowed{field_name}: {field_type}, Codable {{
 {enum_values}
     }}
-"""
+    """
