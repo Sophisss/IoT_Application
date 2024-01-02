@@ -272,7 +272,7 @@ export class DiagramComponent {
           sort_key: this.currentItem.sort_key,
         },
       }]);
-      
+
       const allLinkedEntities = this.configService.getAllLinkedEntities(this.currentItem.ID);
       for (let entityID of allLinkedEntities) {
         this.dataSource.push([{

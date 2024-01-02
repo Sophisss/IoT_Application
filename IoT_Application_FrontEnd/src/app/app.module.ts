@@ -58,7 +58,7 @@ import {JsonPipe} from "@angular/common";
     DxNumberBoxModule,
     DxSelectBoxModule,
     DxCheckBoxModule,
-    HttpClientModule
+    HttpClientModule,
     DxDataGridModule,
   ],
   providers: [

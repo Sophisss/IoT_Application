@@ -1,6 +1,5 @@
 <!-- The diagram: simple view keeps an entire grid instead of only the part you're using. -->
-<dx-diagram #diagram
-            (onCustomCommand)="onCustomCommand($event)"
+<dx-diagram (onCustomCommand)="onCustomCommand($event)"
             (onDisposing)="onDisposing()"
             (onItemDblClick)="editItem($event.item.dataItem)"
             (onRequestEditOperation)="requestEditOperationHandler($event)"

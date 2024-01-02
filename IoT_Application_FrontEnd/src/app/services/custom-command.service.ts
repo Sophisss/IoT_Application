@@ -4,7 +4,6 @@ import {ConfigurationService} from "./configuration.service";
 import {JsonDownloadService} from "./json-download.service";
 import ArrayStore from "devextreme/data/array_store";
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environments";
 
 @Injectable({
   providedIn: 'root'
