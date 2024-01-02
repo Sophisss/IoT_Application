@@ -366,6 +366,7 @@ export class DiagramComponent {
     this.configService.clearList();
     this.dataSource.clear();
     this.linksDataSource.clear();
+    this.configService.resetTitle();
   }
 
   /**

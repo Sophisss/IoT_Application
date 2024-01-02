@@ -11,6 +11,7 @@ const items: Item[] = [];
 export class ConfigurationService {
 
   projectTitle: string = "IoT Application";
+  readonly defaultTitle: string = "IoT Application";
 
   //Since the ID is generated automatically, we need to keep track of the first and last ID.
   firstID: number = 100;
@@ -129,6 +130,11 @@ export class ConfigurationService {
   tableAlreadyLinked(sID: number) {
     return this.specialIDs.includes(sID);
   }
+
+  resetTitle() {
+    this.projectTitle = this.defaultTitle;
+  }
+
   /**
    * Iterates over the list of items and creates a list of entities ready to be exported.
    */
