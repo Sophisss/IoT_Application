@@ -1,5 +1,5 @@
 """This file is responsible for generating the fields of an entity in the schema.graphql file."""
-from services.generation.configuration_application.graphql_resources.schema.resources.generator_fields_link import type_mapping
+from services.generation.attribute_type import AttributeType
 
 
 def generate_fields_entity(entity: dict) -> str:
@@ -11,7 +11,7 @@ def generate_fields_entity_links(name_entity: str, list_link: list) -> str:
 
 
 def generate_field(field: dict) -> str:
-    return f"""{field['name']}: {type_mapping.get(field['type']) if 'allowedValues' not in field else f'allowed{field["name"]}'}{'!' if field['required'] else ''}\n"""
+    return f"""{field['name']}: {AttributeType[field['type']].value if 'allowedValues' not in field else f'allowed{field["name"]}'}{'!' if field['required'] else ''}\n"""
 
 
 def generate_field_link(name_entity: str, link: dict) -> str:

@@ -20,7 +20,7 @@ def generate_lambda_link(link: dict, json: dict) -> str:
     table = get_table_configuration(link['table'], json)
     name = generate_resource_name(link)
     return f"""{generate_header_lambda(name,json['projectName'])}
-{generate_lambda_definition(f'{name}',json['projectName'])}
+{generate_lambda_definition(name ,json['projectName'])}
 {generate_case_link(link)}
 {generate_exception_lambda()}
 {generate_return_lambda_link(link['primary_key'][0], table['partition_key']['name'], link['primary_key'][1], table['sort_key']['name'], table['parameters']['id_separator'])}

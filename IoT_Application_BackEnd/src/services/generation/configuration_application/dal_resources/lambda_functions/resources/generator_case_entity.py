@@ -15,17 +15,24 @@ def generate_case_entity(entity: dict, links: list, name_partition_key_table: st
     entity_name = generate_resource_name(entity)
     partition_key = entity['primary_key'][0]
     link_associated_first_entity, link_associated_second_entity = get_links_associated(entity, links)
+    toReturn = ""
 
-    api_mapping = {
-        'PUT': lambda api: __generate_case_put(entity_name, api['name']),
-        'DELETE': lambda api: __generate_case_delete(entity_name, api['name'], partition_key),
-        'GET_ALL': lambda api: __generate_case_get_all(entity_name, api['name']),
-        'GET': lambda api: __generate_case_get(entity_name, api['name'], partition_key, link_associated_first_entity,
-                                               link_associated_second_entity, name_partition_key_table, id_separator),
-        'POST': lambda api: __generate_case_post(entity_name, api['name']),
-    }
+    for api in entity['API']:
+        match api['type']:
+            case 'PUT':
+                toReturn += __generate_case_put(entity_name, api['name'])
+            case 'DELETE':
+                toReturn += __generate_case_delete(entity_name, api['name'], partition_key)
+            case 'GET_ALL':
+                toReturn += __generate_case_get_all(entity_name, api['name'])
+            case 'GET':
+                toReturn += __generate_case_get(entity_name, api['name'], partition_key, link_associated_first_entity,
+                                                link_associated_second_entity, name_partition_key_table, id_separator)
+            case 'POST':
+                toReturn += __generate_case_post(entity_name, api['name'])
 
-    return ''.join([api_mapping[api['type']](api) for api in entity['API']]) + __generate_default_case()
+    toReturn += __generate_default_case()
+    return toReturn
 
 
 def __generate_case_put(entity_name: str, api_name: str) -> str:

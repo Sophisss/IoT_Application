@@ -12,5 +12,5 @@ def generate_model_entity(entity_name: str, entity_fields: list) -> str:
     return f"""{generate_header_model()}
 
 class {entity_name}(BaseModel):
-    {generate_fields_model(entity_fields)}
+{generate_fields_model(entity_fields)}
 """

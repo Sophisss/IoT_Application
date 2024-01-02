@@ -56,6 +56,12 @@ def __generate_class(json_data: dict) -> str:
     :return: The class of the DynamoDB manager class.
     """
     return f"""class {json_data['projectName']}DynamoManager(BaseDynamoManager):
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super({json_data['projectName']}DynamoManager, cls).__new__(cls)
+        return cls._instance
 {generate_methods(json_data)}
     """
 

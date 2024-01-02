@@ -9,17 +9,22 @@ def generate_case_link(link: dict) -> str:
     """
     name = f"{link['first_entity']}_{link['second_entity']}"
     link_name = generate_resource_name(link)
-    partition_key = link['primary_key'][0]
-    sort_key = link['primary_key'][1]
+    partition_key, sort_key = link['primary_key'][0], link['primary_key'][1]
+    toReturn = ""
 
-    api_mapping = {
-        'PUT': lambda api: __generate_case_put(name, api['name'], link_name),
-        'DELETE': lambda api: __generate_case_delete(name, api['name'], partition_key, sort_key),
-        'GET': lambda api: __generate_case_get(name, api['name'], partition_key, sort_key),
-        'POST': lambda api: __generate_case_post(name, api['name']),
-    }
+    for api in link['API']:
+        match api['type']:
+            case 'PUT':
+                toReturn += __generate_case_put(name, api['name'], link_name)
+            case 'DELETE':
+                toReturn += __generate_case_delete(name, api['name'], partition_key, sort_key)
+            case 'GET':
+                toReturn += __generate_case_get(name, api['name'], partition_key, sort_key)
+            case 'POST':
+                toReturn += __generate_case_post(name, api['name'])
 
-    return ''.join([api_mapping[api['type']](api) for api in link['API']]) + __generate_default_case()
+    toReturn += __generate_default_case()
+    return toReturn
 
 
 def __generate_case_put(name: str, api_name: str, link_name: str) -> str:

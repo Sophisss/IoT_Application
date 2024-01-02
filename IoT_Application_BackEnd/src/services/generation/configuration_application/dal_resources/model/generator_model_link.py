@@ -14,7 +14,7 @@ def generate_model_link(link: dict, json: dict) -> str:
     return f"""{generate_header_model()}
 
 class {link['first_entity']}{link['second_entity']}(BaseModel):
-    {generate_fields_model(link_fields)}
+{generate_fields_model(link_fields)}
 """
 
 
