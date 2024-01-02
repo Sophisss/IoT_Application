@@ -123,6 +123,13 @@ export class ConfigurationService {
     return this.specialIDs.filter(number => number.toString().startsWith(prefixString));
   }
 
+  getAllLinkedEntities(prefix: number): number[] {
+    const prefixString = prefix.toString();
+    return this.specialIDs
+      .filter(number => number.toString().startsWith(prefixString))
+      .map(number => parseInt(number.toString().substring(prefixString.length)));
+  }
+
   assignSpecialID(sID: number) {
     this.specialIDs.push(sID);
   }
