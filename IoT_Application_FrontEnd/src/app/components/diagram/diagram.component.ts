@@ -29,7 +29,7 @@ export class DiagramComponent {
   tableForm: FormGroup;
   linkForm: FormGroup;
   placeholderForm: FormGroup;
-  numerosityOptions: string[] = ['one-to-one', 'one-to-many', 'many-to-many'];
+  numerosityOptions: string[] = ['one-to-one', 'one-to-many', 'many-to-many', 'many-to-one'];
   cancelButtonOptions: any;
   saveButtonOptions: any;
   deleteButtonOptions: any;
@@ -93,20 +93,14 @@ export class DiagramComponent {
     };
   }
 
-  onSelectionChanged(data: any) {
+  datagridSelectionHandler(data: any) {
     this.selectedItemKeys = data.selectedRowKeys;
-  }
-
-  deleteRecords() {
-    this.selectedItemKeys.forEach((key) => {
-      this.fieldsDataSource.remove(key);
-    });
-    this.dataGrid.instance.refresh();
   }
 
   checkCell(event: any) {
     console.log(event);
-    if (this.typeNotChosen(event) || this.isNumericValue(event) || this.isTextualValue(event)) {
+    if (this.typeNotChosen(event) || this.isNumericValue(event) || this.isTextualValue(event)
+      || this.isDateOrBooleanValue(event) || this.nameAlreadyExists(event)) {
       event.cancel = true;
     }
     if (this.isNumericValue(event)) {
@@ -126,12 +120,23 @@ export class DiagramComponent {
 
   isNumericValue(event: any) {
     const field = event.column.dataField;
-    return (field === 'minLength' || field === 'maxLength') && (event.data.type === 'integer' || event.data.type === 'double')
+    return (field === 'minLength' || field === 'maxLength') &&
+      (event.data.type === 'integer' || event.data.type === 'double');
   }
 
   isTextualValue(event: any) {
     const field = event.column.dataField;
-    return (field === 'minimum' || field === 'maximum') && event.data.type === 'string'
+    return (field === 'minimum' || field === 'maximum') && event.data.type === 'string';
+  }
+
+  isDateOrBooleanValue(event: any) {
+    const field = event.column.dataField;
+    return (field === 'minimum' || field === 'maximum' || field === 'minLength' || field === 'maxLength') &&
+      (event.data.type === 'boolean' || event.data.type === 'date');
+  }
+
+  nameAlreadyExists(event: any) {
+    return ("name" in event.data) && (event.data.name !== '') && (event.column.dataField === 'name');
   }
 
   /**
@@ -194,10 +199,13 @@ export class DiagramComponent {
       });
     }
 
-    this.fieldsDataSource = new ArrayStore(
-      {
+    this.fieldsDataSource = new ArrayStore({
         key: 'name',
         data: this.currentItem.fields,
+        onInserting(values) {
+          values.type = values.type || "string";
+          values.required = values.required || false;
+        }
       }
     );
 
@@ -434,7 +442,7 @@ export class DiagramComponent {
     }
   }
 
-  selectionChangedHandler(event: any) {
+  diagramSelectionHandler(event: any) {
     //console.log(event.items)
   }
 

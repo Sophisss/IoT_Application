@@ -4,7 +4,7 @@
             (onItemDblClick)="editItem($event.item.dataItem)"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
             (onRequestLayoutUpdate)="requestLayoutUpdateHandler($event)"
-            (onSelectionChanged)="selectionChangedHandler($event)"
+            (onSelectionChanged)="diagramSelectionHandler($event)"
             [simpleView]="false"
             id="diagram"
 >
@@ -31,6 +31,7 @@
             [dataSource]="linksDataSource"
             fromExpr="first_item"
             keyExpr="id"
+            textExpr="numerosity"
             toExpr="second_item"
     ></dxo-edges>
 
@@ -101,11 +102,11 @@
 <dx-popup
         [(visible)]="popupVisible"
         [dragEnabled]="true"
-        [height]="500"
+        [height]="'70%'"
         [hideOnOutsideClick]="false"
         [showCloseButton]="false"
         [showTitle]="true"
-        [width]="650"
+        [width]="'60%'"
         title="Edit {{currentItem.type | titlecase}}"
 >
     <dxi-toolbar-item [options]="saveButtonOptions"
@@ -116,15 +117,15 @@
                       widget="dxButton">
     </dxi-toolbar-item>
 
-    <dxi-toolbar-item [options]="cancelButtonOptions"
+    <dxi-toolbar-item [options]="deleteButtonOptions"
+                      cssClass="deleteButton"
                       locateInMenu="never"
                       location="after"
                       toolbar="top"
                       widget="dxButton">
     </dxi-toolbar-item>
 
-    <dxi-toolbar-item [options]="deleteButtonOptions"
-                      cssClass="deleteButton"
+    <dxi-toolbar-item [options]="cancelButtonOptions"
                       locateInMenu="never"
                       location="after"
                       toolbar="top"
@@ -159,7 +160,7 @@
 
                     <div *ngSwitchCase="'entity'" class="entityCondition">
                         <div class="dx-field">
-                            <div class="dx-field-label">Table</div>
+                            <div class="dx-field-label">Table *</div>
                             <!-- TODO crea edge quando cambio -->
                             <div class="dx-field-value">
                                 <dx-select-box
@@ -221,7 +222,7 @@
                 <hr>
                 <dx-data-grid
                         (onEditingStart)="checkCell($event)"
-                        (onSelectionChanged)="onSelectionChanged($event)"
+                        (onSelectionChanged)="datagridSelectionHandler($event)"
                         [columnAutoWidth]="true"
                         [columnMinWidth]=20
                         [dataSource]="fieldsDataSource"
@@ -240,15 +241,21 @@
                     </dxo-editing>
                     <dxo-selection mode="none"></dxo-selection>
 
-                    <dxi-column dataField="name"></dxi-column>
-                    <dxi-column [width]="75" dataField="type">
+                    <!--I nomi delle colonne sono:
+                    -a sx: campo string;
+                    -centrale: boolean/button;
+                    -a dx: numeri;
+                    -->
+
+                    <dxi-column [width]="'15%'" dataField="name"></dxi-column>
+                    <dxi-column [width]="'15%'" dataField="type">
                         <dxo-lookup [dataSource]="fieldTypes"></dxo-lookup>
                     </dxi-column>
-                    <dxi-column [width]="75" dataField="required" dataType="boolean"></dxi-column>
-                    <dxi-column [width]="90" dataField="minLength" dataType="number"></dxi-column>
-                    <dxi-column [width]="92" dataField="maxLength" dataType="number"></dxi-column>
-                    <dxi-column [width]="79" dataField="minimum" dataType="number"></dxi-column>
-                    <dxi-column [width]="81" dataField="maximum" dataType="number"></dxi-column>
+                    <dxi-column [width]="'14%'" dataField="required" dataType="boolean"></dxi-column>
+                    <dxi-column [width]="'14%'" dataField="minLength" dataType="number"></dxi-column>
+                    <dxi-column [width]="'14%'" dataField="maxLength" dataType="number"></dxi-column>
+                    <dxi-column [width]="'14%'" dataField="minimum" dataType="number"></dxi-column>
+                    <dxi-column [width]="'14%'" dataField="maximum" dataType="number"></dxi-column>
 
                     <dxo-toolbar>
                         <dxi-item location="before" name="Title">
@@ -257,15 +264,6 @@
                             </div>
                         </dxi-item>
                         <dxi-item name="addRowButton" showText="always">
-                        </dxi-item>
-                        <dxi-item location="after">
-                            <dx-button
-                                    (onClick)="deleteRecords()"
-                                    [disabled]="!selectedItemKeys.length"
-                                    icon="trash"
-                                    text="Delete Selected Records"
-                            >
-                            </dx-button>
                         </dxi-item>
                     </dxo-toolbar>
                 </dx-data-grid>
