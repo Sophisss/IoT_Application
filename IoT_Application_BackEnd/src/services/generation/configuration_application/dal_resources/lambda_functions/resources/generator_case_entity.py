@@ -20,7 +20,8 @@ def generate_case_entity(entity: dict, links: list, name_partition_key_table: st
     for api in entity['API']:
         match api['type']:
             case 'PUT':
-                toReturn += __generate_case_put(entity_name, api['name'])
+                toReturn += __generate_case_put(entity_name, api['name'], link_associated_first_entity,
+                                                link_associated_second_entity)
             case 'DELETE':
                 toReturn += __generate_case_delete(entity_name, api['name'], partition_key)
             case 'GET_ALL':
@@ -35,19 +36,38 @@ def generate_case_entity(entity: dict, links: list, name_partition_key_table: st
     return toReturn
 
 
-def __generate_case_put(entity_name: str, api_name: str) -> str:
+def __generate_case_put(entity_name: str, api_name: str, link_associated_first_entity: dict,
+                        link_associated_second_entity: dict) -> str:
     """
     This method generates the put case of the entity.
     :param entity_name: The name of the entity.
     :param api_name: The name of the api.
     :return: The put case of the entity.
     """
+    condition_case = ""
+
+    def __generate_condition(link: dict, id_entity: str, name_entity: str) -> str:
+        resource = generate_resource_name(link)
+        return f"""
+            if {resource} in event_parse.arguments:
+                response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}({resource})(**event_parse.arguments['{resource}'], {id_entity}={name_entity}.{id_entity}])
+                check_response_status(response_link)
+        """
+
+    for link_associated in link_associated_first_entity:
+        condition_case += __generate_condition(link_associated, link_associated['primary_key'][0], entity_name.lower())
+
+    for link_associated in link_associated_second_entity:
+        condition_case += __generate_condition(link_associated, link_associated['primary_key'][1], entity_name.lower())
+
     return f"""
-            case '{api_name}':
-                response = project_manager.create_{entity_name.lower()}({entity_name}(**event_parse.arguments['{entity_name}']))
-                check_response_status(response)
-                return "{entity_name} created"
- """
+        case '{api_name}':
+            {entity_name.lower()} = {entity_name}(**event_parse.arguments['{entity_name}'])
+            response = project_manager.create_{entity_name.lower()}({entity_name.lower()})
+            check_response_status(response)
+            {condition_case}
+            return "{entity_name} created"
+    """
 
 
 def __generate_case_delete(entity_name: str, api_name: str, partition_key: str) -> str:

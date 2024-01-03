@@ -11,13 +11,14 @@ def generate_queries_mutations(entities: list, links: list) -> tuple:
     :param links: links for which the queries and mutations are generated.
     :return: the queries and mutations for the GraphQL schema.
     """
-    queries_entities, mutation_entities = zip(*map(__generate_queries_mutations_entity, entities))
+    queries_entities, mutation_entities = zip(
+        *map(lambda entity: __generate_queries_mutations_entity(entity, links), entities))
     queries_links, mutation_links = zip(*map(lambda link: __generate_queries_mutations_link(link, entities), links))
 
     return ''.join(queries_entities + queries_links), ''.join(mutation_entities + mutation_links)
 
 
-def __generate_queries_mutations_entity(entity: dict) -> tuple:
+def __generate_queries_mutations_entity(entity: dict, links: list) -> tuple:
     """
     This function generates the queries and mutations for an entity.
     :param entity: entity for which the queries and mutations are generated.
@@ -31,7 +32,7 @@ def __generate_queries_mutations_entity(entity: dict) -> tuple:
                         api: f"""\n  {api['name']}: {f'[{entity["name"]}]'}\n""",
                     filter(lambda api: api['type'] in ['GET_ALL'], entity['API']))),
         ''.join(map(lambda
-                        api: f"\n  {api['name']}(\n   {generate_parameters_entity(entity, api)}\n  ): {'String' if api['type'] == 'PUT' else entity['name']}\n",
+                        api: f"""\n  {api['name']}(\n   {generate_parameters_entity(entity, api, links)}\n  ): 'String'  \n""",
                     filter(lambda api: api['type'] in ['POST', 'DELETE', 'PUT'], entity['API'])))
     )
 
@@ -49,7 +50,7 @@ def __generate_queries_mutations_link(link: dict, entities: list) -> tuple:
                         api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}): {f'{link["first_entity"]}{link["second_entity"]}'}\n""",
                     filter(lambda api: api['type'] in ['GET'], link['API']))),
         ''.join(map(lambda
-                        api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}\n  ): {'String'
-        if api['type'] == 'PUT' else f'{link["first_entity"]}{link["second_entity"]}'}\n""",
+                        api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}\n  ): 'String'\n""",
                     filter(lambda api: api['type'] in ['POST', 'DELETE', 'PUT'], link['API'])))
+
     )
