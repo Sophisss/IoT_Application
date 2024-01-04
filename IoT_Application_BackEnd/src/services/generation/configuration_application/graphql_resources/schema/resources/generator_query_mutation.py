@@ -26,13 +26,13 @@ def __generate_queries_mutations_entity(entity: dict, links: list) -> tuple:
     """
     return (
         ''.join(map(lambda
-                        api: f"""\n  {api['name']}(\n   {generate_parameters_entity(entity, api)}\n  ): {entity["name"]}\n""",
+                        api: f"""\n  {api['name']}(\n   {generate_parameters_entity(entity, api, links)}\n  ): {entity["name"]}\n""",
                     filter(lambda api: api['type'] in ['GET'], entity['API']))) +
         ''.join(map(lambda
                         api: f"""\n  {api['name']}: {f'[{entity["name"]}]'}\n""",
                     filter(lambda api: api['type'] in ['GET_ALL'], entity['API']))),
         ''.join(map(lambda
-                        api: f"""\n  {api['name']}(\n   {generate_parameters_entity(entity, api, links)}\n  ): 'String'  \n""",
+                        api: f"""\n  {api['name']}(\n   {generate_parameters_entity(entity, api, links)}\n  ): String  \n""",
                     filter(lambda api: api['type'] in ['POST', 'DELETE', 'PUT'], entity['API'])))
     )
 
@@ -50,7 +50,7 @@ def __generate_queries_mutations_link(link: dict, entities: list) -> tuple:
                         api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}): {f'{link["first_entity"]}{link["second_entity"]}'}\n""",
                     filter(lambda api: api['type'] in ['GET'], link['API']))),
         ''.join(map(lambda
-                        api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}\n  ): 'String'\n""",
+                        api: f"""\n  {api['name']}(\n   {generate_parameters_link(link, api, type_partition_key, type_sort_key)}\n  ): String\n""",
                     filter(lambda api: api['type'] in ['POST', 'DELETE', 'PUT'], link['API'])))
 
     )

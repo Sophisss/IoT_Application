@@ -11,7 +11,7 @@ def generate_fields_entity_links(name_entity: str, list_link: list) -> str:
 
 
 def generate_field(field: dict) -> str:
-    return f"""{field['name']}: {AttributeType[field['type']].value if 'allowedValues' not in field else f'allowed{field["name"]}'}{'!' if field['required'] else ''}\n"""
+    return f"""{field['name']}: {AttributeType[field['type']].value}{'!' if field['required'] else ''}\n"""
 
 
 def generate_field_link(name_entity: str, link: dict) -> str:

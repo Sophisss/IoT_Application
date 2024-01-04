@@ -25,6 +25,6 @@ def get_links_associated(entity: dict, links: list) -> tuple:
     :param links: list of links.
     :return: The links associated to the entity.
     """
-    links_associated_first_entity = [link for link in links if link['first_entity'] == entity['name']]
-    links_associated_second_entity = [link for link in links if link['second_entity'] == entity['name']]
+    links_associated_first_entity = list(filter(lambda link: link['first_entity'] == entity['name'], links))
+    links_associated_second_entity = list(filter(lambda link: link['second_entity'] == entity['name'], links))
     return links_associated_first_entity, links_associated_second_entity

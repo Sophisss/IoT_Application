@@ -30,8 +30,6 @@ def __generate_class(item: dict, item_name: str) -> str:
     enum CodingKeys: String, CodingKey {{
 {__generate_CodingKeys(item['fields'])}
     }}
-
-{__generate_enum(item['fields'])}
 }}
 
     """
@@ -54,7 +52,7 @@ def __create_field(field: dict) -> str:
     """
     is_required = field["required"]
     field_name = field["name"]
-    field_type = AttributeType[field["type"]].value if "allowedValues" not in field else f"Allowed{field_name}"
+    field_type = AttributeType[field["type"]].value
     return f"""    var {field_name}: {field_type}{'?' if not is_required else ''}"""
 
 
@@ -75,27 +73,3 @@ def __create_CodingKeys(field: dict) -> str:
     """
     field_name = field["name"]
     return f"""        case {field_name} = \"{field_name}\""""
-
-
-def __generate_enum(fields: dict) -> str:
-    """
-    This method generates the enums for a model.
-    :param fields: The fields to generate.
-    :return: The enums generated.
-    """
-    return "\n".join(__create_enum(field) for field in fields if "allowedValues" in field)
-
-
-def __create_enum(field: dict) -> str:
-    """
-    This method creates an enum.
-    :param field: Field which generate the enum.
-    :return: The enum created.
-    """
-    field_name = field["name"]
-    field_type = AttributeType[field["type"]].value
-    enum_values = '\n'.join(f"        case {value.upper()} = \"{value}\"" for value in field['allowedValues'])
-    return f"""    public enum Allowed{field_name}: {field_type}, Codable {{
-{enum_values}
-    }}
-    """

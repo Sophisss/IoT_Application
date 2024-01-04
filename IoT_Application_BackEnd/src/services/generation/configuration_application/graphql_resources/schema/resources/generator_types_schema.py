@@ -1,5 +1,4 @@
 """This file is responsible for generating entities and links types in the schema.graphql file."""
-from services.generation.configuration_application.graphql_resources.schema.resources.generator_enum import generate_enum
 from services.generation.configuration_application.graphql_resources.schema.resources.generator_fields_entity import \
     generate_fields_entity, generate_fields_entity_links
 from services.generation.configuration_application.graphql_resources.schema.resources.generator_fields_link import \
@@ -17,7 +16,6 @@ def generate_types_entities(entities: list, links: list) -> str:
 def generate_type_entity(entity: dict, links: list) -> str:
     return f"""type {entity['name']} {{
 {generate_fields_entity(entity)}{generate_fields_entity_links(entity['name'], links) if bool(links) else ''}}}\n
-{generate_enum(entity['fields'])}
 """
 
 
@@ -33,7 +31,6 @@ def generate_types_links(entities: list, links: list) -> str:
 def generate_type_link(link: dict, entities: list) -> str:
     return f"""type {link['first_entity']}{link['second_entity']}{{
 {generate_fields_link(link['primary_key'], link['fields'], *search_types_primary_key_field(entities, link))}\n}}\n
-{generate_enum(link['fields']) if link['fields'] else ''}
 """
 
 

@@ -46,27 +46,35 @@ def __generate_case_put(entity_name: str, api_name: str, link_associated_first_e
     """
     condition_case = ""
 
-    def __generate_condition(link: dict, id_entity: str, name_entity: str) -> str:
-        resource = generate_resource_name(link)
-        return f"""
-            if {resource} in event_parse.arguments:
-                response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}({resource})(**event_parse.arguments['{resource}'], {id_entity}={name_entity}.{id_entity}])
-                check_response_status(response_link)
-        """
-
     for link_associated in link_associated_first_entity:
-        condition_case += __generate_condition(link_associated, link_associated['primary_key'][0], entity_name.lower())
+        condition_case += __generate_condition(entity_name.lower(), link_associated['primary_key'][0], link_associated)
 
     for link_associated in link_associated_second_entity:
-        condition_case += __generate_condition(link_associated, link_associated['primary_key'][1], entity_name.lower())
+        condition_case += __generate_condition(entity_name.lower(), link_associated['primary_key'][1], link_associated)
 
     return f"""
-        case '{api_name}':
-            {entity_name.lower()} = {entity_name}(**event_parse.arguments['{entity_name}'])
-            response = project_manager.create_{entity_name.lower()}({entity_name.lower()})
-            check_response_status(response)
-            {condition_case}
-            return "{entity_name} created"
+            case '{api_name}':
+                {entity_name.lower()} = {entity_name}(**event_parse.arguments['{entity_name}'])
+                response = project_manager.create_{entity_name.lower()}({entity_name.lower()})
+                check_response_status(response)
+                {condition_case}
+                return "{entity_name} created"
+    """
+
+
+def __generate_condition(entity_name: str, entity_id, link: dict) -> str:
+    """
+    This method generates the condition of the entity.
+    :param entity_name: The name of the entity.
+    :param entity_id: The id of the entity.
+    :param link: The link associated to the entity.
+    :return: The condition of the entity.
+    """
+    resource = generate_resource_name(link)
+    return f"""
+                if '{resource}' in event_parse.arguments:
+                    response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}({resource}(**event_parse.arguments['{resource}'], {entity_id}={entity_name}.{entity_id}))
+                    check_response_status(response_link)
     """
 
 
@@ -86,7 +94,7 @@ def __generate_case_delete(entity_name: str, api_name: str, partition_key: str) 
                 if 'Attributes' not in response:
                     raise ItemNotPresentError()
                        
-                response = response['Attributes']
+                return "{entity_name} deleted"
 """
 
 
@@ -118,7 +126,7 @@ def __generate_case_post(entity_name: str, api_name: str) -> str:
             case '{api_name}':
                 response = project_manager.update_{entity_name.lower()}(event_parse.arguments)
                 check_response_status(response)
-                response = response['Attributes']
+                return "{entity_name} updated"
 """
 
 

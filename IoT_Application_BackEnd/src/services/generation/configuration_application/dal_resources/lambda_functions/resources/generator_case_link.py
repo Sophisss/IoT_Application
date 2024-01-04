@@ -59,7 +59,7 @@ def __generate_case_delete(link_name: str, api_name: str, partition_key: str, so
                 if 'Attributes' not in response:
                     raise ItemNotPresentError()
                     
-                response = response['Attributes']
+                return "{link_name} deleted"
 """
 
 
@@ -92,7 +92,7 @@ def __generate_case_post(link_name: str, api_name: str) -> str:
             case '{api_name}':
                 response = project_manager.update_{link_name.lower()}(event_parse.arguments)
                 check_response_status(response)
-                response = response['Attributes']
+                return "{link_name} updated"
 """
 
 
