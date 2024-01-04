@@ -36,6 +36,8 @@ export class DiagramComponent {
 
   selectedItemKeys: any[] = [];
 
+  specialIDtemp: number = 0;
+
   @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
 
@@ -181,9 +183,17 @@ export class DiagramComponent {
 
     //TODO metti un if per controllare che non sia un link fra entità e tabella
     if (isOk) {
+      this.currentItem = {...item};
+
+      if (this.currentItem.type === 'entity' && this.currentItem.table) {
+        let designatedTable = this.tables.filter((table) => table.name === this.currentItem.table)[0]
+        if (designatedTable) {
+          this.specialIDtemp = this.configService.getSpecialID(designatedTable.ID, this.currentItem.ID);
+          console.log("specialIDtemp", this.specialIDtemp)
+        }
+      }
 
       this.tables = [];
-      this.currentItem = {...item};
 
       for (let i = this.configService.getFirstID(); i <= this.configService.getCurrentID(); i++) {
         this.dataSource.byKey(i).then((data) => {
@@ -239,12 +249,18 @@ export class DiagramComponent {
 
       for (let sID of this.configService.getAllSpecialIDsForTable(this.currentItem.ID)) {
         this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(sID), 1);
+
+        this.linksDataSource.push([{type: 'remove', key: sID}]);
       }
 
     } else if (this.currentItem.type === 'entity') {
       if (this.currentItem.table) {
-        const tableLinkID = this.configService.getSpecialID((this.tables.filter((table) => table.name === this.currentItem.table)[0].ID), this.currentItem.ID);
-        this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(tableLinkID), 1);
+        let designatedTable = this.tables.filter((table) => table.name === this.currentItem.table)[0]
+        if (designatedTable) {
+          const tableLinkID = this.configService.getSpecialID(designatedTable.ID, this.currentItem.ID);
+          this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(tableLinkID), 1);
+          this.linksDataSource.push([{type: 'remove', key: tableLinkID}]);
+        }
       }
 
       this.dataSource.push([{type: 'remove', key: this.currentItem.ID}]);
@@ -278,32 +294,15 @@ export class DiagramComponent {
         },
       }]);
 
-      /*
-      const allLinkedEntities = this.configService.getAllLinkedEntities(this.currentItem.ID);
-      for (let entityID of allLinkedEntities) {
-        this.dataSource.push([{
-          type: 'update',
-          key: entityID,
-          data: {
-            table: this.currentItem.name,
-          },
-        }]);
+      this.cascadeUpdateToEntities(this.currentItem, this.configService.getAllLinkedEntities(this.currentItem.ID));
+
+    } else if (this.currentItem.type === 'entity') {
+
+      if (this.configService.tableAlreadyLinked(this.specialIDtemp)) {
+        console.log("already linked", this.specialIDtemp)
+        this.deleteLinkWithTable(this.currentItem, this.specialIDtemp);
       }
 
-      const allLinksToEntities = this.configService.getAllSpecialIDsForTable(this.currentItem.ID);
-      for (let sID of allLinksToEntities) {
-        console.log(sID)
-        this.linksDataSource.push([{
-          type: 'update',
-          key: sID,
-          data: {
-            second_item: this.currentItem.name,
-          },
-        }]);
-      }*/
-
-      //console.log("special",this.configService.getAllSpecialIDsForTable(this.currentItem.ID));
-    } else if (this.currentItem.type === 'entity') {
       this.dataSource.push([{
         type: 'update',
         key: this.currentItem.ID,
@@ -314,15 +313,12 @@ export class DiagramComponent {
         },
       }]);
 
-      const IDForTableEntityLink = this.configService.getSpecialID((this.tables.filter((table) => table.name === this.currentItem.table)[0].ID), this.currentItem.ID);
+      const finalID = this.configService.getSpecialID(
+        (this.tables.filter((table) => table.name === this.currentItem.table)[0].ID), this.currentItem.ID);
 
-      if (this.configService.tableAlreadyLinked(IDForTableEntityLink)) {
-        console.log("already linked")
-        this.updateLinkWithTable(this.currentItem, IDForTableEntityLink);
-      } else {
-        console.log("new link")
-        this.createLinkWithTable(this.currentItem, IDForTableEntityLink);
-      }
+      console.log("new link", finalID)
+      this.createLinkWithTable(this.currentItem, finalID);
+
     }
     this.popupVisible = false;
 
@@ -363,7 +359,7 @@ export class DiagramComponent {
       if (this.linkAlreadyExists(event.args.connector.fromKey, event.args.connector.toKey)) {
         event.allowed = false;
       }
-      //TODO modificare questo per permettere l'assegnazione di del campo tabella quando traccio
+      //TODO modificare questo per permettere l'assegnazione del campo tabella quando traccio
       //Creating connections between entities and tables is allowed only through assigning inside the popup window
       if (event.args.connector.fromKey && event.args.connector.toKey && (this.isTable(parseInt(event.args.connector.fromKey)) || this.isTable(parseInt(event.args.connector.toKey)))) {
         event.allowed = false;
@@ -456,15 +452,10 @@ export class DiagramComponent {
     return this.configService.getItems().find(entity => entity.ID === id).type === 'table';
   }
 
-  private updateLinkWithTable(item: Item, id: number) {
+  private deleteLinkWithTable(item: Item, id: number) {
     this.linksDataSource.push([{
-      type: 'update',
+      type: 'remove',
       key: id,
-      data: {
-        name: item.name + " - " + this.currentItem.table,
-        first_item: item.name,
-        second_item: item.table,
-      },
     }]);
   }
 
@@ -480,5 +471,16 @@ export class DiagramComponent {
         second_item_ID: this.tables.filter((table) => table.name === this.currentItem.table)[0].ID,
       },
     }]);
+  }
+  private cascadeUpdateToEntities(table: Item, entitiesIDs: number[]) {
+    for (let entityID of entitiesIDs) {
+      this.dataSource.push([{
+        type: 'update',
+        key: entityID,
+        data: {
+          table: table.name,
+        },
+      }]);
+    }
   }
 }
