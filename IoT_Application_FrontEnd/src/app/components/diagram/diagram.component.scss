@@ -69,6 +69,10 @@ h3 {
   color: firebrick;
 }
 
+::ng-deep .cancelButton > div.dx-item-content.dx-toolbar-item-content > div.dx-widget.dx-button.dx-button-mode-contained.dx-button-normal.dx-button-has-icon > div.dx-button-content > i.dx-icon {
+  color: #333;
+}
+
 ::ng-deep .dx-overlay-content .dx-popup-content > .dx-template-wrapper {
   height: unset;
   width: unset;
