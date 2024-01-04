@@ -38,4 +38,5 @@ def __generate_input_link(entities: list, link: dict) -> str:
     """
     return f"""
 input {link['first_entity']}{link['second_entity']}Input{{
-{generate_fields_link(link['primary_key'], link['fields'], *search_types_primary_key_field(entities, link))}\n}}"""
+{generate_fields_link(link['primary_key'], link['fields'], *search_types_primary_key_field(entities, link))}\n}}
+"""

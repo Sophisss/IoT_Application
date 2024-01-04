@@ -16,10 +16,11 @@ def generate_parameters_entity(entity: dict, api, links: list) -> str:
             filter(lambda field: field['name'] in entity['primary_key'], entity['fields'])))
 
     association_link_first, association_link_second = get_links_associated(entity, links)
+    combined_links = association_link_first + association_link_second
     links_put = ""
-    for link in association_link_first and association_link_second:
+    for link in combined_links:
         resource = generate_resource_name(link)
-        links_put += f"{resource}: {resource}Input!"
+        links_put += f"{resource}: {resource}Input\n   "
 
     return (
         '\n    '.join(fields_primary_key) if api['type'] in ['GET', 'DELETE']
@@ -29,7 +30,7 @@ def generate_parameters_entity(entity: dict, api, links: list) -> str:
                                                         api['parameters']))) if api['type'] == 'POST'
 
         else f"""{entity['name']}: {entity['name']}Input!
-                 {links_put}"""
+   {links_put}"""
     )
 
 
