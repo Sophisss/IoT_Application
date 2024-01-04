@@ -28,8 +28,8 @@ export class ImportServiceService {
         table: entity.table,
         partition_key: null,
         sort_key: null,
-        first_item: null,
-        second_item: null,
+        first_item_ID: null,
+        second_item_ID: null,
         numerosity: null
       }
       this.configService.getItems().push(nodeEntity);
@@ -44,8 +44,8 @@ export class ImportServiceService {
         table: null,
         partition_key: null, // table.partition_key,
         sort_key: null, //table.sort_key,
-        first_item: null,
-        second_item: null,
+        first_item_ID: null,
+        second_item_ID: null,
         fields: null, //table.fields,
         numerosity: null
       }
@@ -62,8 +62,8 @@ export class ImportServiceService {
           table: null,
           partition_key: null,
           sort_key: null,
-          first_item: link.first_entity,
-          second_item: link.second_entity,
+          first_item_ID: this.getIDFromName(link.first_entity),
+          second_item_ID: this.getIDFromName(link.second_entity),
           numerosity: link.numerosity,
           fields: link.fields,
         }
@@ -110,5 +110,9 @@ export class ImportServiceService {
       };
       fileReader.readAsText(selectedFile);
     });
+  }
+
+  private getIDFromName(name: string): number {
+    return this.configService.getItems().find(item => item.name === name).ID;
   }
 }

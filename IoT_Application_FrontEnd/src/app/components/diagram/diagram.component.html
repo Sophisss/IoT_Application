@@ -3,7 +3,6 @@
             (onDisposing)="onDisposing()"
             (onItemDblClick)="editItem($event.item.dataItem)"
             (onRequestEditOperation)="requestEditOperationHandler($event)"
-            (onRequestLayoutUpdate)="requestLayoutUpdateHandler($event)"
             (onSelectionChanged)="diagramSelectionHandler($event)"
             [simpleView]="false"
             id="diagram"
@@ -19,7 +18,7 @@
     <dxo-nodes
             [customDataExpr]="itemCustomDataExpr"
             [dataSource]="dataSource"
-            keyExpr="name"
+            keyExpr="ID"
             textExpr="name"
             typeExpr="type"
     >
@@ -29,10 +28,11 @@
     <!-- The totality of links. -->
     <dxo-edges
             [dataSource]="linksDataSource"
-            fromExpr="first_item"
+            [customDataExpr]="itemCustomDataExpr"
+            fromExpr="first_item_ID"
             keyExpr="id"
             textExpr="numerosity"
-            toExpr="second_item"
+            toExpr="second_item_ID"
     ></dxo-edges>
 
     <!-- The toolbar on the left-bottom corner. -->
@@ -126,6 +126,7 @@
     </dxi-toolbar-item>
 
     <dxi-toolbar-item [options]="cancelButtonOptions"
+                      cssClass="cancelButton"
                       locateInMenu="never"
                       location="after"
                       toolbar="top"

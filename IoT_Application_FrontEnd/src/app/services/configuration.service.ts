@@ -97,12 +97,12 @@ export class ConfigurationService {
         //console.log(data)
       });
     }
-    for (let id of this.specialIDs) {
+    //TODO elimina per togliere link ent-tab dal json
+    /*for (let id of this.specialIDs) {
       links.byKey(id).then((data) => {
         items.push(data);
       });
-    }
-    //console.log(items)
+    }*/
   }
 
   getCurrentID() {
@@ -170,10 +170,14 @@ export class ConfigurationService {
    */
   private createLinkJson() {
     return this.getItems().filter(entity => entity.type === 'link').map(link => ({
-      first_entity: link.first_item,
-      second_entity: link.second_item,
+      first_entity: this.getEntityNameByID(link.first_item_ID),
+      second_entity: this.getEntityNameByID(link.second_item_ID),
       numerosity: link.numerosity,
       fields: link.fields
     }));
+  }
+
+  private getEntityNameByID(id: number) {
+    return this.getItems().find(entity => entity.ID === id).name;
   }
 }
