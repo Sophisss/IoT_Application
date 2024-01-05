@@ -35,11 +35,9 @@ export class DiagramComponent {
   deleteButtonOptions: any;
 
   selectedItemKeys: any[] = [];
-
-  previousSpecialID: number = 0;
-
   @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
+  private previousSpecialID: number = 0;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -105,11 +103,19 @@ export class DiagramComponent {
     };
   }
 
+  /**
+   * Handles the selection for the data grid in a custom way.
+   * @param data
+   */
   datagridSelectionHandler(data: any) {
     this.selectedItemKeys = data.selectedRowKeys;
   }
 
-  checkCell(event: any) {
+  /**
+   * Handles the editing of a cell of the data grid in a custom way.
+   * @param event the event that triggered the editing
+   */
+  cellEditingHandler(event: any) {
     if (this.typeNotChosen(event) || this.isNumericValue(event) || this.isTextualValue(event)
       || this.isDateOrBooleanValue(event) || this.nameAlreadyExists(event)) {
       event.cancel = true;
@@ -297,7 +303,7 @@ export class DiagramComponent {
 
       if (this.configService.tableAlreadyLinked(this.previousSpecialID)) {
         console.log("already linked", this.previousSpecialID)
-        this.deleteLinkWithTable(this.currentItem, this.previousSpecialID);
+        this.deleteLinkWithTable(this.previousSpecialID);
       }
 
       this.dataSource.push([{
@@ -447,27 +453,43 @@ export class DiagramComponent {
     return this.configService.getItems().find(entity => entity.ID === id).type === 'table';
   }
 
-  private deleteLinkWithTable(item: Item, id: number) {
+  /**
+   * Deletes a link between an entity and a table.
+   * @param id the ID of the link
+   * @private
+   */
+  private deleteLinkWithTable(id: number) {
     this.linksDataSource.push([{
       type: 'remove',
       key: id,
     }]);
   }
 
-  private createLinkWithTable(item: Item, id: number) {
+  /**
+   * Creates a link between an entity and a table.
+   * @param entity the entity to link
+   * @param id the ID of the link
+   * @private
+   */
+  private createLinkWithTable(entity: Item, id: number) {
     this.configService.assignSpecialID(id);
     this.linksDataSource.push([{
       type: 'insert',
       data: {
         ID: id,
-        name: item.name + " - " + this.currentItem.table,
+        name: entity.name + " - " + this.currentItem.table,
         type: "link",
-        first_item_ID: item.ID,
+        first_item_ID: entity.ID,
         second_item_ID: this.tables.filter((table) => table.name === this.currentItem.table)[0].ID,
       },
     }]);
   }
 
+  /**
+   * Creates the array of the links at the initialization of the component handling the links
+   * between entities and tables.
+   * @private
+   */
   private getStartingLinks() {
     const tables: Item[] = this.items.filter((item) => item.type === 'table');
     const entities: Item[] = this.items.filter((item) => item.type === 'entity');
@@ -495,6 +517,12 @@ export class DiagramComponent {
     return startingLinks;
   }
 
+  /**
+   * Cascades the update of a table to all the entities linked to it.
+   * @param table the updated table
+   * @param entitiesIDs the IDs of the entities linked to the table
+   * @private
+   */
   private cascadeUpdateToEntities(table: Item, entitiesIDs: number[]) {
     for (let entityID of entitiesIDs) {
       this.dataSource.push([{

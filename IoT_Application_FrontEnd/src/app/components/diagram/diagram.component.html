@@ -27,8 +27,8 @@
 
     <!-- The totality of links. -->
     <dxo-edges
-            [dataSource]="linksDataSource"
             [customDataExpr]="itemCustomDataExpr"
+            [dataSource]="linksDataSource"
             fromExpr="first_item_ID"
             keyExpr="id"
             textExpr="numerosity"
@@ -221,7 +221,7 @@
             <div *ngIf="currentItem.type !== 'table'">
                 <hr>
                 <dx-data-grid
-                        (onEditingStart)="checkCell($event)"
+                        (onEditingStart)="cellEditingHandler($event)"
                         (onSelectionChanged)="datagridSelectionHandler($event)"
                         [columnAutoWidth]="true"
                         [columnMinWidth]=20

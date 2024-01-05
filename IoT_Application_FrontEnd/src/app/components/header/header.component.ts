@@ -12,6 +12,9 @@ export class HeaderComponent {
   constructor(protected configurationService: ConfigurationService) {
   }
 
+  /**
+   * Handles the switch to the text mode of the title of the project.
+   */
   switchToText() {
     this.isModifiable = false;
     this.configurationService.updateContent();

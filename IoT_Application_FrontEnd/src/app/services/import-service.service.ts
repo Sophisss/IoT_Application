@@ -112,6 +112,11 @@ export class ImportServiceService {
     });
   }
 
+  /**
+   * This method returns the ID of an item given its name.
+   * @param name the name of the item
+   * @private
+   */
   private getIDFromName(name: string): number {
     return this.configService.getItems().find(item => item.name === name).ID;
   }

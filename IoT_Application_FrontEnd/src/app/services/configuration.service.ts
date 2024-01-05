@@ -45,13 +45,6 @@ export class ConfigurationService {
   }
 
   /**
-   * Clears the list of items.
-   */
-  clearList() {
-    items.splice(0, items.length);
-  }
-
-  /**
    * This method creates a new configuration with a basic structure.
    */
   exportConfiguration() {
@@ -107,16 +100,29 @@ export class ConfigurationService {
     return this.firstID;
   }
 
+  /**
+   * Calculates the special ID for the table-entity link.
+   * @param tableID the ID of the table
+   * @param entityID the ID of the entity
+   */
   getSpecialID(tableID: number, entityID: number) {
     let temp = tableID.toString() + entityID.toString();
     return parseInt(temp);
   }
 
+  /**
+   * Returns all the special IDs reserved for a table.
+   * @param tableID the ID of the table
+   */
   getAllSpecialIDsForTable(tableID: number): number[] {
     const prefixString = tableID.toString();
     return this.specialIDs.filter(number => number.toString().startsWith(prefixString));
   }
 
+  /**
+   * Returns all the IDs of the entities linked to a table.
+   * @param prefix the ID of the table
+   */
   getAllLinkedEntities(prefix: number): number[] {
     const prefixString = prefix.toString();
     return this.specialIDs
@@ -124,10 +130,18 @@ export class ConfigurationService {
       .map(number => parseInt(number.toString().substring(prefixString.length)));
   }
 
+  /**
+   * Reserves a special ID for the table-entity link.
+   * @param sID
+   */
   assignSpecialID(sID: number) {
     this.specialIDs.push(sID);
   }
 
+  /**
+   * Checks if the table is already linked to an entity.
+   * @param sID the ID of the link between the table and the entity
+   */
   tableAlreadyLinked(sID: number) {
     return this.specialIDs.includes(sID);
   }
@@ -137,6 +151,13 @@ export class ConfigurationService {
     this.clearList();
     this.generatedID = this.firstID;
     this.specialIDs = [];
+  }
+
+  /**
+   * Clears the list of items.
+   */
+  private clearList() {
+    items.splice(0, items.length);
   }
 
   /**
