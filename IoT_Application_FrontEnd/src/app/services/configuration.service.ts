@@ -14,7 +14,7 @@ export class ConfigurationService {
   readonly defaultTitle: string = "IoT Application";
 
   //Since the ID is generated automatically, we need to keep track of the first and last ID.
-  firstID: number = 100;
+  readonly firstID: number = 100;
   generatedID: number = 100;
   specialIDs: number[] = [];
 
@@ -132,8 +132,11 @@ export class ConfigurationService {
     return this.specialIDs.includes(sID);
   }
 
-  resetTitle() {
+  reset() {
     this.projectTitle = this.defaultTitle;
+    this.clearList();
+    this.generatedID = this.firstID;
+    this.specialIDs = [];
   }
 
   /**

@@ -326,10 +326,9 @@ export class DiagramComponent {
    *  Handles the resources disposal of the diagram component.
    */
   onDisposing() {
-    this.configService.clearList();
     this.dataSource.clear();
     this.linksDataSource.clear();
-    this.configService.resetTitle();
+    this.configService.reset();
   }
 
   /**
