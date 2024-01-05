@@ -38,6 +38,7 @@ export class DiagramComponent {
   @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
   private previousSpecialID: number = 0;
+  private isClickable: boolean = true;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -88,7 +89,19 @@ export class DiagramComponent {
     this.saveButtonOptions = {
       icon: 'save',
       onClick: () => {
-        if (this.getFormGroup().valid) {
+        console.log(this.fieldsDataSource);
+
+        this.fieldsDataSource.load().then((data) => console.log("total1", data));
+        this.dataGrid.instance.refresh();
+
+        if (this.currentItem.fields.length > 0) {
+          console.log("fields > 0")
+          if (this.getFormGroup().valid && this.primaryKeySelected(this.currentItem)) {
+            console.log("ok")
+            this.updateItem();
+          }
+        } else if (this.getFormGroup().valid && this.isClickable) {
+          console.log("no fields")
           this.updateItem();
         } else {
           console.log("Invalid form");
@@ -101,6 +114,11 @@ export class DiagramComponent {
         this.deleteItem();
       },
     };
+  }
+
+  addNewRow() {
+    this.dataGrid.instance.addRow().then()
+    this.isClickable = false;
   }
 
   /**
@@ -206,12 +224,15 @@ export class DiagramComponent {
         });
       }
 
+      const that = this;
       this.fieldsDataSource = new ArrayStore({
           key: 'name',
           data: this.currentItem.fields,
           onInserting(values) {
             values.type = values.type || "string";
             values.required = values.required || false;
+            values.isPrimaryKey = values.isPrimaryKey || false;
+            that.isClickable = true;
           }
         }
       );
@@ -313,6 +334,7 @@ export class DiagramComponent {
           name: this.currentItem.name,
           table: this.currentItem.table,
           fields: this.currentItem.fields,
+          //primary_key: fields.getPK(),
         },
       }]);
 
@@ -379,7 +401,7 @@ export class DiagramComponent {
 
   //TODO delete
   diagramSelectionHandler(event: any) {
-    console.log("selected", event.items)
+    //console.log("selected", event.items)
   }
 
   /**
@@ -510,7 +532,8 @@ export class DiagramComponent {
           second_item_ID: entityTable.ID,
           sort_key: null,
           table: null,
-          type: 'link'
+          type: 'link',
+          primary_key: null,
         })
       }
     }
@@ -533,5 +556,15 @@ export class DiagramComponent {
         },
       }]);
     }
+  }
+
+  private primaryKeySelected(item: Item) {
+    const fields = item.fields;
+    for (let field of fields) {
+      if (field.isPrimaryKey) {
+        return true;
+      }
+    }
+    return false;
   }
 }

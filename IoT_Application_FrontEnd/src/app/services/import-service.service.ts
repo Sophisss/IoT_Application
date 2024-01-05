@@ -26,6 +26,7 @@ export class ImportServiceService {
         type: "entity",
         fields: entity.fields,
         table: entity.table,
+        primary_key: entity.primary_key,
         partition_key: null,
         sort_key: null,
         first_item_ID: null,
@@ -47,7 +48,8 @@ export class ImportServiceService {
         first_item_ID: null,
         second_item_ID: null,
         fields: null, //table.fields,
-        numerosity: null
+        numerosity: null,
+        primary_key: null
       }
       this.configService.getItems().push(nodeTable);
     }
@@ -66,6 +68,7 @@ export class ImportServiceService {
           second_item_ID: this.getIDFromName(link.second_entity),
           numerosity: link.numerosity,
           fields: link.fields,
+          primary_key: null //TODO fix this
         }
       this.configService.getItems().push(edge);
     }

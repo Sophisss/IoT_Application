@@ -20,4 +20,6 @@ export class Item {
   numerosity: 'one-to-one' | 'one-to-many' | 'many-to-many';
 
   fields: Field[];
+
+  primary_key: string;
 }

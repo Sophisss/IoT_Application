@@ -248,14 +248,15 @@
                     -->
 
                     <dxi-column [width]="'15%'" dataField="name"></dxi-column>
-                    <dxi-column [width]="'15%'" dataField="type">
+                    <dxi-column [width]="'13%'" dataField="type">
                         <dxo-lookup [dataSource]="fieldTypes"></dxo-lookup>
                     </dxi-column>
-                    <dxi-column [width]="'14%'" dataField="required" dataType="boolean"></dxi-column>
-                    <dxi-column [width]="'14%'" dataField="minLength" dataType="number"></dxi-column>
-                    <dxi-column [width]="'14%'" dataField="maxLength" dataType="number"></dxi-column>
-                    <dxi-column [width]="'14%'" dataField="minimum" dataType="number"></dxi-column>
-                    <dxi-column [width]="'14%'" dataField="maximum" dataType="number"></dxi-column>
+                    <dxi-column [width]="'9%'" dataField="required" dataType="boolean"></dxi-column>
+                    <dxi-column [width]="'13%'" dataField="isPrimaryKey" dataType="boolean"></dxi-column>
+                    <dxi-column [width]="'11%'" dataField="minLength" dataType="number"></dxi-column>
+                    <dxi-column [width]="'11%'" dataField="maxLength" dataType="number"></dxi-column>
+                    <dxi-column [width]="'9%'" dataField="minimum" dataType="number"></dxi-column>
+                    <dxi-column [width]="'9%'" dataField="maximum" dataType="number"></dxi-column>
 
                     <dxo-toolbar>
                         <dxi-item location="before" name="Title">
@@ -263,7 +264,11 @@
                                 Fields
                             </div>
                         </dxi-item>
-                        <dxi-item name="addRowButton" showText="always">
+                        <dxi-item location="after">
+                            <dx-button (onClick)="addNewRow()"
+                                       icon="add"
+                                       text="Add a row">
+                            </dx-button>
                         </dxi-item>
                     </dxo-toolbar>
                 </dx-data-grid>

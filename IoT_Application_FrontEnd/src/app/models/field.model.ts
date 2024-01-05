@@ -19,4 +19,5 @@ export class Field {
   minimum?: number | undefined
   maximum?: number | undefined
   allowedValues?: string[] | undefined
+  isPrimaryKey?: boolean | undefined
 }
