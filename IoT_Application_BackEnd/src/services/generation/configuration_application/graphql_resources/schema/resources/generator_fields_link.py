@@ -17,4 +17,4 @@ def generate_fields_primary_key(partition_key: dict, sort_key: dict, type_partit
 
 def generate_field(field: dict) -> str:
     return f"""
-{field['name']}: {AttributeType[field['type']].value if 'allowedValues' not in field else f'allowed{field["name"]}'}{'!' if field['required'] else ''}"""
+{field['name']}: {AttributeType[field['type']].value}{'!' if field['required'] else ''}"""

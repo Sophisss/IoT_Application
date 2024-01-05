@@ -35,6 +35,6 @@ def remove_null_values(dictionary: dict) -> dict:
     return {
         key: remove_null_values(value) if isinstance(value, dict) else value
         for key, value in dictionary.items()
-        if value is not None
+        if value is not None and value != ''
     }
     """

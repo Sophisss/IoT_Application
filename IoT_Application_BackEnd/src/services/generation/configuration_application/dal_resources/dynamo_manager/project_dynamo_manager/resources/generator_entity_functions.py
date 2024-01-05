@@ -88,9 +88,9 @@ def __generate_update_method(entity: dict, table_configuration: dict, api: dict)
     def update_{entity_name.lower()}(self, arguments: dict) -> dict:
         return self.update_item('{entity['table']}', {{
             {generate_pk_sk_update(entity_primary_key, table_configuration, entity_name)}
-        }}, {{
+        }}, remove_null_values({{
 {generate_arguments_update(api['parameters'])}
-        }})
+        }}))
     """
 
 

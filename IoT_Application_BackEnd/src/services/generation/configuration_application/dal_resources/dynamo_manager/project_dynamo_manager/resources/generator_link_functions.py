@@ -89,9 +89,9 @@ def __generate_update_method(link: dict, table_configuration: dict, api: dict) -
     def update_{method_name}(self, arguments: dict) -> dict:
         return self.update_item('{link['table']}', {{
             {generate_pk_sk_update(link_primary_key, table_configuration, first_entity, second_entity)}
-        }}, {{
+        }}, remove_null_values({{
 {generate_arguments_update(api['parameters'])}
-        }})
+        }}))
     """
 
 
