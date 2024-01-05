@@ -97,12 +97,6 @@ export class ConfigurationService {
         //console.log(data)
       });
     }
-    //TODO elimina per togliere link ent-tab dal json
-    /*for (let id of this.specialIDs) {
-      links.byKey(id).then((data) => {
-        items.push(data);
-      });
-    }*/
   }
 
   getCurrentID() {

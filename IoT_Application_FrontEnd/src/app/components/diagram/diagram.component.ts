@@ -175,13 +175,12 @@ export class DiagramComponent {
    * @param item the item to edit
    */
   editItem(item: Item) {
-    let isOk: boolean = true;
+    let isSpecialLink: boolean = true;
     if (item.first_item_ID && item.second_item_ID) {
-      isOk = !(this.isTable(item.first_item_ID) || this.isTable(item.second_item_ID));
+      isSpecialLink = !(this.isTable(item.first_item_ID) || this.isTable(item.second_item_ID));
     }
 
-    //TODO metti un if per controllare che non sia un link fra entità e tabella
-    if (isOk) {
+    if (isSpecialLink) {
       this.currentItem = {...item};
 
       if (this.currentItem.type === 'entity' && this.currentItem.table) {
