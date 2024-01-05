@@ -36,7 +36,7 @@ export class DiagramComponent {
 
   selectedItemKeys: any[] = [];
 
-  specialIDtemp: number = 0;
+  previousSpecialID: number = 0;
 
   @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
@@ -67,7 +67,7 @@ export class DiagramComponent {
     });
     this.linksDataSource = new ArrayStore({
       key: 'ID',
-      data: this.items.filter((item) => item.type === 'link'),
+      data: this.getStartingLinks(),
       onInserting(values) {
         values.ID = values.ID || that.configService.assignID();
         values.type = 'link';
@@ -110,7 +110,6 @@ export class DiagramComponent {
   }
 
   checkCell(event: any) {
-    console.log(event);
     if (this.typeNotChosen(event) || this.isNumericValue(event) || this.isTextualValue(event)
       || this.isDateOrBooleanValue(event) || this.nameAlreadyExists(event)) {
       event.cancel = true;
@@ -188,8 +187,7 @@ export class DiagramComponent {
       if (this.currentItem.type === 'entity' && this.currentItem.table) {
         let designatedTable = this.tables.filter((table) => table.name === this.currentItem.table)[0]
         if (designatedTable) {
-          this.specialIDtemp = this.configService.getSpecialID(designatedTable.ID, this.currentItem.ID);
-          console.log("specialIDtemp", this.specialIDtemp)
+          this.previousSpecialID = this.configService.getSpecialID(designatedTable.ID, this.currentItem.ID);
         }
       }
 
@@ -298,9 +296,9 @@ export class DiagramComponent {
 
     } else if (this.currentItem.type === 'entity') {
 
-      if (this.configService.tableAlreadyLinked(this.specialIDtemp)) {
-        console.log("already linked", this.specialIDtemp)
-        this.deleteLinkWithTable(this.currentItem, this.specialIDtemp);
+      if (this.configService.tableAlreadyLinked(this.previousSpecialID)) {
+        console.log("already linked", this.previousSpecialID)
+        this.deleteLinkWithTable(this.currentItem, this.previousSpecialID);
       }
 
       this.dataSource.push([{
@@ -346,7 +344,6 @@ export class DiagramComponent {
       event.allowed = false;
     }
     if (event.operation === "changeConnection" && event.args.connector) {
-      console.log("connection event", event)
       //Drawing a connector without connecting it to another shape is not allowed
       if (event.args.newShape === undefined && event.args.oldShape === undefined) {
         event.allowed = false;
@@ -472,6 +469,34 @@ export class DiagramComponent {
       },
     }]);
   }
+
+  private getStartingLinks() {
+    const tables: Item[] = this.items.filter((item) => item.type === 'table');
+    const entities: Item[] = this.items.filter((item) => item.type === 'entity');
+
+    const startingLinks: Item[] = this.items.filter((item) => item.type === 'link');
+
+    for (let entity of entities) {
+      const entityTable = tables.find((table) => table.name === entity.table)
+      if (entityTable) {
+        const linkID = this.configService.getSpecialID(entityTable.ID, entity.ID);
+        startingLinks.push({
+          ID: linkID,
+          fields: null,
+          first_item_ID: entity.ID,
+          name: entity.name + " - " + entityTable.name,
+          numerosity: null,
+          partition_key: null,
+          second_item_ID: entityTable.ID,
+          sort_key: null,
+          table: null,
+          type: 'link'
+        })
+      }
+    }
+    return startingLinks;
+  }
+
   private cascadeUpdateToEntities(table: Item, entitiesIDs: number[]) {
     for (let entityID of entitiesIDs) {
       this.dataSource.push([{
