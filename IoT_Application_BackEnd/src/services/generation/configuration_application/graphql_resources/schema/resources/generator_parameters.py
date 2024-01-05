@@ -15,13 +15,6 @@ def generate_parameters_entity(entity: dict, api, links: list) -> str:
                                            AttributeType[field['type']].value),
             filter(lambda field: field['name'] in entity['primary_key'], entity['fields'])))
 
-    association_link_first, association_link_second = get_links_associated(entity, links)
-    combined_links = association_link_first + association_link_second
-    links_put = ""
-    for link in combined_links:
-        resource = generate_resource_name(link)
-        links_put += f"{resource}: {resource}Input\n   "
-
     return (
         '\n    '.join(fields_primary_key) if api['type'] in ['GET', 'DELETE']
 
@@ -30,7 +23,7 @@ def generate_parameters_entity(entity: dict, api, links: list) -> str:
                                                         api['parameters']))) if api['type'] == 'POST'
 
         else f"""{entity['name']}: {entity['name']}Input!
-   {links_put}"""
+   {__generate_links_put(*get_links_associated(entity, links))}"""
     )
 
 
@@ -58,3 +51,26 @@ def generate_parameters_link(link: dict, api, type_partition_key, type_sort_key)
                  next((field['type'] for field in link['fields'] if field['name'] == param), param)].value),
                                    api['parameters'])))
     )
+
+
+def __generate_links_put(association_link_first, association_link_second):
+    """
+    This function generates the links parameters for put method.
+    :param association_link_first: first association link.
+    :param association_link_second: second association link.
+    :return: the links for the put method.
+    """
+    links_put = ""
+    links_put += ''.join(map(
+        lambda link: f"{generate_resource_name(link)}: [{generate_resource_name(link)}Input]\n   "
+        if link['numerosity'] in ['one-to-many', 'many-to-many']
+        else f"{generate_resource_name(link)}: {generate_resource_name(link)}Input\n   ",
+        association_link_first
+    ))
+    links_put += ''.join(map(
+        lambda link: f"{generate_resource_name(link)}: [{generate_resource_name(link)}Input]\n   "
+        if link['numerosity'] in ['many-to-one', 'many-to-many']
+        else f"{generate_resource_name(link)}: {generate_resource_name(link)}Input\n   ",
+        association_link_second
+    ))
+    return links_put

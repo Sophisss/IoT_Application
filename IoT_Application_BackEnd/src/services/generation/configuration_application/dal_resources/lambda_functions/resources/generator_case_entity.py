@@ -44,13 +44,7 @@ def __generate_case_put(entity_name: str, api_name: str, link_associated_first_e
     :param api_name: The name of the api.
     :return: The put case of the entity.
     """
-    condition_case = ""
-
-    for link_associated in link_associated_first_entity:
-        condition_case += __generate_condition(entity_name.lower(), link_associated['primary_key'][0], link_associated)
-
-    for link_associated in link_associated_second_entity:
-        condition_case += __generate_condition(entity_name.lower(), link_associated['primary_key'][1], link_associated)
+    condition_case = __generate_condition_case(entity_name, link_associated_first_entity,link_associated_second_entity)
 
     return f"""
             case '{api_name}':
@@ -59,6 +53,47 @@ def __generate_case_put(entity_name: str, api_name: str, link_associated_first_e
                 check_response_status(response)
                 {condition_case}
                 return "{entity_name} created"
+    """
+
+
+def __generate_condition_case(entity_name: str, link_associated_first_entity: dict,
+                              link_associated_second_entity: dict) -> str:
+    condition_case = ""
+    condition_case += ''.join(
+        map(
+            lambda link: __generate_condition_many(entity_name.lower(), link['primary_key'][0], link)
+            if (link['numerosity'] == 'one-to-many') or (link['numerosity'] == 'many-to-many')
+            else __generate_condition(entity_name.lower(), link['primary_key'][0], link),
+            link_associated_first_entity
+        )
+    )
+
+    condition_case += ''.join(
+        map(
+            lambda link: __generate_condition_many(entity_name.lower(), link['primary_key'][1], link)
+            if (link['numerosity'] == 'many-to-one') or (link['numerosity'] == 'many-to-many')
+            else __generate_condition(entity_name.lower(), link['primary_key'][1], link),
+            link_associated_second_entity
+        )
+    )
+    return condition_case
+
+
+def __generate_condition_many(entity_name: str, entity_id, link: dict) -> str:
+    """
+    This method generates the condition of the entity.
+    :param entity_name: The name of the entity.
+    :param entity_id: The id of the entity.
+    :param link: The link associated to the entity.
+    :return: The condition of the entity.
+    """
+    resource = generate_resource_name(link)
+    return f"""
+                if '{resource}' in event_parse.arguments:
+                    for item in event_parse.arguments['{resource}']:
+                        response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}(
+                            {resource}(**item, {entity_id}={entity_name}.{entity_id}))
+                        check_response_status(response_link)
     """
 
 
@@ -73,7 +108,8 @@ def __generate_condition(entity_name: str, entity_id, link: dict) -> str:
     resource = generate_resource_name(link)
     return f"""
                 if '{resource}' in event_parse.arguments:
-                    response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}({resource}(**event_parse.arguments['{resource}'], {entity_id}={entity_name}.{entity_id}))
+                    response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}(
+                        {resource}(**event_parse.arguments['{resource}'], {entity_id}={entity_name}.{entity_id}))
                     check_response_status(response_link)
     """
 
