@@ -227,7 +227,7 @@ export class DiagramComponent {
           onInserting(values) {
             values.type = values.type || "string";
             values.required = values.required || false;
-            values.isPrimaryKey = values.isPrimaryKey || false;
+            values.isPrimaryKey = false;
             that.isClickable = true;
           }
         }

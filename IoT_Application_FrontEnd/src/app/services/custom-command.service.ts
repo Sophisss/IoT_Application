@@ -36,7 +36,7 @@ export class CustomCommandService {
     }
     if (commandName === 'generateCode') {
       const item = this.configService.getItems()[0];
-      console.log(item.fields.find(field => field.isPrimaryKey));
+
       /*const jsonFile = this.configService.exportConfiguration();
       console.log(jsonFile)
       this.httpClient.post(`${environment.baseUrl}/download`, jsonFile).subscribe(response => {

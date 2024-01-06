@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ConfigurationService} from "./configuration.service";
 import {Item} from "../models/item.model";
+import {Field} from "../models/field.model";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,11 @@ export class ImportServiceService {
   pushToConfiguration(jsonContent: any) {
     //read entities
     for (const entity of jsonContent.entities) {
+      for (const field of entity.fields) {
+        field.isPrimaryKey = false;
+      }
+      entity.fields.find((field: Field) => entity.primary_key[0] === field.name).isPrimaryKey = true;
+
       let nodeEntity: Item = {
         ID: this.configService.assignID(),
         name: entity.name,
