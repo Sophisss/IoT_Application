@@ -5,7 +5,6 @@ import {CustomCommandService} from "../../services/custom-command.service";
 import {Item} from "../../models/item.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {DxDataGridComponent, DxDiagramComponent} from "devextreme-angular";
-import {Field} from "../../models/field.model";
 
 @Component({
   selector: 'app-diagram',
@@ -130,6 +129,10 @@ export class DiagramComponent {
    * @param event the event that triggered the editing
    */
   cellEditingHandler(event: any) {
+    console.log(event)
+    if (this.pkAlreadySelected(event)) {
+      event.cancel = true;
+    }
     if (this.typeNotChosen(event) || this.isNumericValue(event) || this.isTextualValue(event)
       || this.isDateOrBooleanValue(event) || this.nameAlreadyExists(event)) {
       event.cancel = true;
@@ -557,5 +560,10 @@ export class DiagramComponent {
         },
       }]);
     }
+  }
+
+  private pkAlreadySelected(event: any) {
+    return event.column.dataField === 'isPrimaryKey' &&
+      this.configService.getPrimaryKeyField(this.currentItem) !== undefined && !event.data.isPrimaryKey;
   }
 }
