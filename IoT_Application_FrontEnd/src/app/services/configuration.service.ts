@@ -57,7 +57,7 @@ export class ConfigurationService {
     const jsonLinks = this.createLinkJson()
 
     return {
-      projectName: this.projectTitle,
+      projectName: this.projectTitle.trim().replace(/\s/g, '_'),
       entities: jsonEntities,
       links: jsonLinks,
       awsConfig: {
