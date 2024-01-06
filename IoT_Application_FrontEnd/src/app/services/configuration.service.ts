@@ -28,6 +28,10 @@ export class ConfigurationService {
     this.updateSignalSubject.next();
   }
 
+  getPrimaryKeyField(item: Item) {
+    return item.fields.find(field => field.isPrimaryKey);
+  }
+
   /**
    * This method increments the ID by 1 and returns it to assign it to a new item.
    */
@@ -168,7 +172,7 @@ export class ConfigurationService {
       name: entity.name,
       fields: entity.fields,
       table: entity.table,
-      primary_key: []
+      primary_key: entity.primary_key
     }));
   }
 

@@ -5,6 +5,7 @@ import {CustomCommandService} from "../../services/custom-command.service";
 import {Item} from "../../models/item.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {DxDataGridComponent, DxDiagramComponent} from "devextreme-angular";
+import {Field} from "../../models/field.model";
 
 @Component({
   selector: 'app-diagram',
@@ -89,14 +90,9 @@ export class DiagramComponent {
     this.saveButtonOptions = {
       icon: 'save',
       onClick: () => {
-        console.log(this.fieldsDataSource);
-
-        this.fieldsDataSource.load().then((data) => console.log("total1", data));
-        this.dataGrid.instance.refresh();
-
         if (this.currentItem.fields.length > 0) {
           console.log("fields > 0")
-          if (this.getFormGroup().valid && this.primaryKeySelected(this.currentItem)) {
+          if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
             console.log("ok")
             this.updateItem();
           }
@@ -321,10 +317,15 @@ export class DiagramComponent {
       this.cascadeUpdateToEntities(this.currentItem, this.configService.getAllLinkedEntities(this.currentItem.ID));
 
     } else if (this.currentItem.type === 'entity') {
+      let pkName: string = null;
 
       if (this.configService.tableAlreadyLinked(this.previousSpecialID)) {
         console.log("already linked", this.previousSpecialID)
         this.deleteLinkWithTable(this.previousSpecialID);
+      }
+
+      if (this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
+        pkName = this.configService.getPrimaryKeyField(this.currentItem).name;
       }
 
       this.dataSource.push([{
@@ -334,7 +335,7 @@ export class DiagramComponent {
           name: this.currentItem.name,
           table: this.currentItem.table,
           fields: this.currentItem.fields,
-          //primary_key: fields.getPK(),
+          primary_key: [pkName],
         },
       }]);
 
@@ -556,15 +557,5 @@ export class DiagramComponent {
         },
       }]);
     }
-  }
-
-  private primaryKeySelected(item: Item) {
-    const fields = item.fields;
-    for (let field of fields) {
-      if (field.isPrimaryKey) {
-        return true;
-      }
-    }
-    return false;
   }
 }
