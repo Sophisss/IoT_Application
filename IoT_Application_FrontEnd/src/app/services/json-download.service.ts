@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {saveAs} from 'file-saver';
 import {ConfigurationService} from "./configuration.service";
+import {JsonPipe} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import {ConfigurationService} from "./configuration.service";
  * Class that acts as a service that takes care of JSON export.
  */
 export class JsonDownloadService {
-  constructor(private configService: ConfigurationService) {
+  constructor(private configService: ConfigurationService, private jsonPipe: JsonPipe) {
   }
 
   /**
@@ -20,7 +21,7 @@ export class JsonDownloadService {
     let fileName: string = this.configService.getTitle().trim();
 
     if (jsonData) {
-      const blob = new Blob([JSON.stringify(jsonData)], {type: 'application/json'});
+      const blob = new Blob([this.jsonPipe.transform(jsonData)], {type: 'application/json'});
 
       saveAs(blob, `${fileName}.json`);
     } else {

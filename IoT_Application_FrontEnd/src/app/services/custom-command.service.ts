@@ -3,6 +3,7 @@ import {ToggleService} from "./toggle.service";
 import {ConfigurationService} from "./configuration.service";
 import {JsonDownloadService} from "./json-download.service";
 import ArrayStore from "devextreme/data/array_store";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import ArrayStore from "devextreme/data/array_store";
 export class CustomCommandService {
 
   constructor(private toggleService: ToggleService, private configService: ConfigurationService,
-              private jsonDownload: JsonDownloadService) {
+              private jsonDownload: JsonDownloadService, private httpClient: HttpClient) {
   }
 
   /**
@@ -34,7 +35,14 @@ export class CustomCommandService {
       this.toggleService.toggleDrawer();
     }
     if (commandName === 'generateCode') {
-      console.log(this.configService.exportConfiguration());
+      const item = this.configService.getItems()[0];
+
+      /*const jsonFile = this.configService.exportConfiguration();
+      console.log(jsonFile)
+      this.httpClient.post(`${environment.baseUrl}/download`, jsonFile).subscribe(response => {
+        console.log(response);
+      });*/
+      //console.log(this.configService.specialIDs);
     }
   }
 
