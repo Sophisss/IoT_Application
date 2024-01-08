@@ -23,6 +23,8 @@ def generate_fields_model(fields: list) -> str:
                 toReturn += generate_field_model_integer(field)
             case 'boolean':
                 toReturn += generate_field_model_boolean(field)
+            case 'float':
+                toReturn += generate_field_model_float(field)
     return toReturn
 
 
@@ -60,6 +62,24 @@ def generate_field_model_integer(field: dict) -> str:
     options = ', '.join(filter(None, [min_option(), max_option()]))
     return (f"    {field['name']}: int = Field({options})\n" if field['required']
             else f"    {field['name']}:Optional[int] = Field(default=None{', '.join([min_option(), max_option()])})\n")
+
+
+def generate_field_model_float(field: dict) -> str:
+    """
+    This function generates the field if it is an integer.
+    :param field: the field.
+    :return: the field generated.
+    """
+
+    def min_option() -> str:
+        return f"ge={field['minimum']}" if 'minimum' in field else ''
+
+    def max_option() -> str:
+        return f"le={field['maximum']}" if 'maximum' in field else ''
+
+    options = ', '.join(filter(None, [min_option(), max_option()]))
+    return (f"    {field['name']}: float = Field({options})\n" if field['required']
+            else f"    {field['name']}:Optional[float] = Field(default=None{', '.join([min_option(), max_option()])})\n")
 
 
 def generate_field_model_boolean(field: dict) -> str:

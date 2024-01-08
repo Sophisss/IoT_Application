@@ -12,7 +12,7 @@ def generate_fields_link(primary_key: dict, fields: list, type_partition_key: st
 def generate_fields_primary_key(partition_key: dict, sort_key: dict, type_partition_key: str,
                                 type_sort_key: str) -> str:
     return f"""{partition_key}: {AttributeType[type_partition_key].value}!
-{sort_key}: {AttributeType[type_sort_key].value}!"""
+{sort_key}: {AttributeType[type_sort_key].value}"""
 
 
 def generate_field(field: dict) -> str:
