@@ -90,7 +90,11 @@ export class DiagramComponent {
     this.saveButtonOptions = {
       icon: 'save',
       onClick: () => {
-        if (this.currentItem.fields.length > 0) {
+        if (this.currentItem.name === '' || this.currentItem.name === undefined) {
+          console.log("ERROR: Insert a name.")
+        } else if (this.itemNameAlreadyUsed(this.currentItem)) {
+          console.log("ERROR: Name already in use.")
+        } else if (this.currentItem.fields.length > 0) {
           console.log("fields > 0")
           if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
             console.log("ok")
@@ -100,7 +104,7 @@ export class DiagramComponent {
           console.log("no fields")
           this.updateItem();
         } else {
-          console.log("Invalid form");
+          console.log("ERROR: Invalid form");
         }
       },
     };
@@ -130,21 +134,20 @@ export class DiagramComponent {
    * @param event the event that triggered the editing
    */
   cellEditingHandler(event: any) {
-    console.log(event)
     if (this.pkAlreadySelected(event)) {
       event.cancel = true;
     }
-    if (event.column.name === "isPrimaryKey"){
+    if (event.column.name === "isPrimaryKey") {
       let field: Field;
       this.fieldsDataSource.byKey(event.key).then((data) => {
         field = data;
       });
-      if (field.isPrimaryKey){
+      if (field.isPrimaryKey) {
         field.required = field.isPrimaryKey;
       }
     }
     if (this.typeNotChosen(event) || this.isNumericValue(event) || this.isTextualValue(event)
-      || this.isDateOrBooleanValue(event) || this.nameAlreadyExists(event)) {
+      || this.isDateOrBooleanValue(event) || this.cellNameAlreadyExists(event)) {
       event.cancel = true;
     }
     if (this.isNumericValue(event)) {
@@ -452,7 +455,7 @@ export class DiagramComponent {
       (event.data.type === 'boolean' || event.data.type === 'date');
   }
 
-  private nameAlreadyExists(event: any) {
+  private cellNameAlreadyExists(event: any) {
     return ("name" in event.data) && (event.data.name !== '') && (event.column.dataField === 'name');
   }
 
@@ -578,5 +581,9 @@ export class DiagramComponent {
   private pkAlreadySelected(event: any) {
     return event.column.dataField === 'isPrimaryKey' &&
       this.configService.getPrimaryKeyField(this.currentItem) !== undefined && !event.data.isPrimaryKey;
+  }
+
+  private itemNameAlreadyUsed(item: Item) {
+    return this.configService.getItems().filter((temp) => temp.name === item.name).length > 0;
   }
 }
