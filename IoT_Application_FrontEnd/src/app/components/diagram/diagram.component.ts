@@ -5,6 +5,7 @@ import {CustomCommandService} from "../../services/custom-command.service";
 import {Item} from "../../models/item.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {DxDataGridComponent, DxDiagramComponent} from "devextreme-angular";
+import {Field} from "../../models/field.model";
 
 @Component({
   selector: 'app-diagram',
@@ -132,6 +133,15 @@ export class DiagramComponent {
     console.log(event)
     if (this.pkAlreadySelected(event)) {
       event.cancel = true;
+    }
+    if (event.column.name === "isPrimaryKey"){
+      let field: Field;
+      this.fieldsDataSource.byKey(event.key).then((data) => {
+        field = data;
+      });
+      if (field.isPrimaryKey){
+        field.required = field.isPrimaryKey;
+      }
     }
     if (this.typeNotChosen(event) || this.isNumericValue(event) || this.isTextualValue(event)
       || this.isDateOrBooleanValue(event) || this.nameAlreadyExists(event)) {
@@ -328,7 +338,10 @@ export class DiagramComponent {
       }
 
       if (this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
-        pkName = this.configService.getPrimaryKeyField(this.currentItem).name;
+        let pkField = this.configService.getPrimaryKeyField(this.currentItem);
+        pkField.required = true;
+        this.dataGrid.instance.refresh();
+        pkName = pkField.name;
       }
 
       this.dataSource.push([{

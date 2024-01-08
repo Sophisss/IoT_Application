@@ -6,6 +6,8 @@
             (onSelectionChanged)="diagramSelectionHandler($event)"
             [simpleView]="false"
             id="diagram"
+            units="cm"
+            viewUnits="cm"
 >
     <!-- The menu you get after left-clicking on an object or the diagram. -->
     <dxo-context-menu [commands]="['bringToFront', 'sendToBack', 'copy', 'paste']" [enabled]="true"></dxo-context-menu>
@@ -30,7 +32,7 @@
             [customDataExpr]="itemCustomDataExpr"
             [dataSource]="linksDataSource"
             fromExpr="first_item_ID"
-            keyExpr="id"
+            keyExpr="ID"
             textExpr="numerosity"
             toExpr="second_item_ID"
     ></dxo-edges>
@@ -59,15 +61,15 @@
         <dxi-group [expanded]="true" category="iot-devq" displayMode="texts" title="IoT"></dxi-group>
     </dxo-toolbox>
 
-    <!-- The entity custom shape. -->
+    <!-- Entity custom shape -->
     <dxi-custom-shape
             [allowEditText]="false"
-            [defaultHeight]="1"
-            [defaultWidth]="1.5"
-            [maxHeight]="2"
-            [maxWidth]="3"
-            [minHeight]="1"
-            [minWidth]="1.5"
+            [defaultHeight]="2.5"
+            [defaultWidth]="3.8"
+            [maxHeight]="5"
+            [maxWidth]="7.6"
+            [minHeight]="2.5"
+            [minWidth]="3.8"
             [toolboxWidthToHeightRatio]="2"
             baseType="ellipse"
             category="iot-devq"
@@ -77,15 +79,15 @@
     >
     </dxi-custom-shape>
 
-    <!-- The table custom shape. -->
+    <!-- Table custom shape -->
     <dxi-custom-shape
             [allowEditText]="false"
-            [defaultHeight]="1"
-            [defaultWidth]="1.5"
-            [maxHeight]="2"
-            [maxWidth]="3"
-            [minHeight]="1"
-            [minWidth]="1.5"
+            [defaultHeight]="2.5"
+            [defaultWidth]="3.8"
+            [maxHeight]="5"
+            [maxWidth]="7.6"
+            [minHeight]="2.5"
+            [minWidth]="3.8"
             [toolboxWidthToHeightRatio]="2"
             baseType="database"
             category="iot-devq"
@@ -94,6 +96,7 @@
             type="table"
     >
     </dxi-custom-shape>
+
 
     <!-- The menu that appears at the end of a connector that leads to nothing to create a new object. -->
     <dxo-context-toolbox [enabled]="false"></dxo-context-toolbox>
