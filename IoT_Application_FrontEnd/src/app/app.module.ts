@@ -28,7 +28,7 @@ import {
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DrawerContentComponent} from './components/drawer-content/drawer-content.component';
 import {HttpClientModule} from '@angular/common/http';
-import {JsonPipe} from "@angular/common";
+import {JsonPipe, TitleCasePipe} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -62,7 +62,8 @@ import {JsonPipe} from "@angular/common";
     DxDataGridModule,
   ],
   providers: [
-    JsonPipe
+    JsonPipe,
+    TitleCasePipe
   ],
   bootstrap: [AppComponent]
 })

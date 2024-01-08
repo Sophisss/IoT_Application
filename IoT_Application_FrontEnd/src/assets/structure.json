@@ -36,10 +36,8 @@
           "name": "status",
           "type": "string",
           "required": true,
-          "allowedValues": [
-            "active",
-            "inactive"
-          ]
+          "minLength": 2,
+          "maxLength": 256
         }
       ],
       "primary_key": [
@@ -78,13 +76,12 @@
       "fields": [
         {
           "name": "building_id",
-          "type": "string",
+          "type": "integer",
           "required": true,
-          "minLength": 2,
-          "maxLength": 256
+          "maximum": 256
         },
         {
-          "name": "location",
+          "name": "location_building",
           "type": "string",
           "required": false,
           "maxLength": 100
@@ -113,8 +110,7 @@
           "name": "updateBuilding",
           "type": "POST",
           "parameters": [
-            "location",
-            "floors"
+            "location_building"
           ]
         },
         {
@@ -151,13 +147,6 @@
         {
           "name": "getLinkBuildingDevice",
           "type": "GET"
-        },
-        {
-          "name": "updateLinkBuildingDevice",
-          "type": "POST",
-          "parameters": [
-            "timestamp"
-          ]
         }
       ]
     }
@@ -169,11 +158,11 @@
           "tableName": "IoT",
           "partition_key": {
             "name": "PK",
-            "type": "String"
+            "type": "string"
           },
           "sort_key": {
             "name": "SK",
-            "type": "String"
+            "type": "string"
           },
           "GSI": {
             "index_name": "SK-PK",
