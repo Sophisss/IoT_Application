@@ -1,3 +1,5 @@
+import {Field} from "./field.model";
+
 export class Item {
   ID: number;
 
@@ -11,8 +13,13 @@ export class Item {
 
   sort_key: string;
 
-  first_item: string;
+  first_item_ID: number;
 
-  second_item: string;
+  second_item_ID: number;
 
+  numerosity: 'one-to-one' | 'one-to-many' | 'many-to-many' | 'many-to-one';
+
+  fields: Field[];
+
+  primary_key: string;
 }

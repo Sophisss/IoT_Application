@@ -25,20 +25,64 @@
   padding: 0;
 }
 
-::ng-deep .dx-popup-content .dx-fieldset.buttons {
-  display: flex;
-  justify-content: flex-end;
-}
-
 ::ng-deep .dx-popup-content .dx-fieldset.buttons > * {
   margin-left: 10px;
 }
 
-::ng-deep .dx-popup-content .dx-fieldset.buttons > #update {
-  background-color: #0565af;
+::ng-deep .dx-popup-content .dx-fieldset.buttons.bottom > * {
+  margin-bottom: 10px;
 }
 
-::ng-deep .dx-popup-content .dx-fieldset.buttons > #delete {
-  background-color: firebrick;
-  color: #ffffff;
+::ng-deep div.dx-field-label {
+  padding-right: 0;
+}
+
+h3 {
+  margin: 15px;
+}
+
+::ng-deep .rect {
+  text-align: center;
+  font-size: 30px;
+  padding-top: 10px;
+  height: 100%;
+}
+
+::ng-deep .demo-light {
+  //background: rgba(245, 229, 166, 0.5);
+}
+
+::ng-deep .demo-dark {
+  //background: rgba(148, 215, 199, 0.5);
+}
+
+::ng-deep span.dx-checkbox-icon {
+  border-color: #0565af;
+  color: #0565af;
+}
+
+::ng-deep .saveButton > div.dx-item-content.dx-toolbar-item-content > div.dx-widget.dx-button.dx-button-mode-contained.dx-button-normal.dx-button-has-icon > div.dx-button-content > i.dx-icon {
+  color: #0565af;
+}
+
+::ng-deep .deleteButton > div.dx-item-content.dx-toolbar-item-content > div.dx-widget.dx-button.dx-button-mode-contained.dx-button-normal.dx-button-has-icon > div.dx-button-content > i.dx-icon {
+  color: firebrick;
+}
+
+::ng-deep .cancelButton > div.dx-item-content.dx-toolbar-item-content > div.dx-widget.dx-button.dx-button-mode-contained.dx-button-normal.dx-button-has-icon > div.dx-button-content > i.dx-icon {
+  color: #333;
+}
+
+::ng-deep .dx-overlay-content .dx-popup-content > .dx-template-wrapper {
+  height: unset;
+  width: unset;
+}
+
+::ng-deep .gridTitle {
+  padding-left: 10px;
+  font-size: 20px;
+}
+
+#gridContainer {
+  margin: 5px;
 }

@@ -8,7 +8,7 @@ import {Subscription} from "rxjs";
   styleUrls: ['./drawer-content.component.scss']
 })
 export class DrawerContentComponent implements OnInit, OnDestroy {
-  drawerContent: string = "Drawer content";
+  drawerContent: any;
   private updateContentSubscription: Subscription;
 
   constructor(private configService: ConfigurationService) {
@@ -20,13 +20,16 @@ export class DrawerContentComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateContent() {
+  ngOnDestroy() {
+    this.updateContentSubscription.unsubscribe();
+  }
+
+  /**
+   * Updates the content of the drawer.
+   */
+  private updateContent() {
     let configuration = JSON.stringify(this.configService.exportConfiguration());
     this.drawerContent = JSON.parse(configuration);
     //console.log(this.drawerContent);
-  }
-
-  ngOnDestroy() {
-    this.updateContentSubscription.unsubscribe();
   }
 }

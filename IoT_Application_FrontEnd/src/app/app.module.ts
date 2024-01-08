@@ -10,16 +10,25 @@ import {DiagramComponent} from './components/diagram/diagram.component';
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
+  DxBoxModule,
   DxButtonModule,
+  DxCheckBoxModule,
+  DxDataGridModule,
   DxDiagramModule,
   DxDrawerModule,
+  DxFormModule,
+  DxNumberBoxModule,
   DxPopupModule,
+  DxRadioGroupModule,
+  DxSelectBoxModule,
   DxTextBoxModule,
   DxToolbarModule,
   DxTooltipModule
 } from "devextreme-angular";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DrawerContentComponent} from './components/drawer-content/drawer-content.component';
+import {HttpClientModule} from '@angular/common/http';
+import {JsonPipe} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -42,9 +51,19 @@ import {DrawerContentComponent} from './components/drawer-content/drawer-content
     DxPopupModule,
     DxTextBoxModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DxFormModule,
+    DxRadioGroupModule,
+    DxBoxModule,
+    DxNumberBoxModule,
+    DxSelectBoxModule,
+    DxCheckBoxModule,
+    HttpClientModule,
+    DxDataGridModule,
   ],
-  providers: [],
+  providers: [
+    JsonPipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

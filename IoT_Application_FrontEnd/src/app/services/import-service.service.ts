@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ConfigurationService} from "./configuration.service";
 import {Item} from "../models/item.model";
+import {Field} from "../models/field.model";
 
 @Injectable({
   providedIn: 'root'
@@ -20,16 +21,23 @@ export class ImportServiceService {
   pushToConfiguration(jsonContent: any) {
     //read entities
     for (const entity of jsonContent.entities) {
+      for (const field of entity.fields) {
+        field.isPrimaryKey = false;
+      }
+      entity.fields.find((field: Field) => entity.primary_key[0] === field.name).isPrimaryKey = true;
+
       let nodeEntity: Item = {
         ID: this.configService.assignID(),
         name: entity.name,
         type: "entity",
-        //fields: entity.fields,
+        fields: entity.fields,
         table: entity.table,
+        primary_key: entity.primary_key,
         partition_key: null,
         sort_key: null,
-        first_item: null,
-        second_item: null,
+        first_item_ID: null,
+        second_item_ID: null,
+        numerosity: null
       }
       this.configService.getItems().push(nodeEntity);
     }
@@ -40,12 +48,14 @@ export class ImportServiceService {
         ID: this.configService.assignID(),
         name: table.tableName,
         type: "table",
-        //fields: entity.fields,
         table: null,
-        partition_key: null,
-        sort_key: null,
-        first_item: null,
-        second_item: null,
+        partition_key: null, // table.partition_key,
+        sort_key: null, //table.sort_key,
+        first_item_ID: null,
+        second_item_ID: null,
+        fields: null, //table.fields,
+        numerosity: null,
+        primary_key: null
       }
       this.configService.getItems().push(nodeTable);
     }
@@ -55,14 +65,16 @@ export class ImportServiceService {
       let edge: Item =
         {
           ID: this.configService.assignID(),
-          name: link.first_entity + " - " + link.second_entity,
+          name: null,
           type: 'link',
           table: null,
           partition_key: null,
           sort_key: null,
-          first_item: link.first_entity,
-          second_item: link.second_entity,
-          //fields: link.fields,
+          first_item_ID: this.getIDFromName(link.first_entity),
+          second_item_ID: this.getIDFromName(link.second_entity),
+          numerosity: link.numerosity,
+          fields: link.fields,
+          primary_key: null //TODO fix this
         }
       this.configService.getItems().push(edge);
     }
@@ -107,5 +119,14 @@ export class ImportServiceService {
       };
       fileReader.readAsText(selectedFile);
     });
+  }
+
+  /**
+   * This method returns the ID of an item given its name.
+   * @param name the name of the item
+   * @private
+   */
+  private getIDFromName(name: string): number {
+    return this.configService.getItems().find(item => item.name === name).ID;
   }
 }

@@ -8,13 +8,11 @@ import {Router} from "@angular/router";
   styleUrls: ['./homepage.component.scss']
 })
 export class HomepageComponent {
-  descriptionText: string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean volutpat convallis sapien, vitae semper enim\n" +
-    "      volutpat facilisis. Maecenas et lacus arcu. Mauris cursus eu risus nec iaculis. Integer a diam ut nisl luctus\n" +
-    "      convallis vitae non metus. Suspendisse potenti. In in ipsum sem. Curabitur et mauris eget augue lacinia malesuada.\n" +
-    "      Vivamus euismod neque convallis, maximus lacus at, semper sapien.Lorem ipsum dolor sit amet, consectetur\n" +
-    "      adipiscing elit. Aenean volutpat convallis sapien, vitae semper enim volutpat facilisis. Maecenas et lacus arcu.\n" +
-    "      Mauris cursus eu risus nec iaculis. Integer a diam ut nisl luctus convallis vitae non metus. Suspendisse potenti.\n" +
-    "      In in ipsum sem.";
+  descriptionText: string = "Trascina e personalizza le tue entità o tabelle, monitorando in tempo reale" +
+    " il file JSON prodotto.\nQuando sei soddisfatto del risultato," +
+    " puoi salvare il file sul tuo dispositivo per ricominciare quando" +
+    " vuoi oppure generare direttamente un URL da cui scaricare il codice generato" +
+    " per il tuo sistema IoT con le relative app.";
 
   constructor(private importService: ImportServiceService, private router: Router) {
   }
