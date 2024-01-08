@@ -33,8 +33,13 @@ def gone(json_body=None):
     return __http_response(410, json_body)
 
 
-def __http_response(status_code: int, json_body):
+def __http_response(status_code: int, json_body=None):
     return {
         "statusCode": status_code,
+        "headers": {
+            "Content-Type": 'application/json',
+            "Access-Control-Allow-Origin": '*',
+            "Access-Control-Allow-Headers": 'Content-Type'
+        },
         "body": json_body
     }
