@@ -19,6 +19,7 @@ export class DiagramComponent {
 
   items: Item[];
   currentItem: Item = new Item();
+  savedName: string;
 
   dataSource: ArrayStore;
   linksDataSource: ArrayStore;
@@ -211,6 +212,7 @@ export class DiagramComponent {
    * @param item the item to edit
    */
   editItem(item: Item) {
+    this.savedName = item.name;
     let isSpecialLink: boolean = true;
     if (item.first_item_ID && item.second_item_ID) {
       isSpecialLink = !(this.isTable(item.first_item_ID) || this.isTable(item.second_item_ID));
@@ -584,6 +586,6 @@ export class DiagramComponent {
   }
 
   private itemNameAlreadyUsed(item: Item) {
-    return this.configService.getItems().filter((temp) => temp.name === item.name).length > 0;
+    return this.configService.getItems().filter((temp) => temp.name === item.name).length > 0 && item.name !== this.savedName;
   }
 }

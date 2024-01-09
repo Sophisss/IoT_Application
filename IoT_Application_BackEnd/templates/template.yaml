@@ -36,7 +36,6 @@ Resources:
         Rules:
           - Id: DeleteOldFiles
             Status: Enabled
-            Prefix: ""
             ExpirationInDays: 1
             TagFilters:
               - Key: file-type
