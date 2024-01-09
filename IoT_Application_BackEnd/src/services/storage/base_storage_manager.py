@@ -24,13 +24,14 @@ class BaseS3Manager(BaseAWSService):
         if not body:
             raise Exception("body is mandatory")
 
-        if not tags:
-            response = self.s3_client.put_object(Bucket=bucket_name, Key=key, Body=body)
-        else:
-            response = self.s3_client.put_object_tagging(Bucket=bucket_name, Key=key, Body=body, Tagging=f'{",".join([f"{key}={value}" for key, value in tags.items()])}')
+        zip_created_response = self.s3_client.put_object(Bucket=bucket_name, Key=key, Body=body)
+        BaseAWSService.validate_aws_response(self, zip_created_response, "put_object")
 
-        BaseAWSService.validate_aws_response(self, response, "put_object")
-        return response
+        if tags:
+            self.s3_client.put_object_tagging(Bucket=bucket_name, Key=key, Tagging={'TagSet': [tags]})
+            BaseAWSService.validate_aws_response(self, zip_created_response, "put_object_tagging")
+
+        return zip_created_response
 
     def create_and_upload_zip(self, bucket_name: str, code: dict, zip_key: str) -> dict:
         self.__validate_bucket_name(bucket_name)
@@ -41,7 +42,10 @@ class BaseS3Manager(BaseAWSService):
                 zip_file.writestr(file_name, file_content)
 
         zip_buffer.seek(0)
-        tags = {'file-type': 'zip'}
+        tags = {
+            'Key': 'file-type',
+            'Value': 'zip'
+        }
         return self.put_object(bucket_name, zip_key, zip_buffer.getvalue(), tags)
 
     def get_presigned_url(self, bucket_name: str, zip_key: str) -> str:
