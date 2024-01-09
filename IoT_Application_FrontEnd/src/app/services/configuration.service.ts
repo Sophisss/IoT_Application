@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Item} from "../models/item.model";
 import ArrayStore from "devextreme/data/array_store";
 import {BehaviorSubject} from "rxjs";
+import {TitleCasePipe} from "@angular/common";
 
 const items: Item[] = [];
 
@@ -20,6 +21,9 @@ export class ConfigurationService {
 
   private updateSignalSubject = new BehaviorSubject<void>(null);
   updateSignal$ = this.updateSignalSubject.asObservable();
+
+  constructor(private titleCase: TitleCasePipe) {
+  }
 
   /**
    * Signals to the drawer the necessity to update its content.
@@ -63,7 +67,28 @@ export class ConfigurationService {
       awsConfig: {
         dynamo: {
           tables: jsonTable,
-          authentication: {}
+        },
+        authentication: {
+          cognito: {
+            UserPool: {
+              resource_name: "IoTApplicationUserPool",
+              UserPoolName: "IoTApplicationUserPoolName",
+              policy: {
+                "PasswordPolicy": {
+                  "MinimumLength": 8,
+                  "RequireUppercase": true,
+                  "RequireLowercase": true,
+                  "RequireNumbers": true,
+                  "RequireSymbols": false,
+                  "TemporaryPasswordValidityDays": 14
+                }
+              }
+            },
+            IdentityPool: {
+              "resource_name": "IoTApplicationIdentityPool",
+              "IdentityPoolName": "IdentityPool"
+            }
+          }
         }
       }
     };
@@ -170,9 +195,32 @@ export class ConfigurationService {
   private createEntityJson() {
     return this.getItems().filter(entity => entity.type === 'entity').map(entity => ({
       name: entity.name,
-      fields: entity.fields,
       table: entity.table,
-      primary_key: entity.primary_key
+      fields: entity.fields,
+      primary_key: entity.primary_key,
+      API: [
+        {
+          name: "create" + this.titleCase.transform(entity.name),
+          type: "PUT"
+        },
+        {
+          name: "delete" + this.titleCase.transform(entity.name),
+          type: "DELETE"
+        },
+        {
+          name: "update" + this.titleCase.transform(entity.name),
+          type: "POST",
+          parameters: []
+        },
+        {
+          name: "get" + this.titleCase.transform(entity.name) + "ById",
+          type: "GET"
+        },
+        {
+          name: "get" + this.titleCase.transform(entity.name) + "s",
+          type: "GET_ALL"
+        }
+      ]
     }));
   }
 
@@ -183,7 +231,16 @@ export class ConfigurationService {
     return this.getItems().filter(entity => entity.type === 'table').map(table => ({
       tableName: table.name,
       partition_key: table.partition_key,
-      sort_key: table.sort_key
+      sort_key: table.sort_key,
+      GSI: {
+        index_name: "SK-PK",
+        partition_key: "SK",
+        sort_key: "PK"
+      },
+      parameters: {
+        single_entity_storage_keyword: "registry",
+        id_separator: ":"
+      }
     }))
   }
 

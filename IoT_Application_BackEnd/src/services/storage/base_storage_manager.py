@@ -1,4 +1,6 @@
 import zipfile
+from typing import Optional
+
 import boto3
 from io import BytesIO
 from services.response.base_aws_service import BaseAWSService
@@ -15,14 +17,18 @@ class BaseS3Manager(BaseAWSService):
         self.__validate_bucket_name(bucket_name)
         return self.s3_client.get_object(Bucket=bucket_name, Key=key)
 
-    def put_object(self, bucket_name: str, key: str, body: bytes) -> dict:
+    def put_object(self, bucket_name: str, key: str, body: bytes, tags: Optional[dict] = None) -> dict:
         self.__validate_bucket_name(bucket_name)
         if not key or not isinstance(key, str):
             raise Exception("key is mandatory and it must be a string")
         if not body:
             raise Exception("body is mandatory")
 
-        response = self.s3_client.put_object(Bucket=bucket_name, Key=key, Body=body)
+        if not tags:
+            response = self.s3_client.put_object(Bucket=bucket_name, Key=key, Body=body)
+        else:
+            response = self.s3_client.put_object_tagging(Bucket=bucket_name, Key=key, Body=body, Tagging=f'{",".join([f"{key}={value}" for key, value in tags.items()])}')
+
         BaseAWSService.validate_aws_response(self, response, "put_object")
         return response
 
@@ -35,7 +41,8 @@ class BaseS3Manager(BaseAWSService):
                 zip_file.writestr(file_name, file_content)
 
         zip_buffer.seek(0)
-        return self.put_object(bucket_name, zip_key, zip_buffer.getvalue())
+        tags = {'file-type': 'zip'}
+        return self.put_object(bucket_name, zip_key, zip_buffer.getvalue(), tags)
 
     def get_presigned_url(self, bucket_name: str, zip_key: str) -> str:
         self.__validate_bucket_name(bucket_name)
