@@ -154,7 +154,7 @@ export class DiagramComponent {
       this.fieldsDataSource.byKey(event.key).then((data) => {
         field = data;
       });
-      if (field.isPrimaryKey) {
+      if (field?.isPrimaryKey) {
         field.required = field.isPrimaryKey;
       }
     }
