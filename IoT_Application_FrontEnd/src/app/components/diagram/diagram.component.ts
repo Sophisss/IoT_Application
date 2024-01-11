@@ -70,10 +70,13 @@ export class DiagramComponent {
       key: 'ID',
       data: this.getStartingLinks(),
       onInserting(values) {
+        const pKeys = that.getLinkPrimaryKeys(values);
+
         values.ID = values.ID || that.configService.assignID();
         values.type = 'link';
         values.numerosity = values.numerosity || 'many-to-many';
         values.fields = values.fields || [];
+        values.primary_key = [pKeys[0]?.name, pKeys[1]?.name];
       },
       onModified() {
         that.drawerUpdateMethods();
@@ -91,7 +94,7 @@ export class DiagramComponent {
     this.saveButtonOptions = {
       icon: 'save',
       onClick: () => {
-        if (this.currentItem.name === '' || this.currentItem.name === undefined) {
+        if ((this.currentItem.name === '' || this.currentItem.name === undefined) && this.currentItem.type !== 'link') {
           console.log("ERROR: Insert a name.")
         } else if (this.itemNameAlreadyUsed(this.currentItem)) {
           console.log("ERROR: Name already in use.")
@@ -103,6 +106,7 @@ export class DiagramComponent {
           }
         } else if (this.getFormGroup().valid && this.isClickable) {
           console.log("no fields")
+          //TODO togliere updateItem
           this.updateItem();
         } else {
           console.log("ERROR: Invalid form");
@@ -226,6 +230,8 @@ export class DiagramComponent {
         if (designatedTable) {
           this.previousSpecialID = this.configService.getSpecialID(designatedTable.ID, this.currentItem.ID);
         }
+        console.log("from", this.configService.getAllLinksFromEntity(this.currentItem))
+        console.log("to", this.configService.getAllLinksToEntity(this.currentItem))
       }
 
       this.tables = [];
@@ -264,6 +270,7 @@ export class DiagramComponent {
       });
       this.linkForm = new FormGroup({
         name: new FormControl(this.currentItem.name),
+        table: new FormControl(this.currentItem.table, Validators.required),
         numerosity: new FormControl(this.currentItem.numerosity, Validators.required),
       });
       this.placeholderForm = new FormGroup({
@@ -301,6 +308,11 @@ export class DiagramComponent {
         }
       }
 
+      const linksFromEntity = this.configService.getAllLinksFromEntity(this.currentItem);
+      const linksToEntity = this.configService.getAllLinksToEntity(this.currentItem);
+
+      this.cascadeLinkPKs(linksFromEntity, linksToEntity, this.currentItem, 'remove');
+
       this.dataSource.push([{type: 'remove', key: this.currentItem.ID}]);
     }
     this.cancelEditItem();
@@ -317,6 +329,7 @@ export class DiagramComponent {
         key: this.currentItem.ID,
         data: {
           name: this.currentItem.name,
+          table: this.currentItem.table,
           numerosity: this.currentItem.numerosity,
           fields: this.currentItem.fields,
         },
@@ -345,8 +358,7 @@ export class DiagramComponent {
       if (this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
         let pkField = this.configService.getPrimaryKeyField(this.currentItem);
         pkField.required = true;
-        this.dataGrid.instance.refresh();
-        pkName = pkField.name;
+        this.currentItem.primary_key = [pkField.name];
       }
 
       this.dataSource.push([{
@@ -356,9 +368,14 @@ export class DiagramComponent {
           name: this.currentItem.name,
           table: this.currentItem.table,
           fields: this.currentItem.fields,
-          primary_key: [pkName],
+          primary_key: this.currentItem.primary_key,
         },
       }]);
+
+      const linksFromEntity = this.configService.getAllLinksFromEntity(this.currentItem);
+      const linksToEntity = this.configService.getAllLinksToEntity(this.currentItem);
+
+      this.cascadeLinkPKs(linksFromEntity, linksToEntity, this.currentItem, 'update');
 
       const finalID = this.configService.getSpecialID(
         (this.tables.filter((table) => table.name === this.currentItem.table)[0].ID), this.currentItem.ID);
@@ -587,5 +604,66 @@ export class DiagramComponent {
 
   private itemNameAlreadyUsed(item: Item) {
     return this.configService.getItems().filter((temp) => temp.name === item.name).length > 0 && item.name !== this.savedName;
+  }
+
+  private getLinkPrimaryKeys(data: any) {
+    let firstItem: Item, secondItem: Item;
+    this.dataSource.byKey(data.first_item_ID).then((data) => {
+      firstItem = data;
+    });
+    this.dataSource.byKey(data.second_item_ID).then((data) => {
+      secondItem = data;
+    });
+    console.log(firstItem, secondItem)
+    const firstPK = this.configService.getPrimaryKeyField(firstItem);
+    const secondPK = this.configService.getPrimaryKeyField(secondItem);
+    return [firstPK, secondPK];
+  }
+
+  private cascadeLinkPKs(linksFromEntity: Item[], linksToEntity: Item[], item: Item, method: 'update' | 'remove') {
+    if (method === 'update') {
+      let newPKFrom: string, newPKTo: string;
+      if (linksFromEntity.length > 0) {
+        newPKFrom = item.primary_key[0];
+      }
+      if (linksToEntity.length > 0) {
+        newPKTo = item.primary_key[0];
+      }
+      for (let linkFrom of linksFromEntity) {
+        const oldPKTo = linkFrom.primary_key[1];
+        const updatedPK = [newPKFrom, oldPKTo];
+        this.linksDataSource.push([{
+          type: 'update',
+          key: linkFrom.ID,
+          data: {
+            primary_key: updatedPK,
+          },
+        }])
+        this.drawerUpdateMethods();
+      }
+
+      for (let linkTo of linksToEntity) {
+        const oldPKFrom = linkTo.primary_key[0];
+        const updatedPK = [oldPKFrom, newPKTo];
+        this.linksDataSource.push([{
+          type: method,
+          key: linkTo.ID,
+          data: {
+            primary_key: updatedPK,
+          },
+        }])
+        this.drawerUpdateMethods();
+      }
+
+    } else if (method === 'remove') {
+      const links = linksFromEntity.concat(linksToEntity);
+      for (let link of links) {
+        this.linksDataSource.push([{
+          type: method,
+          key: link.ID,
+        }])
+        this.drawerUpdateMethods();
+      }
+    }
   }
 }

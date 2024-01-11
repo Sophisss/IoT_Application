@@ -148,6 +148,14 @@ export class ConfigurationService {
     return this.specialIDs.filter(number => number.toString().startsWith(prefixString));
   }
 
+  getAllLinksFromEntity(i: Item): Item[] {
+    return this.getItems().filter((item) => item.type === 'link' && item.first_item_ID === i.ID)
+  }
+
+  getAllLinksToEntity(i: Item): Item[] {
+    return this.getItems().filter((item) => item.type === 'link' && item.second_item_ID === i.ID)
+  }
+
   /**
    * Returns all the IDs of the entities linked to a table.
    * @param prefix the ID of the table
@@ -252,11 +260,13 @@ export class ConfigurationService {
       first_entity: this.getEntityNameByID(link.first_item_ID),
       second_entity: this.getEntityNameByID(link.second_item_ID),
       numerosity: link.numerosity,
-      fields: link.fields
+      table: link.table,
+      fields: link.fields,
+      primary_key: link.primary_key,
     }));
   }
 
   private getEntityNameByID(id: number) {
-    return this.getItems().find(entity => entity.ID === id).name;
+    return this.getItems().find(entity => entity.ID === id)?.name;
   }
 }

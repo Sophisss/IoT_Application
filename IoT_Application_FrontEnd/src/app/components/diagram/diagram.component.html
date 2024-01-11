@@ -207,6 +207,23 @@
 
                     <div *ngSwitchCase="'link'">
                         <div class="dx-field">
+                            <div class="dx-field-label">Table *</div>
+                            <div class="dx-field-value">
+                                <dx-select-box
+                                        [(value)]="currentItem.table"
+                                        [dataSource]="tables"
+                                        [inputAttr]="{ 'aria-label': 'Table' }"
+                                        [searchEnabled]="true"
+                                        displayExpr="name"
+                                        formControlName="table"
+                                        noDataText="Please, add a table first."
+                                        placeholder="Select a table..."
+                                        searchMode='contains'
+                                        valueExpr="name"
+                                ></dx-select-box>
+                            </div>
+                        </div>
+                        <div class="dx-field">
                             <div class="dx-field-label">Numerosity</div>
                             <div class="dx-field-value">
                                 <dx-radio-group

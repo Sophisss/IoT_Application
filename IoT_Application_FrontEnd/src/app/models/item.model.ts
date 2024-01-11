@@ -21,5 +21,5 @@ export class Item {
 
   fields: Field[];
 
-  primary_key: string;
+  primary_key: string[];
 }
