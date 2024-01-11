@@ -281,7 +281,8 @@ export class DiagramComponent {
         numerosity: new FormControl(this.currentItem.numerosity, Validators.required),
       });
       this.placeholderForm = new FormGroup({
-        name: new FormControl()
+        name: new FormControl(),
+        table: new FormControl(),
       });
     }
   }
