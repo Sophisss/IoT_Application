@@ -94,22 +94,29 @@ export class DiagramComponent {
     this.saveButtonOptions = {
       icon: 'save',
       onClick: () => {
-        if ((this.currentItem.name === '' || this.currentItem.name === undefined) && this.currentItem.type !== 'link') {
-          console.log("ERROR: Insert a name.")
-        } else if (this.itemNameAlreadyUsed(this.currentItem)) {
-          console.log("ERROR: Name already in use.")
-        } else if (this.currentItem.fields.length > 0) {
-          console.log("fields > 0")
-          if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
-            console.log("ok")
+        if (this.currentItem.type === 'link') {
+          if (this.getFormGroup().valid){
             this.updateItem();
           }
-        } else if (this.getFormGroup().valid && this.isClickable) {
-          console.log("no fields")
-          //TODO togliere updateItem
-          this.updateItem();
+          else {
+            console.log("ERROR: Missing Table.");
+          }
         } else {
-          console.log("ERROR: Invalid form");
+          if (this.currentItem.name === '' || this.currentItem.name === undefined) {
+            console.log("ERROR: Insert a name.")
+          } else if (this.itemNameAlreadyUsed(this.currentItem)) {
+            console.log("ERROR: Name already in use.")
+          } else if (this.currentItem.fields.length > 0) {
+            if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
+              this.updateItem();
+            }
+          } else if (this.getFormGroup().valid && this.isClickable) {
+            console.log("no fields")
+            //TODO togliere tutto l'else if
+            this.updateItem();
+          } else {
+            console.log("ERROR: Invalid form");
+          }
         }
       },
     };

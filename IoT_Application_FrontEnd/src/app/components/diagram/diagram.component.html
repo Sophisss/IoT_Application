@@ -272,7 +272,8 @@
                         <dxo-lookup [dataSource]="fieldTypes"></dxo-lookup>
                     </dxi-column>
                     <dxi-column [width]="'9%'" dataField="required" dataType="boolean"></dxi-column>
-                    <dxi-column [width]="'13%'" dataField="isPrimaryKey" dataType="boolean"></dxi-column>
+                    <dxi-column [visible]="this.currentItem.type !== 'link'" [width]="'13%'" dataField="isPrimaryKey"
+                                dataType="boolean"></dxi-column>
                     <dxi-column [width]="'11%'" dataField="minLength" dataType="number"></dxi-column>
                     <dxi-column [width]="'11%'" dataField="maxLength" dataType="number"></dxi-column>
                     <dxi-column [width]="'9%'" dataField="minimum" dataType="number"></dxi-column>
