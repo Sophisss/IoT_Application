@@ -26,4 +26,8 @@ export class Item {
   fields: Field[];
 
   primary_key: string[];
+
+  keyword: string;
+
+  separator: string;
 }

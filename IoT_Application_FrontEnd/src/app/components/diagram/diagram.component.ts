@@ -17,6 +17,8 @@ export class DiagramComponent {
 
   fieldTypes: string[] = ['string', 'integer', 'double', 'boolean', 'date'];
   keysTypes: string[] = ["string", "integer"];
+  parameterWords: string[] = ["registry", "endpoint"];
+  separatorSymbols: string[] = [":", "-", "_", "/", "|"];
 
   items: Item[];
   currentItem: Item = new Item();
@@ -194,8 +196,6 @@ export class DiagramComponent {
    */
   itemCustomDataExpr(obj: Item, value: Item) {
     if (value === undefined) {
-      console.log("obj", obj)
-      console.log("value", value)
       return {
         name: obj.table,
         table: obj.table,
@@ -282,6 +282,8 @@ export class DiagramComponent {
         partition_key_type: new FormControl(this.currentItem.partition_key_type, Validators.required),
         sort_key_name: new FormControl(this.currentItem.sort_key_name, Validators.required),
         sort_key_type: new FormControl(this.currentItem.sort_key_type, Validators.required),
+        keyword: new FormControl(this.currentItem.keyword, Validators.required),
+        separator: new FormControl(this.currentItem.separator, Validators.required),
       });
       this.linkForm = new FormGroup({
         name: new FormControl(this.currentItem.name),
@@ -360,6 +362,8 @@ export class DiagramComponent {
           partition_key_type: this.currentItem.partition_key_type,
           sort_key_name: this.currentItem.sort_key_name,
           sort_key_type: this.currentItem.sort_key_type,
+          keyword: this.currentItem.keyword,
+          separator: this.currentItem.separator,
         },
       }]);
 
@@ -593,6 +597,8 @@ export class DiagramComponent {
           table: null,
           type: 'link',
           primary_key: null,
+          keyword: null,
+          separator: null,
         })
       }
     }

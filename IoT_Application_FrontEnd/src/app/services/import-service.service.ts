@@ -39,7 +39,9 @@ export class ImportServiceService {
         sort_key_type: null,
         first_item_ID: null,
         second_item_ID: null,
-        numerosity: null
+        numerosity: null,
+        keyword: null,
+        separator: null
       }
       this.configService.getItems().push(nodeEntity);
     }
@@ -59,10 +61,11 @@ export class ImportServiceService {
         second_item_ID: null,
         fields: null,
         numerosity: null,
-        primary_key: null
+        primary_key: null,
+        keyword: table.parameters.single_entity_storage_keyword,
+        separator: table.parameters.id_separator
       }
       this.configService.getItems().push(nodeTable);
-      console.log(this.configService.getItems());
     }
 
     //read links
@@ -82,6 +85,8 @@ export class ImportServiceService {
           numerosity: link.numerosity,
           fields: link.fields,
           primary_key: link.primary_key,
+          keyword: null,
+          separator: null
         }
       this.configService.getItems().push(edge);
     }

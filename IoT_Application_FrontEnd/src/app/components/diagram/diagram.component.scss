@@ -43,10 +43,15 @@ h3 {
 
 ::ng-deep .tableKeys {
   padding-top: 15px;
+  margin-bottom: 10px;
 }
 
 ::ng-deep .rightSide {
   padding-left: 60px;
+}
+
+.keysSection {
+  margin-bottom: 40px;
 }
 
 ::ng-deep span.dx-checkbox-icon {

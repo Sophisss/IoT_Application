@@ -161,55 +161,82 @@
                 </div>
 
                 <div *ngIf="currentItem.type === 'table'" class="tableCondition">
+                    <div class="keysSection">
+                        <dx-box [height]="75" direction="row" width="100%">
+                            <dxi-item [ratio]="1" class="tableKeys">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">Partition Key</div>
+                                    <div class="dx-field-value">
+                                        <dx-text-box
+                                                [(value)]="currentItem.partition_key_name"
+                                                [inputAttr]="{ 'aria-label': 'Partition Key' }"
+                                                formControlName="partition_key_name"
+                                        ></dx-text-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field">
+                                    <div class="dx-field-label">Sort Key</div>
+                                    <div class="dx-field-value">
+                                        <dx-text-box
+                                                [(value)]="currentItem.sort_key_name"
+                                                [inputAttr]="{ 'aria-label': 'Sort Key' }"
+                                                formControlName="sort_key_name"
+                                        ></dx-text-box>
+                                    </div>
+                                </div>
+                            </dxi-item>
+                            <dxi-item [ratio]="1" class="tableKeys rightSide">
+                                <div class="dx-field">
+                                    <div class="dx-field-label">Type</div>
+                                    <div class="dx-field-value">
+                                        <dx-select-box
+                                                [(value)]="currentItem.partition_key_type"
+                                                [inputAttr]="{ 'aria-label': 'Partition Key Type' }"
+                                                [items]="keysTypes"
+                                                formControlName="partition_key_type"
+                                        ></dx-select-box>
+                                    </div>
+                                </div>
+                                <div class="dx-field">
+                                    <div class="dx-field-label">Type</div>
+                                    <div class="dx-field-value">
+                                        <dx-select-box
+                                                [(value)]="currentItem.sort_key_type"
+                                                [inputAttr]="{ 'aria-label': 'Sort Key Type' }"
+                                                [items]="keysTypes"
+                                                formControlName="sort_key_type"
+                                        ></dx-select-box>
+                                    </div>
+                                </div>
+                            </dxi-item>
+                        </dx-box>
+                    </div>
 
-                    <dx-box [height]="75" direction="row" width="100%">
-                        <dxi-item [ratio]="1" class="tableKeys">
-                            <div class="dx-field">
-                                <div class="dx-field-label">Partition Key</div>
-                                <div class="dx-field-value">
-                                    <dx-text-box
-                                            [(value)]="currentItem.partition_key_name"
-                                            [inputAttr]="{ 'aria-label': 'Partition Key' }"
-                                            formControlName="partition_key_name"
-                                    ></dx-text-box>
-                                </div>
-                            </div>
-                            <div class="dx-field">
-                                <div class="dx-field-label">Sort Key</div>
-                                <div class="dx-field-value">
-                                    <dx-text-box
-                                            [(value)]="currentItem.sort_key_name"
-                                            [inputAttr]="{ 'aria-label': 'Sort Key' }"
-                                            formControlName="sort_key_name"
-                                    ></dx-text-box>
-                                </div>
-                            </div>
-                        </dxi-item>
-                        <dxi-item [ratio]="1" class="tableKeys rightSide">
-                            <div class="dx-field">
-                                <div class="dx-field-label">Type</div>
-                                <div class="dx-field-value">
-                                    <dx-select-box
-                                            [(value)]="currentItem.partition_key_type"
-                                            [inputAttr]="{ 'aria-label': 'Partition Key Type' }"
-                                            [items]="keysTypes"
-                                            formControlName="partition_key_type"
-                                    ></dx-select-box>
-                                </div>
-                            </div>
-                            <div class="dx-field">
-                                <div class="dx-field-label">Type</div>
-                                <div class="dx-field-value">
-                                    <dx-select-box
-                                            [(value)]="currentItem.sort_key_type"
-                                            [inputAttr]="{ 'aria-label': 'Sort Key Type' }"
-                                            [items]="keysTypes"
-                                            formControlName="sort_key_type"
-                                    ></dx-select-box>
-                                </div>
-                            </div>
-                        </dxi-item>
-                    </dx-box>
+                    <hr>
+
+                    <div class="dx-field">
+                        <div class="dx-field-label">SES Keyword</div>
+                        <div class="dx-field-value">
+                            <dx-select-box
+                                    [(value)]="currentItem.keyword"
+                                    [inputAttr]="{ 'aria-label': 'Single Entity Storage Keyword' }"
+                                    [items]="parameterWords"
+                                    formControlName="keyword"
+                            ></dx-select-box>
+                        </div>
+                    </div>
+
+                    <div class="dx-field">
+                        <div class="dx-field-label">Id Separator</div>
+                        <div class="dx-field-value">
+                            <dx-radio-group
+                                    [(value)]="currentItem.separator"
+                                    [items]="separatorSymbols"
+                                    formControlName="separator"
+                                    layout="horizontal">
+                            </dx-radio-group>
+                        </div>
+                    </div>
                 </div>
 
                 <div *ngIf="currentItem.type === 'link'" class="dx-field">

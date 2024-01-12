@@ -252,8 +252,8 @@ export class ConfigurationService {
         sort_key: table.sort_key_name
       },
       parameters: {
-        single_entity_storage_keyword: "registry",
-        id_separator: ":"
+        single_entity_storage_keyword: table.keyword,
+        id_separator: table.separator
       }
     }))
   }
