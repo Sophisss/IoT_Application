@@ -9,9 +9,13 @@ export class Item {
 
   table: string;
 
-  partition_key: string;
+  partition_key_name: string;
 
-  sort_key: string;
+  partition_key_type: 'string' | 'integer';
+
+  sort_key_name: string;
+
+  sort_key_type: 'string' | 'integer'
 
   first_item_ID: number;
 

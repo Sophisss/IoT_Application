@@ -238,12 +238,18 @@ export class ConfigurationService {
   private createTableJson() {
     return this.getItems().filter(entity => entity.type === 'table').map(table => ({
       tableName: table.name,
-      partition_key: table.partition_key,
-      sort_key: table.sort_key,
+      partition_key: {
+        name: table.partition_key_name,
+        type: table.partition_key_type
+      },
+      sort_key: {
+        name: table.sort_key_name,
+        type: table.sort_key_type
+      },
       GSI: {
-        index_name: "SK-PK",
-        partition_key: "SK",
-        sort_key: "PK"
+        index_name: table.partition_key_name + "-" + table.sort_key_name,
+        partition_key: table.partition_key_name,
+        sort_key: table.sort_key_name
       },
       parameters: {
         single_entity_storage_keyword: "registry",

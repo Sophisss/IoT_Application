@@ -16,6 +16,7 @@ export class DiagramComponent {
   tables: Item[] = [];
 
   fieldTypes: string[] = ['string', 'integer', 'double', 'boolean', 'date'];
+  keysTypes: string[] = ["string", "integer"];
 
   items: Item[];
   currentItem: Item = new Item();
@@ -95,10 +96,9 @@ export class DiagramComponent {
       icon: 'save',
       onClick: () => {
         if (this.currentItem.type === 'link') {
-          if (this.getFormGroup().valid){
+          if (this.getFormGroup().valid) {
             this.updateItem();
-          }
-          else {
+          } else {
             console.log("ERROR: Missing Table.");
           }
         } else {
@@ -194,12 +194,16 @@ export class DiagramComponent {
    */
   itemCustomDataExpr(obj: Item, value: Item) {
     if (value === undefined) {
+      console.log("obj", obj)
+      console.log("value", value)
       return {
         name: obj.table,
         table: obj.table,
         fields: obj.fields,
-        partition_key: obj.partition_key,
-        sort_key: obj.sort_key,
+        partition_key_name: obj.partition_key_name,
+        partition_key_type: obj.partition_key_type,
+        sort_key_name: obj.sort_key_name,
+        sort_key_type: obj.sort_key_type,
         first_item: obj.first_item_ID,
         second_item: obj.second_item_ID,
         numerosity: obj.numerosity,
@@ -208,8 +212,10 @@ export class DiagramComponent {
       obj.name = value.table;
       obj.table = value.table;
       obj.fields = value.fields;
-      obj.partition_key = value.partition_key;
-      obj.sort_key = value.sort_key;
+      obj.partition_key_name = value.partition_key_name;
+      obj.partition_key_type = value.partition_key_type;
+      obj.sort_key_name = value.sort_key_name;
+      obj.sort_key_type = value.sort_key_type;
       obj.first_item_ID = value.first_item_ID;
       obj.second_item_ID = value.second_item_ID;
       obj.numerosity = value.numerosity;
@@ -272,8 +278,10 @@ export class DiagramComponent {
       });
       this.tableForm = new FormGroup({
         name: new FormControl(this.currentItem.name, Validators.required),
-        partition_key: new FormControl(this.currentItem.partition_key, Validators.required),
-        sort_key: new FormControl(this.currentItem.sort_key, Validators.required),
+        partition_key_name: new FormControl(this.currentItem.partition_key_name, Validators.required),
+        partition_key_type: new FormControl(this.currentItem.partition_key_type, Validators.required),
+        sort_key_name: new FormControl(this.currentItem.sort_key_name, Validators.required),
+        sort_key_type: new FormControl(this.currentItem.sort_key_type, Validators.required),
       });
       this.linkForm = new FormGroup({
         name: new FormControl(this.currentItem.name),
@@ -348,8 +356,10 @@ export class DiagramComponent {
         key: this.currentItem.ID,
         data: {
           name: this.currentItem.name,
-          partition_key: this.currentItem.partition_key,
-          sort_key: this.currentItem.sort_key,
+          partition_key_name: this.currentItem.partition_key_name,
+          partition_key_type: this.currentItem.partition_key_type,
+          sort_key_name: this.currentItem.sort_key_name,
+          sort_key_type: this.currentItem.sort_key_type,
         },
       }]);
 
@@ -575,9 +585,11 @@ export class DiagramComponent {
           first_item_ID: entity.ID,
           name: entity.name + " - " + entityTable.name,
           numerosity: null,
-          partition_key: null,
+          partition_key_name: null,
+          partition_key_type: null,
           second_item_ID: entityTable.ID,
-          sort_key: null,
+          sort_key_name: null,
+          sort_key_type: null,
           table: null,
           type: 'link',
           primary_key: null,
