@@ -81,7 +81,7 @@ export class ImportServiceService {
           second_item_ID: this.getIDFromName(link.second_entity),
           numerosity: link.numerosity,
           fields: link.fields,
-          primary_key: null //TODO fix this
+          primary_key: link.primary_key,
         }
       this.configService.getItems().push(edge);
     }
