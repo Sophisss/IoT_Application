@@ -15,11 +15,6 @@ Parameters:
     Description: S3 bucket name
     Default: devq.iot.iot-platform
 
-  S3Folder:
-    Type: String
-    Description: S3 first folder name
-    Default: code_generated
-
 
 # endregion
 
@@ -97,31 +92,11 @@ Resources:
         Statement:
           - Effect: Allow
             Action:
-              - "dynamodb:PutItem"
-              - "dynamodb:DeleteItem"
-              - "dynamodb:Scan"
-              - "dynamodb:Query"
-              - "dynamodb:UpdateItem"
-              - "dynamodb:GetItem"
-            Resource:
-              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/IoT"
-              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/IoT/index/SK-PK"
-          - Effect: Allow
-            Action:
               - "s3:PutObject*"
               - "s3:GetObject*"
               - "s3:DeleteObject"
             Resource:
               - !Sub "arn:aws:s3:::${S3Bucket}/*"
-          - Effect: Allow
-            Action:
-              - "s3:ListBucket"
-            Resource:
-              - !Sub "arn:aws:s3:::${S3Bucket}"
-            Condition:
-              StringLike:
-                s3:prefix:
-                  - !Sub "${S3Folder}/*"
       Roles:
         - !Ref LambdaExecutionRole
 
@@ -134,13 +109,6 @@ Outputs:
     Value: !Sub 'https://${ApplicationApiGateway}.execute-api.${AWS::Region}.amazonaws.com/v2/'
     Export:
       Name: !Sub "${Project}-ApiGatewayId"
-
-
-  LambdaExecutionRole:
-    Description: The ARN of the lambda execution role
-    Value: !GetAtt LambdaExecutionRole.Arn
-    Export:
-      Name: !Sub "${Project}-LambdaExecutionRoleArn"
 
 
 
