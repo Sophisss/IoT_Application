@@ -1,20 +1,20 @@
 from services.generation.utility_methods import generate_resource_name
 
 
-def generate_graphql_template(json: dict) -> str:
+def generate_graphql_template(resources: list) -> str:
     """
     This function generates the GraphQL API template.
-    :param json: The JSON file containing the API information.
+    :param resources: The list of resources.
     :return: The GraphQL API template.
     """
     return f"""
   GraphQLAPI:
     Type: AWS::Serverless::GraphQLApi
-    Properties: {__add_graphql_properties(json)}
+    Properties: {__add_graphql_properties(resources)}
     """
 
 
-def __add_graphql_properties(resources: dict) -> str:
+def __add_graphql_properties(resources: list) -> str:
     """
     This function adds the properties to the GraphQL API template.
     :param resources: The resources to add to the GraphQL API template.

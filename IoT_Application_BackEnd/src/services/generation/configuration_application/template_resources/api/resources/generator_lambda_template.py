@@ -1,13 +1,13 @@
 from services.generation.utility_methods import generate_resource_name
 
 
-def generate_lambda_template(json: dict) -> str:
+def generate_lambda_template(resources: list) -> str:
     """
     This function generate the CloudFormation template for AWS Lambda function.
-    :param json: JSON data containing Lambda function configuration.
+    :param resources: the list of resources.
     :return: the lambda-related CloudFormation template.
     """
-    return "".join(map(lambda resource: __generate_lambda_resource(generate_resource_name(resource)), json))
+    return "".join(map(lambda resource: __generate_lambda_resource(generate_resource_name(resource)), resources))
 
 
 def __generate_lambda_resource(resource_name: str) -> str:
@@ -34,7 +34,7 @@ def __generate_lambda_properties(resource_name: str) -> str:
      CodeUri: ../src/
      Handler: lambda_{resource_name.lower()}.lambda_handler_{resource_name.lower()}
      Role:
-       Fn::ImportValue: !Sub "${{Project}}-LambdaExecutionRoleArn"
+       !GetAtt LambdaExecutionRoleGenerator.Arn
      Tags:
         Name: !Sub "${{Project}}-{resource_name}Handler"
         """

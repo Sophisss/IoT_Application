@@ -1,87 +1,87 @@
-def generate_table_template(json: dict) -> str:
+def generate_table_template(tables: list) -> str:
     """
-    This function generates the CloudFormation template for DynamoDB table.
-    :param json: JSON data containing DynamoDB table configuration.
-    :return: the DynamoDB table-related CloudFormation template.
+    This function generates the table-related CloudFormation template.
+    :param tables: the list of tables.
+    :return: the table-related CloudFormation template.
     """
-    return "".join(map(lambda resource: __generate_table_resource(resource), json))
+    return "".join(map(lambda resource: __generate_table_resource(resource), tables))
 
 
-def __generate_table_resource(resource: dict) -> str:
+def __generate_table_resource(table: dict) -> str:
     """
     This function generates the resource definition for a DynamoDB table.
-    :param resource: the resource data.
+    :param table: the table.
     :return: the resource definition for a DynamoDB table.
     """
     return f"""
-  {resource['tableName']}Table:
+  {table['tableName']}Table:
     Type: AWS::DynamoDB::Table
-    Properties: {__generate_table_properties(resource)}      
+    Properties: {__generate_table_properties(table)}      
     """
 
 
-def __generate_table_properties(resource: dict) -> str:
+def __generate_table_properties(table: dict) -> str:
     """
     This function generates the DynamoDB table properties.
-    :param resource: the resource.
+    :param table: the table.
     :return: the DynamoDB table properties.
     """
     return f"""
-      TableName: {resource['tableName']}
-      AttributeDefinitions: {__generate_table_attributes(resource)}
-      KeySchema:{__generate_key_schema_table(resource)}
+      TableName: {table['tableName']}
+      AttributeDefinitions: {__generate_table_attributes(table)}
+      KeySchema:{__generate_key_schema_table(table)}
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-{__generate_gsi(resource)}"""
+{__generate_gsi(table)}"""
 
 
-def __generate_table_attributes(resource: dict) -> str:
+def __generate_table_attributes(table: dict) -> str:
     """
     This function generates the DynamoDB table attributes.
-    :param resource: the resource.
+    :param table: the table.
     :return: the DynamoDB table attributes.
     """
     attribute_mappings = {"string": "S", "number": "N", "binary": "B"}
     return f"""
-        - AttributeName: {resource['partition_key']['name']}
-          AttributeType: {attribute_mappings[resource['partition_key']['type']]}
-        - AttributeName: {resource['sort_key']['name']}
-          AttributeType: {attribute_mappings[resource['sort_key']['type']]}"""
+        - AttributeName: {table['partition_key']['name']}
+          AttributeType: {attribute_mappings[table['partition_key']['type']]}
+        - AttributeName: {table['sort_key']['name']}
+          AttributeType: {attribute_mappings[table['sort_key']['type']]}"""
 
 
-def __generate_key_schema_table(resource: dict) -> str:
+def __generate_key_schema_table(table: dict) -> str:
     """
     This function generates the DynamoDB table key schema.
-    :param resource: the resource.
+    :param table: the resource.
     :return: the DynamoDB table key schema.
     """
     return f"""
-        - AttributeName: {resource['partition_key']['name']}
+        - AttributeName: {table['partition_key']['name']}
           KeyType: HASH
-        - AttributeName: {resource['sort_key']['name']}
+        - AttributeName: {table['sort_key']['name']}
           KeyType: RANGE"""
 
 
-def __generate_gsi(resource: dict) -> str:
+def __generate_gsi(table: dict) -> str:
     """
     This function generates the DynamoDB table GSI.
-    :param resource: the resource.
+    :param table: the table.
     :return: the DynamoDB table GSI if it exists or an empty string otherwise.
     """
-    return f"""      GlobalSecondaryIndexes: {__generate_gsi_resources(resource)}
-      """ if resource.get('GSI', None) else ""
+    return f"""      GlobalSecondaryIndexes: {__generate_gsi_resources(table)}
+      """ if table.get('GSI', None) else ""
 
 
-def __generate_gsi_resources(resource: dict) -> str:
+def __generate_gsi_resources(table: dict) -> str:
     """
     This function generates the DynamoDB table GSI.
-    :param resource: the resource.
+    :param table: the resource.
     :return: the DynamoDB table GSI.
     """
     return f"""
-        - IndexName: {resource['GSI']['index_name']}
-          KeySchema:  {__generate_key_schema_gsi(resource)}
+        - IndexName: {table['GSI']['index_name']}
+          KeySchema:  {__generate_key_schema_gsi(table)}
           Projection:
             ProjectionType: ALL
           ProvisionedThroughput:
@@ -89,14 +89,14 @@ def __generate_gsi_resources(resource: dict) -> str:
             WriteCapacityUnits: 5"""
 
 
-def __generate_key_schema_gsi(resource: dict) -> str:
+def __generate_key_schema_gsi(table: dict) -> str:
     """
     This function generates the DynamoDB table GSI key schema.
-    :param resource: the resource.
+    :param table: the table.
     :return: the DynamoDB table GSI key schema.
     """
     return f"""
-            - AttributeName: {resource['GSI']['partition_key']}
+            - AttributeName: {table['GSI']['partition_key']}
               KeyType: HASH
-            - AttributeName: {resource['GSI']['sort_key']}
+            - AttributeName: {table['GSI']['sort_key']}
               KeyType: RANGE"""
