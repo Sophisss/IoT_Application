@@ -10,21 +10,21 @@ def generate_case_link(link: dict) -> str:
     name = f"{link['first_entity']}_{link['second_entity']}"
     link_name = generate_resource_name(link)
     partition_key, sort_key = link['primary_key'][0], link['primary_key'][1]
-    toReturn = ""
+    to_return = ""
 
     for api in link['API']:
         match api['type']:
             case 'PUT':
-                toReturn += __generate_case_put(name, api['name'], link_name)
+                to_return += __generate_case_put(name, api['name'], link_name)
             case 'DELETE':
-                toReturn += __generate_case_delete(name, api['name'], partition_key, sort_key)
+                to_return += __generate_case_delete(name, api['name'], partition_key, sort_key)
             case 'GET':
-                toReturn += __generate_case_get(name, api['name'], partition_key, sort_key)
+                to_return += __generate_case_get(name, api['name'], partition_key, sort_key)
             case 'POST':
-                toReturn += __generate_case_post(name, api['name'])
+                to_return += __generate_case_post(name, api['name'])
 
-    toReturn += __generate_default_case()
-    return toReturn
+    to_return += __generate_default_case()
+    return to_return
 
 
 def __generate_case_put(name: str, api_name: str, link_name: str) -> str:
@@ -55,10 +55,10 @@ def __generate_case_delete(link_name: str, api_name: str, partition_key: str, so
     return f"""
             case '{api_name}':
                 response = project_manager.delete_{link_name.lower()}(event_parse.arguments['{partition_key}'], event_parse.arguments['{sort_key}'])
-                
+
                 if 'Attributes' not in response:
                     raise ItemNotPresentError()
-                    
+
                 return "{link_name} deleted"
 """
 

@@ -1,39 +1,36 @@
-from services.generation.configuration_application.dal_resources.lambda_functions.resources.generator_case_get_link import \
-    generate_case_get_link_first_entity, generate_case_get_link_second_entity
 from services.generation.utility_methods import generate_resource_name, get_links_associated
 
 
-def generate_case_entity(entity: dict, links: list, name_partition_key_table: str, id_separator: str) -> str:
+def generate_case_entity(entity: dict, links: list, condition_get: str, condition_get_all: str) -> str:
     """
     This method generates the case of the entity.
     :param entity: entity for which to generate the case.
     :param links: list of links.
-    :param name_partition_key_table: The name of the partition key of the table.
-    :param id_separator: The id separator.
+    :param condition_get:
+    :param condition_get_all:
     :return: The case of the entity.
     """
     entity_name = generate_resource_name(entity)
     partition_key = entity['primary_key'][0]
     link_associated_first_entity, link_associated_second_entity = get_links_associated(entity, links)
-    toReturn = ""
+    to_return = ""
 
     for api in entity['API']:
         match api['type']:
             case 'PUT':
-                toReturn += __generate_case_put(entity_name, api['name'], link_associated_first_entity,
-                                                link_associated_second_entity)
+                to_return += __generate_case_put(entity_name, api['name'], link_associated_first_entity,
+                                                 link_associated_second_entity)
             case 'DELETE':
-                toReturn += __generate_case_delete(entity_name, api['name'], partition_key)
+                to_return += __generate_case_delete(entity_name, api['name'], partition_key)
             case 'GET_ALL':
-                toReturn += __generate_case_get_all(entity_name, api['name'])
+                to_return += __generate_case_get_all(entity_name, api['name'], condition_get_all)
             case 'GET':
-                toReturn += __generate_case_get(entity_name, api['name'], partition_key, link_associated_first_entity,
-                                                link_associated_second_entity, name_partition_key_table, id_separator)
+                to_return += __generate_case_get(entity_name, api['name'], partition_key, condition_get)
             case 'POST':
-                toReturn += __generate_case_post(entity_name, api['name'])
+                to_return += __generate_case_post(entity_name, api['name'])
 
-    toReturn += __generate_default_case()
-    return toReturn
+    to_return += __generate_default_case()
+    return to_return
 
 
 def __generate_case_put(entity_name: str, api_name: str, link_associated_first_entity: dict,
@@ -44,7 +41,7 @@ def __generate_case_put(entity_name: str, api_name: str, link_associated_first_e
     :param api_name: The name of the api.
     :return: The put case of the entity.
     """
-    condition_case = __generate_condition_case(entity_name, link_associated_first_entity,link_associated_second_entity)
+    condition_case = __generate_condition_case(entity_name, link_associated_first_entity, link_associated_second_entity)
 
     return f"""
             case '{api_name}':
@@ -91,8 +88,7 @@ def __generate_condition_many(entity_name: str, entity_id, link: dict) -> str:
     return f"""
                 if '{resource}' in event_parse.arguments:
                     for item in event_parse.arguments['{resource}']:
-                        response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}(
-                            {resource}(**item, {entity_id}={entity_name}.{entity_id}))
+                        response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}({resource}(**item, {entity_id}={entity_name}.{entity_id}))
                         check_response_status(response_link)
     """
 
@@ -108,8 +104,7 @@ def __generate_condition(entity_name: str, entity_id, link: dict) -> str:
     resource = generate_resource_name(link)
     return f"""
                 if '{resource}' in event_parse.arguments:
-                    response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}(
-                        {resource}(**event_parse.arguments['{resource}'], {entity_id}={entity_name}.{entity_id}))
+                    response_link = project_manager.create_{link['first_entity'].lower()}_{link['second_entity'].lower()}({resource}(**event_parse.arguments['{resource}'], {entity_id}={entity_name}.{entity_id}))
                     check_response_status(response_link)
     """
 
@@ -126,15 +121,15 @@ def __generate_case_delete(entity_name: str, api_name: str, partition_key: str) 
             case '{api_name}':
                 response = project_manager.delete_{entity_name.lower()}(event_parse.arguments['{partition_key}'])
                 check_response_status(response)
-                
+
                 if 'Attributes' not in response:
                     raise ItemNotPresentError()
-                       
+
                 return "{entity_name} deleted"
 """
 
 
-def __generate_case_get_all(entity_name: str, api_name: str) -> str:
+def __generate_case_get_all(entity_name: str, api_name: str, condition_get_all: str) -> str:
     """
     This method generates the get all case of the entity.
     :param entity_name: The name of the entity.
@@ -147,6 +142,7 @@ def __generate_case_get_all(entity_name: str, api_name: str) -> str:
                 if response:
                     for item in response:
                         check_response_status(item)
+                {condition_get_all}
                 response = [item['Item'] for item in response]                
 """
 
@@ -166,17 +162,12 @@ def __generate_case_post(entity_name: str, api_name: str) -> str:
 """
 
 
-def __generate_case_get(entity_name: str, api_name: str, partition_key: str, links_associated_first_entity: list,
-                        links_associated_second_entity: list, name_partition_key_table: str, id_separator: str) -> str:
+def __generate_case_get(entity_name: str, api_name: str, partition_key: str, condition_get) -> str:
     """
     This method generates the get case of the entity.
     :param entity_name: The name of the entity.
     :param api_name: The name of the api.
     :param partition_key: The name of the partition key.
-    :param links_associated_first_entity: list of links associated to the first entity.
-    :param links_associated_second_entity: list of links associated to the second entity.
-    :param name_partition_key_table: The name of the partition key of the table.
-    :param id_separator: The id separator.
     :return: The get case of the entity.
     """
     return f"""
@@ -185,9 +176,7 @@ def __generate_case_get(entity_name: str, api_name: str, partition_key: str, lin
                 check_response_item(response)
                 check_response_status(response)
                 response = response['Item']
-                {generate_case_get_link_first_entity(links_associated_first_entity, name_partition_key_table, id_separator) if links_associated_first_entity else ''}
-                {generate_case_get_link_second_entity(links_associated_second_entity, name_partition_key_table, id_separator) if links_associated_second_entity else ''}
-"""
+                {condition_get}"""
 
 
 def __generate_default_case() -> str:

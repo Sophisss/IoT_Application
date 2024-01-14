@@ -9,6 +9,8 @@ from services.generation.configuration_application.dal_resources.lambda_function
 from services.generation.configuration_application.dal_resources.lambda_functions.resources.generator_return_lambda import \
     generate_return_lambda_entity
 from services.generation.utility_methods import generate_resource_name, get_table_configuration, get_links_associated
+from services.generation.configuration_application.dal_resources.lambda_functions.resources.generator_condition_link import \
+    generate_condition_link
 
 
 def generate_lambda_entity(entity: dict, json: dict) -> str:
@@ -19,11 +21,17 @@ def generate_lambda_entity(entity: dict, json: dict) -> str:
     :return: the lambda function for the entity.
     """
     table, entity_name, entity_links = __get_utility_resources(entity, json)
+    condition_def, condition_get, condition_get_all = generate_condition_link(entity, json['links'],
+                                                                              table['partition_key']['name'],
+                                                                              table['parameters']['id_separator'])
+
     return f"""{generate_header_lambda(entity_name, json['projectName'], entity_links)}
 {generate_lambda_definition(entity_name, json['projectName'])}
-{generate_case_entity(entity, json['links'], table['partition_key']['name'], table['parameters']['id_separator'])}
+{generate_case_entity(entity, json['links'], condition_get, condition_get_all)}
 {generate_exception_lambda()}
-{generate_return_lambda_entity(entity['primary_key'][0], table['partition_key']['name'], table['parameters']['id_separator'])}"""
+{generate_return_lambda_entity(entity['primary_key'][0], table['partition_key']['name'], table['parameters']['id_separator'])}
+{condition_def}
+"""
 
 
 def __get_utility_resources(entity: dict, json: dict) -> tuple:
