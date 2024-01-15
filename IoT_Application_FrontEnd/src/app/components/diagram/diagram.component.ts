@@ -353,6 +353,12 @@ export class DiagramComponent {
         },
       }]);
     } else if (this.currentItem.type === 'table') {
+      let oldTableName;
+      this.dataSource.byKey(this.currentItem.ID).then((data) => {
+        oldTableName = data.name;
+      });
+      const itemsToUpdate = this.getAllItemsWithTable(oldTableName);
+
       this.dataSource.push([{
         type: 'update',
         key: this.currentItem.ID,
@@ -367,7 +373,7 @@ export class DiagramComponent {
         },
       }]);
 
-      this.cascadeUpdateToEntities(this.currentItem, this.configService.getAllLinkedEntities(this.currentItem.ID));
+      this.cascadeUpdateToItems(this.currentItem, itemsToUpdate);
 
     } else if (this.currentItem.type === 'entity') {
       let pkName: string = null;
@@ -606,16 +612,22 @@ export class DiagramComponent {
   }
 
   /**
-   * Cascades the update of a table to all the entities linked to it.
+   * Cascades the update of a table to all the items linked to it.
    * @param table the updated table
-   * @param entitiesIDs the IDs of the entities linked to the table
+   * @param items the items linked to the table
    * @private
    */
-  private cascadeUpdateToEntities(table: Item, entitiesIDs: number[]) {
-    for (let entityID of entitiesIDs) {
-      this.dataSource.push([{
+  private cascadeUpdateToItems(table: Item, items: Item[]) {
+    for (let item of items) {
+      let arrayStore: ArrayStore;
+      if (item.type === 'entity') {
+        arrayStore = this.dataSource;
+      } else {
+        arrayStore = this.linksDataSource;
+      }
+      arrayStore.push([{
         type: 'update',
-        key: entityID,
+        key: item.ID,
         data: {
           table: table.name,
         },
@@ -691,5 +703,11 @@ export class DiagramComponent {
         this.drawerUpdateMethods();
       }
     }
+  }
+
+  private getAllItemsWithTable(tableName: string): Item[] {
+    const itemList: Item[] = this.configService.getItems().filter((item) => item.table === tableName);
+    console.log("items", itemList)
+    return itemList;
   }
 }

@@ -158,17 +158,6 @@ export class ConfigurationService {
   }
 
   /**
-   * Returns all the IDs of the entities linked to a table.
-   * @param prefix the ID of the table
-   */
-  getAllLinkedEntities(prefix: number): number[] {
-    const prefixString = prefix.toString();
-    return this.specialIDs
-      .filter(number => number.toString().startsWith(prefixString))
-      .map(number => parseInt(number.toString().substring(prefixString.length)));
-  }
-
-  /**
    * Reserves a special ID for the table-entity link.
    * @param sID
    */
@@ -276,7 +265,7 @@ export class ConfigurationService {
   private createFieldJson(fields: Field[]) {
     const fieldList: Field[] = [];
 
-    for (let field of fields){
+    for (let field of fields) {
       fieldList.push({
         name: field.name,
         type: field.type,
