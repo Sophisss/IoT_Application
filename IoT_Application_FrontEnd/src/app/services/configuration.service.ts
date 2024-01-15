@@ -3,6 +3,7 @@ import {Item} from "../models/item.model";
 import ArrayStore from "devextreme/data/array_store";
 import {BehaviorSubject} from "rxjs";
 import {TitleCasePipe} from "@angular/common";
+import {Field} from "../models/field.model";
 
 const items: Item[] = [];
 
@@ -204,7 +205,7 @@ export class ConfigurationService {
     return this.getItems().filter(entity => entity.type === 'entity').map(entity => ({
       name: entity.name,
       table: entity.table,
-      fields: entity.fields,
+      fields: this.createFieldJson(entity.fields),
       primary_key: entity.primary_key,
       API: [
         {
@@ -229,6 +230,20 @@ export class ConfigurationService {
           type: "GET_ALL"
         }
       ]
+    }));
+  }
+
+  /**
+   * Iterates over the list of items and creates a list of links ready to be exported.
+   */
+  private createLinkJson() {
+    return this.getItems().filter(entity => entity.type === 'link').map(link => ({
+      first_entity: this.getEntityNameByID(link.first_item_ID),
+      second_entity: this.getEntityNameByID(link.second_item_ID),
+      numerosity: link.numerosity,
+      table: link.table,
+      fields: this.createFieldJson(link.fields),
+      primary_key: link.primary_key,
     }));
   }
 
@@ -258,18 +273,21 @@ export class ConfigurationService {
     }))
   }
 
-  /**
-   * Iterates over the list of items and creates a list of links ready to be exported.
-   */
-  private createLinkJson() {
-    return this.getItems().filter(entity => entity.type === 'link').map(link => ({
-      first_entity: this.getEntityNameByID(link.first_item_ID),
-      second_entity: this.getEntityNameByID(link.second_item_ID),
-      numerosity: link.numerosity,
-      table: link.table,
-      fields: link.fields,
-      primary_key: link.primary_key,
-    }));
+  private createFieldJson(fields: Field[]) {
+    const fieldList: Field[] = [];
+
+    for (let field of fields){
+      fieldList.push({
+        name: field.name,
+        type: field.type,
+        required: field.required,
+        minLength: field.minLength,
+        maxLength: field.maxLength,
+        minimum: field.minimum,
+        maximum: field.maximum,
+      })
+    }
+    return fieldList;
   }
 
   private getEntityNameByID(id: number) {
