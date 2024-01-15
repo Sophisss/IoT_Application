@@ -75,7 +75,7 @@ export class ImportServiceService {
           ID: this.configService.assignID(),
           name: null,
           type: 'link',
-          table: null,
+          table: link.table,
           partition_key_name: null,
           partition_key_type: null,
           sort_key_name: null,
