@@ -1,6 +1,6 @@
 # IoT Application
-Lo scopo di questa applicazione è la creazione di un applicativo di configurazione e
-un’applicazione mobile di esempio.
+Questo applicativo di configurazione ha l'obiettivo di automatizzare il processo di sviluppo di nuovi prodotti IoT, 
+fornendo una piattaforma tecnologica completa e replicabile che garantisca flessibilità ed estensibilità.
 L’applicativo di configurazione verrà utilizzato in scenari in cui del personale tecnico
 specializzato dovrà configurare il funzionamento del sistema IoT finale in base alle esigenze
 del cliente. Ad esempio, permetterà di aggiungere entità, personalizzarne le proprietà e creare
