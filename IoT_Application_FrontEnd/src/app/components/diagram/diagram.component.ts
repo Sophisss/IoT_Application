@@ -108,7 +108,7 @@ export class DiagramComponent {
             console.log("ERROR: Insert a name.")
           } else if (this.itemNameAlreadyUsed(this.currentItem)) {
             console.log("ERROR: Name already in use.")
-          } else if (this.currentItem.fields.length > 0) {
+          } else if (this.currentItem.type === 'entity' && this.currentItem.fields.length > 0) {
             if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
               this.updateItem();
             }

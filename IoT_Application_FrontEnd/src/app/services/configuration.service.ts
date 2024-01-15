@@ -247,9 +247,9 @@ export class ConfigurationService {
         type: table.sort_key_type
       },
       GSI: {
-        index_name: table.partition_key_name + "-" + table.sort_key_name,
-        partition_key: table.partition_key_name,
-        sort_key: table.sort_key_name
+        index_name: table.sort_key_name + "-" + table.partition_key_name,
+        partition_key: table.sort_key_name,
+        sort_key: table.partition_key_name
       },
       parameters: {
         single_entity_storage_keyword: table.keyword,
