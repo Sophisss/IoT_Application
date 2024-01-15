@@ -233,6 +233,20 @@ export class ConfigurationService {
       table: link.table,
       fields: this.createFieldJson(link.fields),
       primary_key: link.primary_key,
+      API: [
+        {
+          name: "createLink" + this.getEntityNameByID(link.first_item_ID) + this.getEntityNameByID(link.second_item_ID),
+          type: "PUT"
+        },
+        {
+          name: "deleteLink" + this.getEntityNameByID(link.first_item_ID) + this.getEntityNameByID(link.second_item_ID),
+          type: "DELETE"
+        },
+        {
+          name: "getLink" + this.getEntityNameByID(link.first_item_ID) + this.getEntityNameByID(link.second_item_ID),
+          type: "GET"
+        }
+      ]
     }));
   }
 
