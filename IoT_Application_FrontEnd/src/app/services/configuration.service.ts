@@ -208,7 +208,7 @@ export class ConfigurationService {
         {
           name: "update" + this.titleCase.transform(entity.name),
           type: "POST",
-          parameters: []
+          parameters: this.getAPIParameters(entity.fields)
         },
         {
           name: "get" + this.titleCase.transform(entity.name) + "ById",
@@ -295,5 +295,9 @@ export class ConfigurationService {
 
   private getEntityNameByID(id: number) {
     return this.getItems().find(entity => entity.ID === id)?.name;
+  }
+
+  private getAPIParameters(fields: Field[]): string[] {
+    return fields.filter(field => field.isPrimaryKey === false).map(field => (field.name));
   }
 }
