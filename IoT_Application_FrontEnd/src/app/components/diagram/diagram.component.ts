@@ -15,10 +15,10 @@ import {Field} from "../../models/field.model";
 export class DiagramComponent {
   tables: Item[] = [];
 
-  fieldTypes: string[] = ['string', 'integer', 'double', 'boolean', 'date'];
+  fieldTypes: string[] = ['string', 'integer', 'float', 'boolean', 'date'];
   keysTypes: string[] = ["string", "integer"];
   parameterWords: string[] = ["registry", "endpoint"];
-  separatorSymbols: string[] = [":", "-", "_", "/", "|"];
+  separatorSymbols: string[] = [":", "-", "_", "/", "|", "*"];
 
   items: Item[];
   currentItem: Item = new Item();
@@ -43,7 +43,6 @@ export class DiagramComponent {
   @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
   private previousSpecialID: number = 0;
-  private isClickable: boolean = true;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -103,18 +102,17 @@ export class DiagramComponent {
           } else {
             console.log("ERROR: Missing Table.");
           }
-        } else {
-          if (this.currentItem.name === '' || this.currentItem.name === undefined) {
-            console.log("ERROR: Insert a name.")
+        } else if (this.currentItem.type === 'entity' && this.currentItem.fields.length > 0) {
+          if (this.currentItem.name === '' || this.currentItem.name === undefined || this.currentItem.name.trim().length === 0) {
+            console.log("ERROR: Insert a name.");
           } else if (this.itemNameAlreadyUsed(this.currentItem)) {
-            console.log("ERROR: Name already in use.")
-          } else if (this.currentItem.type === 'entity' && this.currentItem.fields.length > 0) {
-            if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
-              this.updateItem();
-            }
-          } else if (this.getFormGroup().valid && this.isClickable) {
-            console.log("no fields")
-            //TODO togliere tutto l'else if
+            console.log("ERROR: Name already in use.");
+          } else if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
+            this.updateItem();
+          }
+        } else if (this.currentItem.type === 'table') {
+          if (this.getFormGroup().valid && this.currentItem.name.trim().length > 0) {
+            console.log("no fields");
             this.updateItem();
           } else {
             console.log("ERROR: Invalid form");
@@ -132,14 +130,13 @@ export class DiagramComponent {
 
   addNewRow() {
     this.dataGrid.instance.addRow().then()
-    this.isClickable = false;
   }
 
   /**
    * Handles the selection for the data grid in a custom way.
    * @param data
    */
-  datagridSelectionHandler(data: any) {
+  dataGridSelectionHandler(data: any) {
     this.selectedItemKeys = data.selectedRowKeys;
   }
 
@@ -257,7 +254,6 @@ export class DiagramComponent {
         });
       }
 
-      const that = this;
       this.fieldsDataSource = new ArrayStore({
           key: 'name',
           data: this.currentItem.fields,
@@ -265,7 +261,6 @@ export class DiagramComponent {
             values.type = values.type || "string";
             values.required = values.required || false;
             values.isPrimaryKey = false;
-            that.isClickable = true;
           }
         }
       );
@@ -273,11 +268,11 @@ export class DiagramComponent {
       this.popupVisible = true;
 
       this.entityForm = new FormGroup({
-        name: new FormControl(this.currentItem.name, Validators.required),
+        name: new FormControl(this.currentItem.name, [Validators.required, Validators.minLength(1)]),
         table: new FormControl(this.currentItem.table, Validators.required),
       });
       this.tableForm = new FormGroup({
-        name: new FormControl(this.currentItem.name, Validators.required),
+        name: new FormControl(this.currentItem.name, [Validators.required, Validators.minLength(1)]),
         partition_key_name: new FormControl(this.currentItem.partition_key_name, Validators.required),
         partition_key_type: new FormControl(this.currentItem.partition_key_type, Validators.required),
         sort_key_name: new FormControl(this.currentItem.sort_key_name, Validators.required),
@@ -376,7 +371,6 @@ export class DiagramComponent {
       this.cascadeUpdateToItems(this.currentItem, itemsToUpdate);
 
     } else if (this.currentItem.type === 'entity') {
-      let pkName: string = null;
 
       if (this.configService.tableAlreadyLinked(this.previousSpecialID)) {
         console.log("already linked", this.previousSpecialID)
