@@ -4,6 +4,7 @@ import {ConfigurationService} from "./configuration.service";
 import {JsonDownloadService} from "./json-download.service";
 import ArrayStore from "devextreme/data/array_store";
 import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environments";
 
 @Injectable({
   providedIn: 'root'
@@ -35,14 +36,11 @@ export class CustomCommandService {
       this.toggleService.toggleDrawer();
     }
     if (commandName === 'generateCode') {
-      const item = this.configService.getItems()[0];
-
-      /*const jsonFile = this.configService.exportConfiguration();
+      const jsonFile = this.configService.exportConfiguration();
       console.log(jsonFile)
       this.httpClient.post(`${environment.baseUrl}/download`, jsonFile).subscribe(response => {
         console.log(response);
-      });*/
-      //console.log(this.configService.specialIDs);
+      });
     }
   }
 
