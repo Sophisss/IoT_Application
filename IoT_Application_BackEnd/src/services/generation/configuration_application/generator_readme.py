@@ -4,24 +4,36 @@ def generate_readme(project_name: str) -> str:
     :param project_name: The name of the project.
     :return: The README.md file.
     """
-    return f"""# {project_name.upper()} PROJECT 
+    return f"""# {project_name.upper()} PROJECT
 
-## Description
+## Introduzione
 
-This project contains the generated code for the GraphQL API. GraphQL APIs provide a powerful and flexible interface for interacting with our system's data.
+Utilizzando la configurazione definita dall'utente sulla base delle esigenze specifiche del cliente,
+sono stati generati diversi artefatti.
 
-## Project Structure
+## Template
 
-The project is organized into the following modules:
+- api.yaml: contiene la definizione delle risorse AWS che verranno create.
+In questo caso sono state definite funzioni Lambda associate ad ogni entità e link,
+il ruolo che verrà assunto da queste funzioni Lambda e la rispettiva policy associata
+ed infine le API GraphQL che verranno esposte.
 
-- `src`: Contains the source code.
-  - Inside the src directory, you will find the Lambdas for each entity and relationship.
-  - `dal`: Contains the Data Access Layer (DAL) code, which facilitates interaction with the database.
-  - `model`: Contains models for defining data.
-  - `graphql`: Contains the resolver and graphql schema.
-- `template`: Contains YAML templates for AWS resources.
+- cognito.yaml: contiene la definizione delle risorse AWS relative all'autenticazione.
+In questo caso sono state definite le risorse per la creazione di un pool di utenti cognito e
+le risorse per la creazione di un client relativo al pool di utenti.
 
-## Getting Started
+## Risorse
 
-For deployment instructions, see the [Deployment Guide](./template/guide/deployment_guide.md).
+- dal: contiene il DAL (Data Access Layer) che facilita l'interazione con il database.
+- model: contiene i modelli per la definizione dei dati.
+- graphql: contiene il resolver e lo schema graphql.
+- event: contiene la gestione dell'evento che attiva la funzione Lambda.
+- funzioni lambda progettate per gestire le operazioni CRUD.
+
+
+## Per iniziare
+
+Per le istruzioni di deploy, vedere la [Deployment Guide](./template/guide/deployment_guide.md).
+
+
     """
