@@ -44,6 +44,8 @@ def __generate_models(swift_app_code: dict, json: dict):
     :param json: the json with the data.
     :return: the models for swift app.
     """
-    for item in json['entities']:
+    entities_and_links = json['entities'] + json['links']
+    for item in entities_and_links:
         item_name = generate_resource_name(item)
-        swift_app_code[f'src/models/{item_name}.swift'] = generate_model(item, item_name)
+        swift_app_code[f'src/models/{item_name}.swift'] = generate_model(item, json)
+

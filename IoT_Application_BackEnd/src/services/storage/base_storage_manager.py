@@ -33,7 +33,7 @@ class BaseS3Manager(BaseAWSService):
 
         return zip_created_response
 
-    def create_and_upload_zip(self, bucket_name: str, code: dict, zip_key: str) -> dict:
+    def create_and_upload_zip(self, bucket_name: str, code: dict, zip_key: str, tags: Optional[dict] = None) -> dict:
         self.__validate_bucket_name(bucket_name)
         zip_buffer = BytesIO()
 
@@ -42,10 +42,6 @@ class BaseS3Manager(BaseAWSService):
                 zip_file.writestr(file_name, file_content)
 
         zip_buffer.seek(0)
-        tags = {
-            'Key': 'file-type',
-            'Value': 'zip'
-        }
         return self.put_object(bucket_name, zip_key, zip_buffer.getvalue(), tags)
 
     def get_presigned_url(self, bucket_name: str, zip_key: str) -> str:

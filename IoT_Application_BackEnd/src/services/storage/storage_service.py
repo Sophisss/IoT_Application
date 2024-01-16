@@ -12,7 +12,11 @@ class StorageService(BaseS3Manager):
     def create_zip_and_upload_code(self, code: dict) -> str:
         guid = str(uuid.uuid4())
         zip_name = f'{guid}.zip'
-        response = self.create_and_upload_zip(self.bucket_name, code, zip_name)
+        tags = {
+            'Key': 'file-type',
+            'Value': 'zip'
+        }
+        response = self.create_and_upload_zip(self.bucket_name, code, zip_name, tags)
         if response['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise Exception("Error creating zip and uploading to S3")
         return zip_name
