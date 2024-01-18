@@ -21,11 +21,12 @@ def __generate_role() -> str:
     Properties:
       Path: "/"
       RoleName: !Sub "${Project}-LambdaExecutionRoleGenerator"
-      AssumeRolePolicyDocument: !Sub "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+      AssumeRolePolicyDocument: !Sub '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"lambda.amazonaws.com"},"Action":"sts:AssumeRole"}]}'
       MaxSessionDuration: 3600
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
     """
+
 
 
 def __generate_policy(tables: list) -> str:
