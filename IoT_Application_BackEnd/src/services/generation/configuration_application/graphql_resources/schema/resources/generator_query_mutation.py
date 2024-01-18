@@ -13,9 +13,11 @@ def generate_queries_mutations(entities: list, links: list) -> tuple:
     """
     queries_entities, mutation_entities = zip(
         *map(lambda entity: __generate_queries_mutations_entity(entity, links), entities))
-    queries_links, mutation_links = zip(*map(lambda link: __generate_queries_mutations_link(link, entities), links))
-
-    return ''.join(queries_entities + queries_links), ''.join(mutation_entities + mutation_links)
+    if bool(links):
+        queries_links, mutation_links = zip(*map(lambda link: __generate_queries_mutations_link(link, entities), links))
+        return ''.join(queries_entities + queries_links), ''.join(mutation_entities + mutation_links)
+    else:
+        return ''.join(queries_entities), ''.join(mutation_entities)
 
 
 def __generate_queries_mutations_entity(entity: dict, links: list) -> tuple:
