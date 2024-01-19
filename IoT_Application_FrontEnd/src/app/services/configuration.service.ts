@@ -300,4 +300,8 @@ export class ConfigurationService {
   private getAPIParameters(fields: Field[]): string[] {
     return fields.filter(field => field.isPrimaryKey === false).map(field => (field.name));
   }
+
+  setTitle(projectName: string) {
+    this.projectTitle = projectName;
+  }
 }

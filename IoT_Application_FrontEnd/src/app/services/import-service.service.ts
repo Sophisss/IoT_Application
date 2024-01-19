@@ -19,6 +19,7 @@ export class ImportServiceService {
    * @param jsonContent the content of the .json file
    */
   pushToConfiguration(jsonContent: any) {
+    this.configService.setTitle(jsonContent.projectName);
     //read entities
     for (const entity of jsonContent.entities) {
       for (const field of entity.fields) {
