@@ -5,7 +5,12 @@ from services.generation.configuration_application.dal_resources.model.generator
 from services.generation.utility_methods import generate_resource_name
 
 
-def generate_api_client(json):
+def generate_api_client(json: dict) -> str:
+    """
+    This method generate the code for the api client.
+    :param json: the json with the data.
+    :return: the code for the api client.
+    """
     return f"""import Foundation
 import Amplify
 
@@ -17,7 +22,12 @@ final class ApiClient {{
 """
 
 
-def __generate_api_client_entity_methods(json):
+def __generate_api_client_entity_methods(json: dict) -> str:
+    """
+    This method generate the code for the entity methods.
+    :param json: the json with the data.
+    :return: the code for the entity methods.
+    """
     to_return = ""
     for entity in json['entities']:
         entity_id = entity['primary_key'][0]
@@ -57,7 +67,12 @@ def __generate_api_client_entity_methods(json):
     return to_return
 
 
-def __generate_api_client_link_methods(json):
+def __generate_api_client_link_methods(json: dict) -> str:
+    """
+    This method generate the code for the link methods.
+    :param json: the json with the data.
+    :return: the code for the link methods.
+    """
     to_return = ""
     for link in json['links']:
         link_fields = [*__search_primary_key_field(json['entities'], link)]
@@ -84,7 +99,7 @@ def __generate_api_client_link_methods(json):
     return to_return
 
 
-def __generate_api_client_put(api_name, entity, link_associated_first_entity, link_associated_second_entity):
+def __generate_api_client_put(api_name: str, entity: dict, link_associated_first_entity, link_associated_second_entity) -> str:
     parameters = __generate_parameters_links(link_associated_first_entity, link_associated_second_entity)
     return f'''
     func {api_name}({entity['name'].lower()}:{entity['name']}{"," if parameters else ""} {', '.join(f"{key}: {value}" for key, value in parameters.items())}) async -> Result<String, Error> {{
@@ -96,7 +111,7 @@ def __generate_api_client_put(api_name, entity, link_associated_first_entity, li
     '''
 
 
-def __generate_api_client_put_link(name, api_name, par):
+def __generate_api_client_put_link(name: str, api_name: str, par: dict) -> str:
     return f'''
     func {api_name}({", ".join(f"{key}: {value}" for key, value in par.items())}) async -> Result<String, Error> {{
 
@@ -115,7 +130,7 @@ def __generate_api_client_put_link(name, api_name, par):
 '''
 
 
-def __generate_api_client_delete(parameters, api_name):
+def __generate_api_client_delete(parameters: dict, api_name: str) -> str:
     par = ", ".join(f"{key}: {value}!" for key, value in parameters.items())
     par_ = ", ".join(f"${key}: {value}!" for key, value in parameters.items())
     par__ = ", ".join(f"{key}: ${value}" for key, value in parameters.items())
@@ -134,7 +149,7 @@ def __generate_api_client_delete(parameters, api_name):
 '''
 
 
-def __generate_api_client_post(api_name, parameters):
+def __generate_api_client_post(api_name: str, parameters: dict) -> str:
     return f'''
     func {api_name}({", ".join(f"{key}: {value}" for key, value in parameters.items())}) async -> Result<String, Error> {{
 
@@ -151,7 +166,7 @@ def __generate_api_client_post(api_name, parameters):
 '''
 
 
-def __generate_api_client_get(api_name, item, parameters, entity_associated=None):
+def __generate_api_client_get(api_name: str, item: dict, parameters: dict, entity_associated=None) -> str:
     name = generate_resource_name(item)
     par = ", ".join(f"{key}: {value}!" for key, value in parameters.items())
     to_return = ""
@@ -173,13 +188,13 @@ def __generate_api_client_get(api_name, item, parameters, entity_associated=None
     '''
 
 
-def __generate_api_client_get_all(api_name, entity, entity_associated):
+def __generate_api_client_get_all(api_name: str, entity: dict, entities_associated: list) -> str:
     return f'''    
     func {api_name}() async -> Result<[{entity['name']}], Error> {{
 
     let query = """\n        query {api_name}{{
             {api_name}{{
-            {__generate_fields_query(entity['fields'], entity_associated)}
+            {__generate_fields_query(entity['fields'], entities_associated)}
          }}
       }}
       """
@@ -190,7 +205,7 @@ def __generate_api_client_get_all(api_name, entity, entity_associated):
     '''
 
 
-def __generate_fields_query(fields_entity, entities):
+def __generate_fields_query(fields_entity: list, entities: list) -> str:
     to_return = "\n            ".join(field['name'] for field in fields_entity)
     for entity in entities:
         fields_entity_associated = "\n              ".join(field['name'] for field in entity['fields'])
@@ -200,12 +215,12 @@ def __generate_fields_query(fields_entity, entities):
     return to_return
 
 
-def __generate_variables(*variables):
+def __generate_variables(*variables) -> str:
     var = ",  ".join(f'"{variable}": {variable}' for variable in variables)
     return f"""    let variables: [String:Any] = [{var}]"""
 
 
-def __generate_request(api_name, response_type, is_mutation):
+def __generate_request(api_name: str, response_type, is_mutation) -> str:
     return f"""    do {{
             let request = GraphQLRequest<{response_type}> (
                 document: {'mutation' if is_mutation else 'query'},
@@ -215,7 +230,11 @@ def __generate_request(api_name, response_type, is_mutation):
 {__generate_response_error()} """
 
 
-def __generate_response_error():
+def __generate_response_error() -> str:
+    """
+    This method generate the code for the response error.
+    :return: the code for the response error.
+    """
     return f"""            
             switch response {{
             case .success(let data):
@@ -232,7 +251,7 @@ def __generate_response_error():
         }}"""
 
 
-def __generate_mutation_create(api_name, item, links):
+def __generate_mutation_create(api_name: str, item: dict, links: list) -> str:
     name = generate_resource_name(item)
     name_links = ""
     for link in links:
@@ -251,12 +270,12 @@ def __generate_mutation_create(api_name, item, links):
             '''
 
 
-def __generate_parameter_create_link(par):
+def __generate_parameter_create_link(par) -> str:
     return "\n                  ".join(
         f"{key}: \\({key})" if value in ['integer', 'float'] else f'{key}: "\\({value})"' for key, value in par.items())
 
 
-def __generate_conditions(link_associated_first_entity, link_associated_second_entity):
+def __generate_conditions(link_associated_first_entity, link_associated_second_entity) -> str:
     to_return = ""
     for link in link_associated_first_entity:
         if link['numerosity'] in ['one-to-many', 'many-to-many']:
@@ -271,7 +290,7 @@ def __generate_conditions(link_associated_first_entity, link_associated_second_e
     return to_return
 
 
-def __gen_condition_many(link, name, primary_key):
+def __gen_condition_many(link: dict, name: str, primary_key) -> str:
     first_entity, second_entity = link['first_entity'], link['second_entity']
     return f'''
         var {first_entity.lower()}_{second_entity.lower()}_link = ""
@@ -293,7 +312,7 @@ def __gen_condition_many(link, name, primary_key):
             '''
 
 
-def __gen_condition_one(link, primary_key):
+def __gen_condition_one(link: dict, primary_key) -> str:
     first_entity, second_entity = link['first_entity'], link['second_entity']
     return f'''
         let {first_entity.lower()}_{second_entity.lower()}_link = {first_entity.lower()}_{second_entity.lower()}.map {{  {first_entity.lower()}{second_entity} in
@@ -306,7 +325,7 @@ def __gen_condition_one(link, primary_key):
         '''
 
 
-def __gen_p(fields, name):
+def __gen_p(fields: list, name: str) -> str:
     backslash = '\\'
     to_return = ""
     for field in fields:
@@ -320,7 +339,7 @@ def __gen_p(fields, name):
     return to_return
 
 
-def __generate_parameters_links(link_associated_first_entity, link_associated_second_entity):
+def __generate_parameters_links(link_associated_first_entity, link_associated_second_entity) -> dict:
     parameters = dict()
     for link in link_associated_first_entity:
         name = f"{link['first_entity'].lower()}_{link['second_entity'].lower()}"
@@ -333,7 +352,7 @@ def __generate_parameters_links(link_associated_first_entity, link_associated_se
     return parameters
 
 
-def __get_entity_associated(entities, link_associated_first_entity, link_associated_second_entity):
+def __get_entity_associated(entities: list, link_associated_first_entity, link_associated_second_entity) -> list:
     entities_associated = list()
     for link in link_associated_first_entity:
         entities_associated.append(
@@ -342,5 +361,3 @@ def __get_entity_associated(entities, link_associated_first_entity, link_associa
         entities_associated.append(
             next((entity for entity in entities if entity['name'] == link['first_entity']), None))
     return entities_associated
-
-

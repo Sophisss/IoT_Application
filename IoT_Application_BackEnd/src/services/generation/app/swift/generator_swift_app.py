@@ -1,5 +1,6 @@
 from services.generation.app.generator_amplify_config import generate_amplify_configuration
 from services.generation.app.swift.models.generator_model import generate_model
+from services.generation.app.swift.services.generator_api_client import generate_api_client
 from services.generation.app.swift.services.generator_error_service import generate_error_service
 from services.generation.app.swift.services.generator_identity_client import generate_identity_client
 from services.generation.utility_methods import generate_resource_name
@@ -35,6 +36,7 @@ def __generate_services(swift_app_code: dict, json: dict):
     """
     swift_app_code['src/services/ErrorsService.swift'] = generate_error_service()
     swift_app_code['src/services/IdentityClient.swift'] = generate_identity_client()
+    swift_app_code['src/services/ApiClient.swift'] = generate_api_client(json)
 
 
 def __generate_models(swift_app_code: dict, json: dict):
@@ -48,4 +50,3 @@ def __generate_models(swift_app_code: dict, json: dict):
     for item in entities_and_links:
         item_name = generate_resource_name(item)
         swift_app_code[f'src/models/{item_name}.swift'] = generate_model(item, json)
-
