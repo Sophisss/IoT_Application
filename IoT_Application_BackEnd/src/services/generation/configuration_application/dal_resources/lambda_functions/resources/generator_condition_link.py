@@ -101,7 +101,7 @@ def __condition_get_{second_entity.lower()}({link['primary_key'][0]}, project_ma
     condition_get_all = f"""
                 if '{second_entity}' in event_parse.projection:
                     for {first_entity.lower()} in response:
-                        __condition_get_{second_entity.lower()}({first_entity.lower()}['Item']['{name_partition_key_field}'].split('{id_separator}')[1], project_manager, {first_entity.lower()})
+                        __condition_get_{second_entity.lower()}({first_entity.lower()}['Item']['{name_partition_key_field}'].split('{id_separator}')[1], project_manager, {first_entity.lower()}["Item"])
                     """
     return condition_def, condition_get, condition_get_all
 
@@ -126,7 +126,7 @@ def __condition_get_{second_entity.lower()}({link['primary_key'][0]}, project_ma
     condition_get_all = f"""
                 if '{second_entity}' in event_parse.projection:
                     for {first_entity.lower()} in response:
-                        __condition_get_{second_entity.lower()}({first_entity.lower()}['Item']['{name_partition_key_field}'].split('{id_separator}'), project_manager, {first_entity.lower()})
+                        __condition_get_{second_entity.lower()}({first_entity.lower()}['Item']['{name_partition_key_field}'].split('{id_separator}')[1], project_manager, {first_entity.lower()}["Item"])
                        """
     return condition_def, condition_get, condition_get_all
 
@@ -152,7 +152,7 @@ def __condition_get_{first_entity.lower()}({link['primary_key'][1]}, project_man
     condition_get_all = f"""
                 if '{first_entity}' in event_parse.projection:
                     for {second_entity.lower()} in response:
-                        __condition_get_{first_entity.lower()}({second_entity.lower()}['Item']['{name_partition_key_field}'].split('{id_separator}'), project_manager, {second_entity.lower()})
+                        __condition_get_{first_entity.lower()}({second_entity.lower()}['Item']['{name_partition_key_field}'].split('{id_separator}')[1], project_manager, {second_entity.lower()}["Item"])
     """
     return condition_def, condition_get, condition_get_all
 
@@ -177,6 +177,6 @@ def __condition_get_{first_entity.lower()}({link['primary_key'][1]}, project_man
     condition_get_all = f"""
                 if '{first_entity}' in event_parse.projection:
                     for {second_entity.lower()} in response:
-                        __condition_get_{first_entity.lower()}({second_entity.lower()}, project_manager, {second_entity.lower()})
+                        __condition_get_{first_entity.lower()}({second_entity.lower()}['Item']['{name_partition_key_field}'].split('{id_separator}')[1], project_manager, {second_entity.lower()}["Item"])
     """
     return condition_def, condition_get, condition_get_all
