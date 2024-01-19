@@ -19,6 +19,7 @@ export class ImportServiceService {
    * @param jsonContent the content of the .json file
    */
   pushToConfiguration(jsonContent: any) {
+    this.configService.setTitle(jsonContent.projectName);
     //read entities
     for (const entity of jsonContent.entities) {
       for (const field of entity.fields) {
@@ -33,11 +34,15 @@ export class ImportServiceService {
         fields: entity.fields,
         table: entity.table,
         primary_key: entity.primary_key,
-        partition_key: null,
-        sort_key: null,
+        partition_key_name: null,
+        partition_key_type: null,
+        sort_key_name: null,
+        sort_key_type: null,
         first_item_ID: null,
         second_item_ID: null,
-        numerosity: null
+        numerosity: null,
+        keyword: null,
+        separator: null
       }
       this.configService.getItems().push(nodeEntity);
     }
@@ -49,13 +54,17 @@ export class ImportServiceService {
         name: table.tableName,
         type: "table",
         table: null,
-        partition_key: null, // table.partition_key,
-        sort_key: null, //table.sort_key,
+        partition_key_name: table.partition_key.name,
+        partition_key_type: table.partition_key.type,
+        sort_key_name: table.sort_key.name,
+        sort_key_type: table.sort_key.type,
         first_item_ID: null,
         second_item_ID: null,
-        fields: null, //table.fields,
+        fields: null,
         numerosity: null,
-        primary_key: null
+        primary_key: null,
+        keyword: table.parameters.single_entity_storage_keyword,
+        separator: table.parameters.id_separator
       }
       this.configService.getItems().push(nodeTable);
     }
@@ -67,14 +76,18 @@ export class ImportServiceService {
           ID: this.configService.assignID(),
           name: null,
           type: 'link',
-          table: null,
-          partition_key: null,
-          sort_key: null,
+          table: link.table,
+          partition_key_name: null,
+          partition_key_type: null,
+          sort_key_name: null,
+          sort_key_type: null,
           first_item_ID: this.getIDFromName(link.first_entity),
           second_item_ID: this.getIDFromName(link.second_entity),
           numerosity: link.numerosity,
           fields: link.fields,
-          primary_key: null //TODO fix this
+          primary_key: link.primary_key,
+          keyword: null,
+          separator: null
         }
       this.configService.getItems().push(edge);
     }

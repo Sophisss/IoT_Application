@@ -3,6 +3,7 @@ import {Item} from "../models/item.model";
 import ArrayStore from "devextreme/data/array_store";
 import {BehaviorSubject} from "rxjs";
 import {TitleCasePipe} from "@angular/common";
+import {Field} from "../models/field.model";
 
 const items: Item[] = [];
 
@@ -148,15 +149,12 @@ export class ConfigurationService {
     return this.specialIDs.filter(number => number.toString().startsWith(prefixString));
   }
 
-  /**
-   * Returns all the IDs of the entities linked to a table.
-   * @param prefix the ID of the table
-   */
-  getAllLinkedEntities(prefix: number): number[] {
-    const prefixString = prefix.toString();
-    return this.specialIDs
-      .filter(number => number.toString().startsWith(prefixString))
-      .map(number => parseInt(number.toString().substring(prefixString.length)));
+  getAllLinksFromEntity(i: Item): Item[] {
+    return this.getItems().filter((item) => item.type === 'link' && item.first_item_ID === i.ID)
+  }
+
+  getAllLinksToEntity(i: Item): Item[] {
+    return this.getItems().filter((item) => item.type === 'link' && item.second_item_ID === i.ID)
   }
 
   /**
@@ -196,7 +194,7 @@ export class ConfigurationService {
     return this.getItems().filter(entity => entity.type === 'entity').map(entity => ({
       name: entity.name,
       table: entity.table,
-      fields: entity.fields,
+      fields: this.createFieldJson(entity.fields),
       primary_key: entity.primary_key,
       API: [
         {
@@ -210,7 +208,7 @@ export class ConfigurationService {
         {
           name: "update" + this.titleCase.transform(entity.name),
           type: "POST",
-          parameters: []
+          parameters: this.getAPIParameters(entity.fields)
         },
         {
           name: "get" + this.titleCase.transform(entity.name) + "ById",
@@ -225,26 +223,6 @@ export class ConfigurationService {
   }
 
   /**
-   * Iterates over the list of items and creates a list of tables ready to be exported.
-   */
-  private createTableJson() {
-    return this.getItems().filter(entity => entity.type === 'table').map(table => ({
-      tableName: table.name,
-      partition_key: table.partition_key,
-      sort_key: table.sort_key,
-      GSI: {
-        index_name: "SK-PK",
-        partition_key: "SK",
-        sort_key: "PK"
-      },
-      parameters: {
-        single_entity_storage_keyword: "registry",
-        id_separator: ":"
-      }
-    }))
-  }
-
-  /**
    * Iterates over the list of items and creates a list of links ready to be exported.
    */
   private createLinkJson() {
@@ -252,11 +230,78 @@ export class ConfigurationService {
       first_entity: this.getEntityNameByID(link.first_item_ID),
       second_entity: this.getEntityNameByID(link.second_item_ID),
       numerosity: link.numerosity,
-      fields: link.fields
+      table: link.table,
+      fields: this.createFieldJson(link.fields),
+      primary_key: link.primary_key,
+      API: [
+        {
+          name: "createLink" + this.getEntityNameByID(link.first_item_ID) + this.getEntityNameByID(link.second_item_ID),
+          type: "PUT"
+        },
+        {
+          name: "deleteLink" + this.getEntityNameByID(link.first_item_ID) + this.getEntityNameByID(link.second_item_ID),
+          type: "DELETE"
+        },
+        {
+          name: "getLink" + this.getEntityNameByID(link.first_item_ID) + this.getEntityNameByID(link.second_item_ID),
+          type: "GET"
+        }
+      ]
     }));
   }
 
+  /**
+   * Iterates over the list of items and creates a list of tables ready to be exported.
+   */
+  private createTableJson() {
+    return this.getItems().filter(entity => entity.type === 'table').map(table => ({
+      tableName: table.name,
+      partition_key: {
+        name: table.partition_key_name,
+        type: table.partition_key_type
+      },
+      sort_key: {
+        name: table.sort_key_name,
+        type: table.sort_key_type
+      },
+      GSI: {
+        index_name: table.sort_key_name + "-" + table.partition_key_name,
+        partition_key: table.sort_key_name,
+        sort_key: table.partition_key_name
+      },
+      parameters: {
+        single_entity_storage_keyword: table.keyword,
+        id_separator: table.separator
+      }
+    }))
+  }
+
+  private createFieldJson(fields: Field[]) {
+    const fieldList: Field[] = [];
+
+    for (let field of fields) {
+      fieldList.push({
+        name: field.name,
+        type: field.type,
+        required: field.required,
+        minLength: field.minLength,
+        maxLength: field.maxLength,
+        minimum: field.minimum,
+        maximum: field.maximum,
+      })
+    }
+    return fieldList;
+  }
+
   private getEntityNameByID(id: number) {
-    return this.getItems().find(entity => entity.ID === id).name;
+    return this.getItems().find(entity => entity.ID === id)?.name;
+  }
+
+  private getAPIParameters(fields: Field[]): string[] {
+    return fields.filter(field => field.isPrimaryKey === false).map(field => (field.name));
+  }
+
+  setTitle(projectName: string) {
+    this.projectTitle = projectName;
   }
 }
