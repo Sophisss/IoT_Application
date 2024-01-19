@@ -84,10 +84,6 @@ export class ConfigurationService {
                   "TemporaryPasswordValidityDays": 14
                 }
               }
-            },
-            IdentityPool: {
-              "resource_name": "IoTApplicationIdentityPool",
-              "IdentityPoolName": "IdentityPool"
             }
           }
         }
@@ -178,6 +174,10 @@ export class ConfigurationService {
     this.clearList();
     this.generatedID = this.firstID;
     this.specialIDs = [];
+  }
+
+  setTitle(projectName: string) {
+    this.projectTitle = projectName;
   }
 
   /**
@@ -299,9 +299,5 @@ export class ConfigurationService {
 
   private getAPIParameters(fields: Field[]): string[] {
     return fields.filter(field => field.isPrimaryKey === false).map(field => (field.name));
-  }
-
-  setTitle(projectName: string) {
-    this.projectTitle = projectName;
   }
 }
