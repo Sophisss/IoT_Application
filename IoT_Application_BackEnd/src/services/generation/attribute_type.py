@@ -6,3 +6,4 @@ class AttributeType(Enum):
     integer = "Int"
     boolean = "Boolean"
     float = "Float"
+    date = "Date"
