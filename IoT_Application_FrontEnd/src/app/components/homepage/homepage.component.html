@@ -7,17 +7,17 @@
     </div>
 
     <div class="open-create" id="open-create-text">
-        <label class="externalLink" for="textInput">Apri</label>
+        <a class="externalLink" routerLink="new">Create</a>
+        or
+        <label class="externalLink" for="textInput">open</label>
         <input #jsonInput (change)="import($event)" accept=".json" hidden id="textInput"
                type="file">
-        o
-        <a class="externalLink" routerLink="new">crea</a>
-        un nuovo diagramma per iniziare
+        a new diagram to start
     </div>
 
     <div class="description" id="caption">
     <span>
-      Modella e crea facilmente il tuo sistema IoT
+      Model and create your IoT system with ease
     </span>
         <p>{{ descriptionText }}</p>
     </div>

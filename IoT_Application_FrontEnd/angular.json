@@ -75,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "IoT_Application_FrontEnd:build:production"
+              "buildTarget": "IoT_Application_FrontEnd:build:production"
             },
             "development": {
-              "browserTarget": "IoT_Application_FrontEnd:build:development"
+              "buildTarget": "IoT_Application_FrontEnd:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -86,7 +86,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "IoT_Application_FrontEnd:build"
+            "buildTarget": "IoT_Application_FrontEnd:build"
           }
         },
         "test": {

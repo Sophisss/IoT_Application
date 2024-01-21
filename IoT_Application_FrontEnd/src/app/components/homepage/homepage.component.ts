@@ -8,11 +8,10 @@ import {Router} from "@angular/router";
   styleUrls: ['./homepage.component.scss']
 })
 export class HomepageComponent {
-  descriptionText: string = "Trascina e personalizza le tue entità o tabelle, monitorando in tempo reale" +
-    " il file JSON prodotto.\nQuando sei soddisfatto del risultato," +
-    " puoi salvare il file sul tuo dispositivo per ricominciare quando" +
-    " vuoi oppure generare direttamente un URL da cui scaricare il codice generato" +
-    " per il tuo sistema IoT con le relative app.";
+  descriptionText: string = "Drag, drop and customize your entities or tables, monitoring in real time" +
+    " the produced JSON file.\nWhen you are satisfied with the result, you can save the file to your device" +
+    " to start over whenever you want or generate an URL from which to download the generated code for your" +
+    " IoT system with the related apps.";
 
   constructor(private importService: ImportServiceService, private router: Router) {
   }

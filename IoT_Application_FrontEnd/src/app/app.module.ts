@@ -29,6 +29,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DrawerContentComponent} from './components/drawer-content/drawer-content.component';
 import {HttpClientModule} from '@angular/common/http';
 import {JsonPipe, TitleCasePipe} from "@angular/common";
+import {Clipboard} from "@angular/cdk/clipboard";
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import {JsonPipe, TitleCasePipe} from "@angular/common";
   ],
   providers: [
     JsonPipe,
-    TitleCasePipe
+    TitleCasePipe,
+    Clipboard
   ],
   bootstrap: [AppComponent]
 })

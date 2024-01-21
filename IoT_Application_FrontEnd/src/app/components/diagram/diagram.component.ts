@@ -15,7 +15,10 @@ import {Field} from "../../models/field.model";
 export class DiagramComponent {
   tables: Item[] = [];
 
-  fieldTypes: string[] = ['string', 'integer', 'double', 'boolean', 'date'];
+  fieldTypes: string[] = ['string', 'integer', 'float', 'boolean', 'date'];
+  keysTypes: string[] = ["string", "integer"];
+  parameterWords: string[] = ["registry", "endpoint"];
+  separatorSymbols: string[] = [":", "-", "_", "/", "|", "*"];
 
   items: Item[];
   currentItem: Item = new Item();
@@ -40,7 +43,6 @@ export class DiagramComponent {
   @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
   private previousSpecialID: number = 0;
-  private isClickable: boolean = true;
 
   /**
    * Constructor of the diagram component. It initializes the data sources of the diagram taking the items from the
@@ -70,10 +72,13 @@ export class DiagramComponent {
       key: 'ID',
       data: this.getStartingLinks(),
       onInserting(values) {
+        const pKeys = that.getLinkPrimaryKeys(values);
+
         values.ID = values.ID || that.configService.assignID();
         values.type = 'link';
         values.numerosity = values.numerosity || 'many-to-many';
         values.fields = values.fields || [];
+        values.primary_key = [pKeys[0]?.name, pKeys[1]?.name];
       },
       onModified() {
         that.drawerUpdateMethods();
@@ -91,21 +96,27 @@ export class DiagramComponent {
     this.saveButtonOptions = {
       icon: 'save',
       onClick: () => {
-        if (this.currentItem.name === '' || this.currentItem.name === undefined) {
-          console.log("ERROR: Insert a name.")
-        } else if (this.itemNameAlreadyUsed(this.currentItem)) {
-          console.log("ERROR: Name already in use.")
-        } else if (this.currentItem.fields.length > 0) {
-          console.log("fields > 0")
-          if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
-            console.log("ok")
+        if (this.currentItem.type === 'link') {
+          if (this.getFormGroup().valid) {
+            this.updateItem();
+          } else {
+            console.log("ERROR: Missing Table.");
+          }
+        } else if (this.currentItem.type === 'entity' && this.currentItem.fields.length > 0) {
+          if (this.currentItem.name === '' || this.currentItem.name === undefined || this.currentItem.name.trim().length === 0) {
+            console.log("ERROR: Insert a name.");
+          } else if (this.itemNameAlreadyUsed(this.currentItem)) {
+            console.log("ERROR: Name already in use.");
+          } else if (this.getFormGroup().valid && this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
             this.updateItem();
           }
-        } else if (this.getFormGroup().valid && this.isClickable) {
-          console.log("no fields")
-          this.updateItem();
-        } else {
-          console.log("ERROR: Invalid form");
+        } else if (this.currentItem.type === 'table') {
+          if (this.getFormGroup().valid && this.currentItem.name.trim().length > 0) {
+            console.log("no fields");
+            this.updateItem();
+          } else {
+            console.log("ERROR: Invalid form");
+          }
         }
       },
     };
@@ -119,14 +130,13 @@ export class DiagramComponent {
 
   addNewRow() {
     this.dataGrid.instance.addRow().then()
-    this.isClickable = false;
   }
 
   /**
    * Handles the selection for the data grid in a custom way.
    * @param data
    */
-  datagridSelectionHandler(data: any) {
+  dataGridSelectionHandler(data: any) {
     this.selectedItemKeys = data.selectedRowKeys;
   }
 
@@ -143,7 +153,7 @@ export class DiagramComponent {
       this.fieldsDataSource.byKey(event.key).then((data) => {
         field = data;
       });
-      if (field.isPrimaryKey) {
+      if (field?.isPrimaryKey) {
         field.required = field.isPrimaryKey;
       }
     }
@@ -187,8 +197,10 @@ export class DiagramComponent {
         name: obj.table,
         table: obj.table,
         fields: obj.fields,
-        partition_key: obj.partition_key,
-        sort_key: obj.sort_key,
+        partition_key_name: obj.partition_key_name,
+        partition_key_type: obj.partition_key_type,
+        sort_key_name: obj.sort_key_name,
+        sort_key_type: obj.sort_key_type,
         first_item: obj.first_item_ID,
         second_item: obj.second_item_ID,
         numerosity: obj.numerosity,
@@ -197,8 +209,10 @@ export class DiagramComponent {
       obj.name = value.table;
       obj.table = value.table;
       obj.fields = value.fields;
-      obj.partition_key = value.partition_key;
-      obj.sort_key = value.sort_key;
+      obj.partition_key_name = value.partition_key_name;
+      obj.partition_key_type = value.partition_key_type;
+      obj.sort_key_name = value.sort_key_name;
+      obj.sort_key_type = value.sort_key_type;
       obj.first_item_ID = value.first_item_ID;
       obj.second_item_ID = value.second_item_ID;
       obj.numerosity = value.numerosity;
@@ -226,6 +240,8 @@ export class DiagramComponent {
         if (designatedTable) {
           this.previousSpecialID = this.configService.getSpecialID(designatedTable.ID, this.currentItem.ID);
         }
+        console.log("from", this.configService.getAllLinksFromEntity(this.currentItem))
+        console.log("to", this.configService.getAllLinksToEntity(this.currentItem))
       }
 
       this.tables = [];
@@ -238,7 +254,6 @@ export class DiagramComponent {
         });
       }
 
-      const that = this;
       this.fieldsDataSource = new ArrayStore({
           key: 'name',
           data: this.currentItem.fields,
@@ -246,7 +261,6 @@ export class DiagramComponent {
             values.type = values.type || "string";
             values.required = values.required || false;
             values.isPrimaryKey = false;
-            that.isClickable = true;
           }
         }
       );
@@ -254,20 +268,26 @@ export class DiagramComponent {
       this.popupVisible = true;
 
       this.entityForm = new FormGroup({
-        name: new FormControl(this.currentItem.name, Validators.required),
+        name: new FormControl(this.currentItem.name, [Validators.required, Validators.minLength(1)]),
         table: new FormControl(this.currentItem.table, Validators.required),
       });
       this.tableForm = new FormGroup({
-        name: new FormControl(this.currentItem.name, Validators.required),
-        partition_key: new FormControl(this.currentItem.partition_key, Validators.required),
-        sort_key: new FormControl(this.currentItem.sort_key, Validators.required),
+        name: new FormControl(this.currentItem.name, [Validators.required, Validators.minLength(1)]),
+        partition_key_name: new FormControl(this.currentItem.partition_key_name, Validators.required),
+        partition_key_type: new FormControl(this.currentItem.partition_key_type, Validators.required),
+        sort_key_name: new FormControl(this.currentItem.sort_key_name, Validators.required),
+        sort_key_type: new FormControl(this.currentItem.sort_key_type, Validators.required),
+        keyword: new FormControl(this.currentItem.keyword, Validators.required),
+        separator: new FormControl(this.currentItem.separator, Validators.required),
       });
       this.linkForm = new FormGroup({
         name: new FormControl(this.currentItem.name),
+        table: new FormControl(this.currentItem.table, Validators.required),
         numerosity: new FormControl(this.currentItem.numerosity, Validators.required),
       });
       this.placeholderForm = new FormGroup({
-        name: new FormControl()
+        name: new FormControl(),
+        table: new FormControl(),
       });
     }
   }
@@ -301,6 +321,11 @@ export class DiagramComponent {
         }
       }
 
+      const linksFromEntity = this.configService.getAllLinksFromEntity(this.currentItem);
+      const linksToEntity = this.configService.getAllLinksToEntity(this.currentItem);
+
+      this.cascadeLinkPKs(linksFromEntity, linksToEntity, this.currentItem, 'remove');
+
       this.dataSource.push([{type: 'remove', key: this.currentItem.ID}]);
     }
     this.cancelEditItem();
@@ -317,25 +342,35 @@ export class DiagramComponent {
         key: this.currentItem.ID,
         data: {
           name: this.currentItem.name,
+          table: this.currentItem.table,
           numerosity: this.currentItem.numerosity,
           fields: this.currentItem.fields,
         },
       }]);
     } else if (this.currentItem.type === 'table') {
+      let oldTableName;
+      this.dataSource.byKey(this.currentItem.ID).then((data) => {
+        oldTableName = data.name;
+      });
+      const itemsToUpdate = this.getAllItemsWithTable(oldTableName);
+
       this.dataSource.push([{
         type: 'update',
         key: this.currentItem.ID,
         data: {
           name: this.currentItem.name,
-          partition_key: this.currentItem.partition_key,
-          sort_key: this.currentItem.sort_key,
+          partition_key_name: this.currentItem.partition_key_name,
+          partition_key_type: this.currentItem.partition_key_type,
+          sort_key_name: this.currentItem.sort_key_name,
+          sort_key_type: this.currentItem.sort_key_type,
+          keyword: this.currentItem.keyword,
+          separator: this.currentItem.separator,
         },
       }]);
 
-      this.cascadeUpdateToEntities(this.currentItem, this.configService.getAllLinkedEntities(this.currentItem.ID));
+      this.cascadeUpdateToItems(this.currentItem, itemsToUpdate);
 
     } else if (this.currentItem.type === 'entity') {
-      let pkName: string = null;
 
       if (this.configService.tableAlreadyLinked(this.previousSpecialID)) {
         console.log("already linked", this.previousSpecialID)
@@ -345,8 +380,7 @@ export class DiagramComponent {
       if (this.configService.getPrimaryKeyField(this.currentItem) !== undefined) {
         let pkField = this.configService.getPrimaryKeyField(this.currentItem);
         pkField.required = true;
-        this.dataGrid.instance.refresh();
-        pkName = pkField.name;
+        this.currentItem.primary_key = [pkField.name];
       }
 
       this.dataSource.push([{
@@ -356,9 +390,14 @@ export class DiagramComponent {
           name: this.currentItem.name,
           table: this.currentItem.table,
           fields: this.currentItem.fields,
-          primary_key: [pkName],
+          primary_key: this.currentItem.primary_key,
         },
       }]);
+
+      const linksFromEntity = this.configService.getAllLinksFromEntity(this.currentItem);
+      const linksToEntity = this.configService.getAllLinksToEntity(this.currentItem);
+
+      this.cascadeLinkPKs(linksFromEntity, linksToEntity, this.currentItem, 'update');
 
       const finalID = this.configService.getSpecialID(
         (this.tables.filter((table) => table.name === this.currentItem.table)[0].ID), this.currentItem.ID);
@@ -550,12 +589,16 @@ export class DiagramComponent {
           first_item_ID: entity.ID,
           name: entity.name + " - " + entityTable.name,
           numerosity: null,
-          partition_key: null,
+          partition_key_name: null,
+          partition_key_type: null,
           second_item_ID: entityTable.ID,
-          sort_key: null,
+          sort_key_name: null,
+          sort_key_type: null,
           table: null,
           type: 'link',
           primary_key: null,
+          keyword: null,
+          separator: null,
         })
       }
     }
@@ -563,16 +606,22 @@ export class DiagramComponent {
   }
 
   /**
-   * Cascades the update of a table to all the entities linked to it.
+   * Cascades the update of a table to all the items linked to it.
    * @param table the updated table
-   * @param entitiesIDs the IDs of the entities linked to the table
+   * @param items the items linked to the table
    * @private
    */
-  private cascadeUpdateToEntities(table: Item, entitiesIDs: number[]) {
-    for (let entityID of entitiesIDs) {
-      this.dataSource.push([{
+  private cascadeUpdateToItems(table: Item, items: Item[]) {
+    for (let item of items) {
+      let arrayStore: ArrayStore;
+      if (item.type === 'entity') {
+        arrayStore = this.dataSource;
+      } else {
+        arrayStore = this.linksDataSource;
+      }
+      arrayStore.push([{
         type: 'update',
-        key: entityID,
+        key: item.ID,
         data: {
           table: table.name,
         },
@@ -587,5 +636,72 @@ export class DiagramComponent {
 
   private itemNameAlreadyUsed(item: Item) {
     return this.configService.getItems().filter((temp) => temp.name === item.name).length > 0 && item.name !== this.savedName;
+  }
+
+  private getLinkPrimaryKeys(data: any) {
+    let firstItem: Item, secondItem: Item;
+    this.dataSource.byKey(data.first_item_ID).then((data) => {
+      firstItem = data;
+    });
+    this.dataSource.byKey(data.second_item_ID).then((data) => {
+      secondItem = data;
+    });
+    console.log(firstItem, secondItem)
+    const firstPK = this.configService.getPrimaryKeyField(firstItem);
+    const secondPK = this.configService.getPrimaryKeyField(secondItem);
+    return [firstPK, secondPK];
+  }
+
+  private cascadeLinkPKs(linksFromEntity: Item[], linksToEntity: Item[], item: Item, method: 'update' | 'remove') {
+    if (method === 'update') {
+      let newPKFrom: string, newPKTo: string;
+      if (linksFromEntity.length > 0) {
+        newPKFrom = item.primary_key[0];
+      }
+      if (linksToEntity.length > 0) {
+        newPKTo = item.primary_key[0];
+      }
+      for (let linkFrom of linksFromEntity) {
+        const oldPKTo = linkFrom.primary_key[1];
+        const updatedPK = [newPKFrom, oldPKTo];
+        this.linksDataSource.push([{
+          type: 'update',
+          key: linkFrom.ID,
+          data: {
+            primary_key: updatedPK,
+          },
+        }])
+        this.drawerUpdateMethods();
+      }
+
+      for (let linkTo of linksToEntity) {
+        const oldPKFrom = linkTo.primary_key[0];
+        const updatedPK = [oldPKFrom, newPKTo];
+        this.linksDataSource.push([{
+          type: method,
+          key: linkTo.ID,
+          data: {
+            primary_key: updatedPK,
+          },
+        }])
+        this.drawerUpdateMethods();
+      }
+
+    } else if (method === 'remove') {
+      const links = linksFromEntity.concat(linksToEntity);
+      for (let link of links) {
+        this.linksDataSource.push([{
+          type: method,
+          key: link.ID,
+        }])
+        this.drawerUpdateMethods();
+      }
+    }
+  }
+
+  private getAllItemsWithTable(tableName: string): Item[] {
+    const itemList: Item[] = this.configService.getItems().filter((item) => item.table === tableName);
+    console.log("items", itemList)
+    return itemList;
   }
 }

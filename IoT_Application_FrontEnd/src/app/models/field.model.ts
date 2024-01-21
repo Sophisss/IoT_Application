@@ -10,7 +10,6 @@
  * allowed_values: if the field is a string it can have a list of allowed values.
  */
 export class Field {
-
   name: string
   type: string
   required: boolean
