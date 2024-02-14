@@ -32,6 +32,16 @@ from services.generation.configuration_application.template_resources.deployment
 from services.generation.configuration_application.template_resources.api.generator_api_template import \
     generate_api_template
 from services.generation.utility_methods import generate_resource_name
+from services.generation.configuration_application.dal_resources.timeseries_manager.generator_timeseries_dal import \
+    generate_timeseries_dal
+from services.generation.configuration_application.dal_resources.iot_resources.generator_device_status_change import \
+    generate_device_status_change
+from services.generation.configuration_application.dal_resources.iot_resources.generator_device_status_event import \
+    generate_device_status_event
+from services.generation.configuration_application.dal_resources.timeseries_manager.generator_project_timeseries_manager import \
+    generate_project_timeseries_manager
+from services.generation.configuration_application.dal_resources.iot_resources.generator_iot_rules_app import \
+    generate_iot_rules_app
 
 
 def generate_code_configuration_application(json: dict) -> dict:
@@ -129,8 +139,9 @@ def __generate_response_manager(configuration_application_code: dict):
     This method generate the code for the exception.
     :param configuration_application_code: the code that will be generated.
     """
-    configuration_application_code['src/dal/response_manager/exception_class.py'] = generate_exception()
-    configuration_application_code['src/dal/response_manager/response_manager.py'] = generate_response_manager()
+    configuration_application_code['src/response_manager/base_aws_service.py'] = generate_base_aws_service()
+    configuration_application_code['src/response_manager/exception_class.py'] = generate_exception()
+    configuration_application_code['src/response_manager/response_manager.py'] = generate_response_manager()
 
 
 def __generate_event_parse_resources(configuration_application_code: dict, json: dict):
@@ -148,8 +159,10 @@ def __generate_dal_resources(configuration_application_code: dict, json: dict):
     :param configuration_application_code: the code that will be generated.
     :param json: the json with the data.
     """
-    configuration_application_code['src/dal/utility.py'] = generate_utility()
+    configuration_application_code['src/dynamo_manager/utility.py'] = generate_utility()
     __generate_dynamo_manager_resources(configuration_application_code, json)
+    __generate_timeseries_manager_resources(configuration_application_code, json)
+    __generate_iot_resources(configuration_application_code, json)
     __generate_lambdas_functions(configuration_application_code, json)
 
 
@@ -159,10 +172,30 @@ def __generate_dynamo_manager_resources(configuration_application_code: dict, js
     :param configuration_application_code: the code that will be generated.
     :param json: the json with the data.
     """
-    configuration_application_code['src/dal/dynamo_manager/base_aws_service.py'] = generate_base_aws_service()
-    configuration_application_code['src/dal/dynamo_manager/dynamo_manager.py'] = generate_dbmanager()
+    configuration_application_code['src/dynamo_manager/dynamo_manager.py'] = generate_dbmanager()
     configuration_application_code[
-        'src/dal/dynamo_manager/project_dynamo_manager.py'] = generate_project_dynamo_manager(json)
+        'src/dynamo_manager/project_dynamo_manager.py'] = generate_project_dynamo_manager(json)
+
+
+def __generate_timeseries_manager_resources(configuration_application_code: dict, json: dict):
+    """
+    This method generate the code for the timeseries manager resources.
+    :param configuration_application_code: the code that will be generated.
+    :param json: the json with the data.
+    """
+    configuration_application_code['src/timestream_manager/timeseries_dal.py'] = generate_timeseries_dal()
+    configuration_application_code['src/timestream_manager/project_timeseries_manager.py'] = generate_project_timeseries_manager(json)
+
+
+def __generate_iot_resources(configuration_application_code: dict, json: dict):
+    """
+    This method generate the code for the iot resources.
+    :param configuration_application_code: the code that will be generated.
+    :param json: the json with the data.
+    """
+    configuration_application_code['src/iot/device_status_change.py'] = generate_device_status_change()
+    configuration_application_code['src/iot/device_status_event.py'] = generate_device_status_event()
+    configuration_application_code['src/iot_rules_app.py'] = generate_iot_rules_app()
 
 
 def __generate_lambdas_functions(configuration_application_code: dict, json: dict):

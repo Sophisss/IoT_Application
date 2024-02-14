@@ -3,7 +3,7 @@ def generate_response_manager() -> str:
     This function generates the response manager.
     :return: The response manager.
     """
-    return f"""from dal.response_manager.exception_class import InternalServerError, ItemNotPresentError
+    return f"""from response_manager.exception_class import InternalServerError, ItemNotPresentError
     
 {__generate_check_response_status_method()}
 {__generate_check_response_item_method()}

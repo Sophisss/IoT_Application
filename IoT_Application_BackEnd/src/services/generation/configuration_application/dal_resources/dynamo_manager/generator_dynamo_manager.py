@@ -19,8 +19,8 @@ def __generate_header() -> str:
     """
     return """import boto3
 from boto3.dynamodb.conditions import Key
-from dal.dynamo_manager.base_aws_service import BaseAWSService
-from dal.response_manager.response_manager import check_response_status
+from response_manager.base_aws_service import BaseAWSService
+from response_manager.response_manager import check_response_status
     """
 
 

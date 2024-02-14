@@ -4,7 +4,7 @@ def generate_event_parse(json: dict) -> str:
     :return: The event parse for the DAL template.
     """
     return f"""import functools
-from dal.dynamo_manager.project_dynamo_manager import {json['projectName']}DynamoManager
+from dynamo_manager.project_dynamo_manager import {json['projectName']}DynamoManager
 
 
 def parse_event(*params):

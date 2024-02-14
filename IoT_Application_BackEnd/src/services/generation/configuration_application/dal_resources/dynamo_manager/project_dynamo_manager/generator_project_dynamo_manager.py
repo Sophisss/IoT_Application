@@ -23,9 +23,9 @@ def __generate_header(json_data: dict) -> str:
     :return: The header of the DynamoDB manager class.
     """
     return f"""from boto3.dynamodb.conditions import Key
-from dal.dynamo_manager.dynamo_manager import BaseDynamoManager
-from dal.response_manager.exception_class import ItemNotPresentError
-from dal.utility import remove_null_values
+from dynamo_manager.dynamo_manager import BaseDynamoManager
+from response_manager.exception_class import ItemNotPresentError
+from dynamo_manager.utility import remove_null_values
 {__generate_header_entities_and_links(json_data['entities'] + json_data['links'])}
     """
 
