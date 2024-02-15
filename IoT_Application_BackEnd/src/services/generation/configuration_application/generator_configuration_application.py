@@ -34,14 +34,15 @@ from services.generation.configuration_application.template_resources.api.genera
 from services.generation.utility_methods import generate_resource_name
 from services.generation.configuration_application.dal_resources.timeseries_manager.generator_timeseries_dal import \
     generate_timeseries_dal
-from services.generation.configuration_application.dal_resources.iot_resources.generator_device_status_change import \
-    generate_device_status_change
-from services.generation.configuration_application.dal_resources.iot_resources.generator_device_status_event import \
-    generate_device_status_event
+from services.generation.configuration_application.dal_resources.iot_resources.generator_iot_base_models import *
 from services.generation.configuration_application.dal_resources.timeseries_manager.generator_project_timeseries_manager import \
     generate_project_timeseries_manager
 from services.generation.configuration_application.dal_resources.iot_resources.generator_iot_rules_app import \
     generate_iot_rules_app
+from services.generation.configuration_application.template_resources.storage.generator_project_table import \
+    generate_project_table
+from services.generation.configuration_application.template_resources.telemetry.generator_telemetry_resources import \
+    generate_telemetry_resources_template
 
 
 def generate_code_configuration_application(json: dict) -> dict:
@@ -73,6 +74,8 @@ def __generate_templates(configuration_application_code: dict, json: dict):
     configuration_application_code['template/cognito.yaml'] = generate_cognito_template(
         json['awsConfig']['authentication']['cognito'])
     configuration_application_code['template/api.yaml'] = generate_api_template(json)
+    configuration_application_code['template/application_storage.yaml'] = generate_project_table(json)
+    configuration_application_code['template/iot_rules.yaml'] = generate_telemetry_resources_template(json)
 
 
 def __generate_deployment_guide(configuration_application_code: dict):
@@ -184,7 +187,8 @@ def __generate_timeseries_manager_resources(configuration_application_code: dict
     :param json: the json with the data.
     """
     configuration_application_code['src/timestream_manager/timeseries_dal.py'] = generate_timeseries_dal()
-    configuration_application_code['src/timestream_manager/project_timeseries_manager.py'] = generate_project_timeseries_manager(json)
+    configuration_application_code[
+        'src/timestream_manager/project_timeseries_manager.py'] = generate_project_timeseries_manager(json)
 
 
 def __generate_iot_resources(configuration_application_code: dict, json: dict):

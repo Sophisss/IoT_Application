@@ -5,10 +5,6 @@ def generate_iot_rules_app() -> str:
 
 
 def __generate_header() -> str:
-    """
-    This function generates the header of the TimeseriesDal class.
-    :return: The header of the TimeseriesDal class.
-    """
     return """from timestream_manager.timeseries_dal import TimeseriesDal
 from timestream_manager.project_timeseries_manager import IoT_PlatformTimeseriesManager
 from iot.device_status_event import DeviceStatusEvent
@@ -25,7 +21,8 @@ def __generate_lambdas() -> str:
 
 
 def __generate_monitor_device_status_shadow() -> str:
-    return """def monitor_device_status_shadow(event, _):
+    return """
+def monitor_device_status_shadow(event, _):
     device_id = event['thingName']
     device_status_reported = event['current']['state']['reported']
 
@@ -34,8 +31,11 @@ def __generate_monitor_device_status_shadow() -> str:
     """
 
 
+# TODO: rivedi device_status
+
 def __generate_monitor_device_status_mqtt() -> str:
-    return """def monitor_device_status_mqtt(event, _):
+    return """
+def monitor_device_status_mqtt(event, _):
     device_id = event['thingName']
     device_status = event['shadow']['state']['reported']
 
@@ -45,7 +45,8 @@ def __generate_monitor_device_status_mqtt() -> str:
 
 
 def __generate_get_event() -> str:
-    return """def get_event(device_id: str, status: dict) -> DeviceStatusEvent:
+    return """
+def get_event(device_id: str, status: dict) -> DeviceStatusEvent:
     device_status_changes = []
     for signal, value in status.items():
         device_status_changes.append(DeviceStatusChange(value, signal))
@@ -55,7 +56,8 @@ def __generate_get_event() -> str:
 
 
 def __generate_device_status_storage() -> str:
-    return """def device_status_storage(event: DeviceStatusEvent):
+    return """
+def device_status_storage(event: DeviceStatusEvent):
     try:
         device_id = event.device_id
         changes = event.changes

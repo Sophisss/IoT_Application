@@ -25,6 +25,7 @@ def __generate_class() -> str:
     :return: The code for the TimeseriesDal class.
     """
     return f"""
+    
 class TimeseriesDal:
     timestream = None
     timestream_write = None
@@ -41,11 +42,16 @@ def __generate_methods() -> str:
     This function generates the methods for the TimeseriesDal class.
     :return: The methods for the TimeseriesDal class.
     """
-    return f"""{__generate_write_device_status_changes()}
+    return f"""    # region write operations
+{__generate_write_device_status_changes()}
 {__generate_write_records()}
+    # endregion
+    
+    # region device status changes writes
 {__generate_build_records()}
 {__generate_build_common_attributes()}
 {__generate_get_value_timestream_type()}
+    # endregion
     """
 
 
@@ -54,7 +60,8 @@ def __generate_write_device_status_changes() -> str:
     This function generates the write_device_status_changes method.
     :return: The write_device_status_changes method.
     """
-    return """    def write_device_status_changes(self, device_id: str, database_name: str, table_name: str, changes: [DeviceStatusChange]):
+    return """
+    def write_device_status_changes(self, device_id: str, database_name: str, table_name: str, changes: [DeviceStatusChange]):
         if not database_name or not table_name:
             raise ValueError("Database and table names are required.")
 
@@ -92,7 +99,8 @@ def __generate_build_records() -> str:
     This function generates the method used to build records.
     :return: The method used to build records.
     """
-    return """    def __build_records(self, status_changes: [DeviceStatusChange]) -> [dict]:
+    return """
+    def __build_records(self, status_changes: [DeviceStatusChange]) -> [dict]:
         records = []
         for change in status_changes:
             value = change.new_value

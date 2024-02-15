@@ -4,10 +4,7 @@ from services.generation.configuration_application.template_resources.api.resour
     generate_lambda_template
 from services.generation.configuration_application.template_resources.api.resources.generator_roles_and_policies import \
     generate_roles_and_policies
-from services.generation.configuration_application.template_resources.api.resources.generator_table_template import \
-    generate_table_template
-from services.generation.configuration_application.template_resources.api.resources.generator_header_template import \
-    generate_header_template
+from services.generation.configuration_application.template_resources.generator_header_template import generate_header_template
 from services.generation.configuration_application.template_resources.outputs.generator_graphql_output import \
     generate_graphql_outputs
 
@@ -34,18 +31,7 @@ def __generate_resources(json: dict) -> str:
     """
     return f"""Resources:
     {__generate_entity_link_resources(json['entities'] + json['links'])}
-    {__generate_tables_resources(json['awsConfig']['dynamo']['tables'])}
-    """
-
-
-def __generate_tables_resources(tables: list) -> str:
-    """
-    This function generates the tables resources of the api-related CloudFormation template.
-    :param tables: the list of tables.
-    :return: the tables resources of the api-related CloudFormation template.
-    """
-    return f"""{generate_table_template(tables)}
-{generate_roles_and_policies(tables)}
+    {generate_roles_and_policies(json)}
     """
 
 

@@ -1,12 +1,15 @@
-def generate_roles_and_policies(tables: list) -> str:
+from services.generation.utility_methods import get_dynamo_data
+
+
+def generate_roles_and_policies(json: dict) -> str:
     """
     This function generates the roles and policies of the api-related CloudFormation template.
-    :param tables: the list of tables.
+    :param json: the json configuration.
     :return: the roles and policies of the api-related CloudFormation template.
     """
     return f"""
 {__generate_role()}
-{__generate_policy(tables)}
+{__generate_policy(json)}
     """
 
 
@@ -28,13 +31,15 @@ def __generate_role() -> str:
     """
 
 
-
-def __generate_policy(tables: list) -> str:
+def __generate_policy(json: dict) -> str:
     """
     This function generates the policy of the api-related CloudFormation template.
-    :param tables: the list of tables.
+    :param json: the json configuration.
     :return: the policy of the api-related CloudFormation template.
     """
+
+    dynamo_tables = get_dynamo_data(json)
+
     return f"""
   LambdaExecutionPolicyGenerator:
     Type: AWS::IAM::Policy
@@ -52,19 +57,19 @@ def __generate_policy(tables: list) -> str:
               - "dynamodb:UpdateItem"
               - "dynamodb:GetItem"
             Resource:
-{__generate_resource_policy(tables)}
+{__generate_resource_policy(dynamo_tables)}
       Roles:
         - !Ref LambdaExecutionRoleGenerator
     """
 
 
-def __generate_resource_policy(tables: list) -> str:
+def __generate_resource_policy(dynamo_tables: list) -> str:
     """
     This function generates the resource policy of the api-related CloudFormation template.
-    :param tables: the list of tables.
+    :param dynamo_tables: the list of tables.
     :return: the resource policy of the api-related CloudFormation template.
     """
-    return "".join(map(lambda resource: __generate_table_resource(resource), tables))
+    return "".join(map(lambda resource: __generate_table_resource(resource), dynamo_tables))
 
 
 def __generate_table_resource(table: dict) -> str:

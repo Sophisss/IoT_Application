@@ -1,10 +1,14 @@
-def generate_table_template(tables: list) -> str:
+from services.generation.utility_methods import get_dynamo_data
+
+
+def generate_dynamo_table_template(json: dict) -> str:
     """
-    This function generates the table-related CloudFormation template.
-    :param tables: the list of tables.
-    :return: the table-related CloudFormation template.
+    This function generates the DynamoDB table resources.
+    :param json: the JSON object.
+    :return: the DynamoDB table resources.
     """
-    return "".join(map(lambda resource: __generate_table_resource(resource), tables))
+    dynamo_tables = get_dynamo_data(json)
+    return "".join(map(lambda resource: __generate_table_resource(resource), dynamo_tables))
 
 
 def __generate_table_resource(table: dict) -> str:

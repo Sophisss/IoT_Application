@@ -1,3 +1,6 @@
+from services.generation.utility_methods import get_timestream_data
+
+
 def generate_project_timeseries_manager(json_data: dict) -> str:
     """
     This function generates the timeseries manager class for the project.
@@ -52,12 +55,11 @@ def __generate_write_device_changes(json_data: dict) -> str:
     :param json_data: The json data from the project configuration file.
     :return: The write device changes method.
     """
-    database_name = json_data['awsConfig']['timestream']['database']['name']
-    table_name = json_data['awsConfig']['timestream']['table']['name']
+    database_name, table_name = get_timestream_data(json_data)
 
     return f"""    def write_device_changes(self, device_id: str, changes: [DeviceStatusChange]):
         if not device_id or not changes or len(changes) <= 0:
             raise ValueError("Invalid parameters")
 
-        self.write_device_status_changes(device_id, 'IoTPlatform-TimeStreamDB', 'IoTPlatform-DevicesTelemetry', changes)
+        self.write_device_status_changes(device_id, '{database_name}', '{table_name}', changes)
     """
