@@ -1,20 +1,32 @@
 <div id="header">
-    <app-header></app-header>
+    <app-header (toggleSidebarForMe)="sideBarToggler()"></app-header>
 </div>
-
 <div id="body">
     <dx-drawer
-            [closeOnOutsideClick]=false
-            [opened]="getDrawerOpen()"
-            openedStateMode="shrink"
-            position="right"
-            revealMode="slide"
-            template="template"
-    >
-        <app-diagram></app-diagram>
-        <div *dxTemplate="let data of 'template'" class="title">
-            <p id="drawer-title"><b>JSON configuration</b></p>
-            <app-drawer-content></app-drawer-content>
-        </div>
-    </dx-drawer>
+    template="template"
+    [opened]="getDrawerOpen()"
+    [minSize]="37"
+    revealMode="expand"
+    openedStateMode="push">
+    <div *dxTemplate="let data of 'template'">
+        <dx-list
+            [items]="navigation"
+            [width]="200"
+            selectionMode="single"
+            itemTemplate="links">
+            <div *dxTemplate="let link of 'links'">
+                <a [routerLink]="['/' + link.path]">
+                    <div>
+                        <div class="dx-list-item-icon-container">
+                            <i class="dx-icon dx-list-item-icon dx-icon-{{link.icon}}"></i>
+                        </div>
+                        <span id="span">{{ link.text }}</span>
+                    </div>
+                </a>
+            </div>
+        </dx-list>
+    </div>
+    <app-diagram></app-diagram>
+    <router-outlet></router-outlet>
+</dx-drawer>
 </div>

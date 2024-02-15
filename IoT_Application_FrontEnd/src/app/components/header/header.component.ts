@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {ConfigurationService} from "../../services/configuration.service";
 
 @Component({
@@ -7,7 +7,16 @@ import {ConfigurationService} from "../../services/configuration.service";
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
+  @Output() toggleSidebarForMe: EventEmitter<any> = new EventEmitter();
+
   isModifiable: boolean = false;
+
+  buttonOptions: any = {
+    icon: "menu",
+    onClick: () => {
+      this.toggleSidebar();
+    }
+  }
 
   constructor(protected configurationService: ConfigurationService) {
   }
@@ -18,5 +27,9 @@ export class HeaderComponent {
   switchToText() {
     this.isModifiable = false;
     this.configurationService.updateContent();
+  }
+
+  toggleSidebar() {
+    this.toggleSidebarForMe.emit();
   }
 }

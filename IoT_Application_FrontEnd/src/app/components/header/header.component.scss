@@ -14,5 +14,10 @@
 
 b {
   font-size: 25px;
-  color: #0565af;
+  color: #000000;
+}
+
+::ng-deep .dx-toolbar-button .dx-button {
+  color: #000000;
+  border: none;
 }

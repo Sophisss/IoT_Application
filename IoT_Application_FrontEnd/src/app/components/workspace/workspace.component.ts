@@ -7,6 +7,11 @@ import {ToggleService} from "../../services/toggle.service";
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent {
+  navigation: any[] = [
+    { id: 1, text: "Diagram", icon: "mediumiconslayout", path: "new" },
+    { id: 2, text: "IoT Rules", icon: "edit", path: "rules" }
+];
+
   constructor(private toggleService: ToggleService) {
   }
 
@@ -15,5 +20,9 @@ export class WorkspaceComponent {
    */
   getDrawerOpen(): boolean {
     return this.toggleService.isDrawerOpened();
+  }
+
+  sideBarToggler() {
+    this.toggleService.toggleDrawer();
   }
 }

@@ -1,13 +1,90 @@
 {
-  "field": "createDevice",
-  "arguments": {
-    "Device": {
-      "device_id": "06",
-      "thingName": "ciao",
-      "deviceType": "prova",
-      "status": "active"
-    }
+  "resource": "/download",
+  "path": "/download",
+  "httpMethod": "POST",
+  "headers": {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Cache-Control": "no-cache",
+    "Content-Type": "application/json",
+    "Host": "0kb23mrw9k.execute-api.eu-central-1.amazonaws.com",
+    "Postman-Token": "99dbb585-328f-42cc-b44d-e75ae4a58ff8",
+    "User-Agent": "PostmanRuntime/7.36.3",
+    "X-Amzn-Trace-Id": "Root=1-65cdde2b-241ac27d51f0f27432e79bf5",
+    "X-Forwarded-For": "84.253.158.220",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
   },
-  "source": null,
-  "projection": []
+  "multiValueHeaders": {
+    "Accept": [
+      "*/*"
+    ],
+    "Accept-Encoding": [
+      "gzip, deflate, br"
+    ],
+    "Cache-Control": [
+      "no-cache"
+    ],
+    "Content-Type": [
+      "application/json"
+    ],
+    "Host": [
+      "0kb23mrw9k.execute-api.eu-central-1.amazonaws.com"
+    ],
+    "Postman-Token": [
+      "99dbb585-328f-42cc-b44d-e75ae4a58ff8"
+    ],
+    "User-Agent": [
+      "PostmanRuntime/7.36.3"
+    ],
+    "X-Amzn-Trace-Id": [
+      "Root=1-65cdde2b-241ac27d51f0f27432e79bf5"
+    ],
+    "X-Forwarded-For": [
+      "84.253.158.220"
+    ],
+    "X-Forwarded-Port": [
+      "443"
+    ],
+    "X-Forwarded-Proto": [
+      "https"
+    ]
+  },
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "resourceId": "x27anf",
+    "resourcePath": "/download",
+    "httpMethod": "POST",
+    "extendedRequestId": "TK-m1EWqliAEFPQ=",
+    "requestTime": "15/Feb/2024:09:49:31 +0000",
+    "path": "/v2/download",
+    "accountId": "526506163209",
+    "protocol": "HTTP/1.1",
+    "stage": "v2",
+    "domainPrefix": "0kb23mrw9k",
+    "requestTimeEpoch": 1707990571401,
+    "requestId": "0f976d32-7ad2-4f28-8580-421f32696c46",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "sourceIp": "84.253.158.220",
+      "principalOrgId": null,
+      "accessKey": null,
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "PostmanRuntime/7.36.3",
+      "user": null
+    },
+    "domainName": "0kb23mrw9k.execute-api.eu-central-1.amazonaws.com",
+    "deploymentId": "f9t4io",
+    "apiId": "0kb23mrw9k"
+  },
+  "body": "{\\r\\n  \"projectName\": \"IoT_Platform\",\\r\\n  \"entities\": [\\r\\n    {\\r\\n      \"name\": \"Device\",\\r\\n      \"table\": \"IoT\",\\r\\n      \"fields\": [\\r\\n        {\\r\\n          \"name\": \"device_id\",\\r\\n          \"type\": \"string\",\\r\\n          \"required\": true,\\r\\n          \"minLength\": 2,\\r\\n          \"maxLength\": 256\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"thingName\",\\r\\n          \"type\": \"string\",\\r\\n          \"required\": true,\\r\\n          \"minLength\": 2,\\r\\n          \"maxLength\": 100\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"description\",\\r\\n          \"type\": \"string\",\\r\\n          \"required\": false,\\r\\n          \"maxLength\": 256\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"deviceType\",\\r\\n          \"type\": \"string\",\\r\\n          \"required\": true,\\r\\n          \"minLength\": 2,\\r\\n          \"maxLength\": 256\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"status\",\\r\\n          \"type\": \"string\",\\r\\n          \"required\": true,\\r\\n          \"minLength\": 2,\\r\\n          \"maxLength\": 256\\r\\n        }\\r\\n      ],\\r\\n      \"primary_key\": [\\r\\n        \"device_id\"\\r\\n      ],\\r\\n      \"API\": [\\r\\n        {\\r\\n          \"name\": \"createDevice\",\\r\\n          \"type\": \"PUT\"\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"deleteDevice\",\\r\\n          \"type\": \"DELETE\"\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"updateDevice\",\\r\\n          \"type\": \"POST\",\\r\\n          \"parameters\": [\\r\\n            \"thingName\",\\r\\n            \"deviceType\",\\r\\n            \"description\",\\r\\n            \"status\"\\r\\n          ]\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"getDeviceById\",\\r\\n          \"type\": \"GET\"\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"getDevices\",\\r\\n          \"type\": \"GET_ALL\"\\r\\n        }\\r\\n      ]\\r\\n    },\\r\\n    {\\r\\n      \"name\": \"Building\",\\r\\n      \"table\": \"IoT\",\\r\\n      \"fields\": [\\r\\n        {\\r\\n          \"name\": \"building_id\",\\r\\n          \"type\": \"integer\",\\r\\n          \"required\": true,\\r\\n          \"maximum\": 256\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"location_building\",\\r\\n          \"type\": \"string\",\\r\\n          \"required\": false,\\r\\n          \"maxLength\": 100\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"floors\",\\r\\n          \"type\": \"integer\",\\r\\n          \"required\": true,\\r\\n          \"minimum\": 1,\\r\\n          \"maximum\": 100\\r\\n        }\\r\\n      ],\\r\\n      \"primary_key\": [\\r\\n        \"building_id\"\\r\\n      ],\\r\\n      \"API\": [\\r\\n        {\\r\\n          \"name\": \"createBuilding\",\\r\\n          \"type\": \"PUT\"\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"deleteBuilding\",\\r\\n          \"type\": \"DELETE\"\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"updateBuilding\",\\r\\n          \"type\": \"POST\",\\r\\n          \"parameters\": [\\r\\n            \"location_building\",\\r\\n            \"floors\"\\r\\n          ]\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"getBuildingById\",\\r\\n          \"type\": \"GET\"\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"getBuildings\",\\r\\n          \"type\": \"GET_ALL\"\\r\\n        }\\r\\n      ]\\r\\n    }\\r\\n  ],\\r\\n  \"links\": [\\r\\n    {\\r\\n      \"first_entity\": \"Building\",\\r\\n      \"second_entity\": \"Device\",\\r\\n      \"numerosity\": \"one-to-many\",\\r\\n      \"table\": \"IoT\",\\r\\n      \"fields\": [],\\r\\n      \"primary_key\": [\\r\\n        \"building_id\",\\r\\n        \"device_id\"\\r\\n      ],\\r\\n      \"API\": [\\r\\n        {\\r\\n          \"name\": \"createLinkBuildingDevice\",\\r\\n          \"type\": \"PUT\"\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"deleteLinkBuildingDevice\",\\r\\n          \"type\": \"DELETE\"\\r\\n        },\\r\\n        {\\r\\n          \"name\": \"getLinkBuildingDevice\",\\r\\n          \"type\": \"GET\"\\r\\n        }\\r\\n      ]\\r\\n    }\\r\\n  ],\\r\\n  \"awsConfig\": {\\r\\n    \"dynamo\": {\\r\\n      \"tables\": [\\r\\n        {\\r\\n          \"tableName\": \"IoT\",\\r\\n          \"partition_key\": {\\r\\n            \"name\": \"PK\",\\r\\n            \"type\": \"string\"\\r\\n          },\\r\\n          \"sort_key\": {\\r\\n            \"name\": \"SK\",\\r\\n            \"type\": \"string\"\\r\\n          },\\r\\n          \"GSI\": {\\r\\n            \"index_name\": \"SK-PK\",\\r\\n            \"partition_key\": \"SK\",\\r\\n            \"sort_key\": \"PK\"\\r\\n          },\\r\\n          \"parameters\": {\\r\\n            \"single_entity_storage_keyword\": \"registry\",\\r\\n            \"id_separator\": \":\"\\r\\n          }\\r\\n        }\\r\\n      ]\\r\\n    },\\r\\n    \"timestream\" : {\\r\\n        \"database\": {\\r\\n            \"name\": \"TimeStreamDB\"\\r\\n        },\\r\\n        \"table\": {\\r\\n            \"name\": \"DevicesTelemetry\"\\r\\n        }\\r\\n    },\\r\\n    \"authentication\": {\\r\\n      \"cognito\": {\\r\\n        \"UserPool\": {\\r\\n          \"resource_name\": \"IoTApplicationUserPool\",\\r\\n          \"UserPoolName\": \"IoTApplicationUserPoolName\",\\r\\n          \"policy\": {\\r\\n            \"PasswordPolicy\": {\\r\\n              \"MinimumLength\": 8,\\r\\n              \"RequireUppercase\": true,\\r\\n              \"RequireLowercase\": true,\\r\\n              \"RequireNumbers\": true,\\r\\n              \"RequireSymbols\": false,\\r\\n              \"TemporaryPasswordValidityDays\": 14\\r\\n            }\\r\\n          }\\r\\n        }\\r\\n      }\\r\\n    }\\r\\n  }\\r\\n}\\r\\n",
+  "isBase64Encoded": false
 }
