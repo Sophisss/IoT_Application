@@ -6,8 +6,10 @@ import {HomepageComponent} from "./components/homepage/homepage.component";
 import {HeaderComponent} from "./components/header/header.component";
 import {WorkspaceComponent} from "./components/workspace/workspace.component";
 import {DiagramComponent} from './components/diagram/diagram.component';
-import {TabComponent} from './components/tab/tab.component';
 import { RulesComponent } from './components/rules/rules.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { TabPanelComponent } from './components/tab-panel/tab-panel.component';
+import { ProvaComponent } from './components/prova/prova.component';
 
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -26,7 +28,8 @@ import {
   DxTextBoxModule,
   DxToolbarModule,
   DxTooltipModule ,
-  DxListModule 
+  DxListModule,
+  DxTabPanelModule
 } from "devextreme-angular";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DrawerContentComponent} from './components/drawer-content/drawer-content.component';
@@ -42,8 +45,10 @@ import {Clipboard} from "@angular/cdk/clipboard";
     WorkspaceComponent,
     DiagramComponent,
     DrawerContentComponent,
-    TabComponent,
-    RulesComponent
+    RulesComponent,
+    SidenavComponent,
+    TabPanelComponent,
+    ProvaComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +71,8 @@ import {Clipboard} from "@angular/cdk/clipboard";
     DxCheckBoxModule,
     HttpClientModule,
     DxDataGridModule,
-    DxListModule 
+    DxListModule,
+    DxTabPanelModule
   ],
   providers: [
     JsonPipe,

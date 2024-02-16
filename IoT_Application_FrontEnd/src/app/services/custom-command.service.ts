@@ -32,7 +32,11 @@ export class CustomCommandService {
     const commandName: string = e.name;
 
     if (commandName === 'export') {
-      console.log("export");
+      if (this.configService.getItems().length === 0) {
+        this.notificationService.displayToast("You need to add at least one node to export the configuration!", 300,
+          "#toast-container", "warning", 2000);
+        return;
+      }
       this.configService.updateConfiguration(nodes, links);
       this.downloadJsonFile();
     }

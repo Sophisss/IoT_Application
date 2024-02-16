@@ -60,6 +60,7 @@ export class ConfigurationService {
     const jsonEntities = this.createEntityJson();
     const jsonTable = this.createTableJson()
     const jsonLinks = this.createLinkJson()
+    const jsonTimestream = this.createTimestreamJson()
 
     return {
       projectName: this.projectTitle.trim().replace(/\s/g, '_'),
@@ -69,6 +70,7 @@ export class ConfigurationService {
         dynamo: {
           tables: jsonTable,
         },
+        timestream: jsonTimestream,
         authentication: {
           cognito: {
             UserPool: {
@@ -185,6 +187,17 @@ export class ConfigurationService {
    */
   private clearList() {
     items.splice(0, items.length);
+  }
+
+  private createTimestreamJson() {
+    return {
+      database : {
+        name: ""
+      },
+      table: {
+        name: ""
+      }
+    }
   }
 
   /**
