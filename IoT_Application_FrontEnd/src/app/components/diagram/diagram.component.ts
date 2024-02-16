@@ -6,6 +6,7 @@ import {Item} from "../../models/item.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {DxDataGridComponent, DxDiagramComponent} from "devextreme-angular";
 import {Field} from "../../models/field.model";
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-diagram',
@@ -39,6 +40,8 @@ export class DiagramComponent {
   saveButtonOptions: any;
   deleteButtonOptions: any;
 
+  hasChild = false;
+
   selectedItemKeys: any[] = [];
   @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
   @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
@@ -50,7 +53,8 @@ export class DiagramComponent {
    * @param customCommandService the service that handles the custom commands of the diagram
    * @param configService the service that handles the configuration aspects of the diagram
    */
-  constructor(private customCommandService: CustomCommandService, private configService: ConfigurationService) {
+  constructor(private customCommandService: CustomCommandService, private configService: ConfigurationService,
+    private router: Router) {
     const that = this;
     this.items = this.configService.getItems();
     this.dataSource = new ArrayStore({
@@ -126,6 +130,14 @@ export class DiagramComponent {
         this.deleteItem();
       },
     };
+  }
+
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.hasChild = this.router.url.includes('/new/');
+      }
+    });
   }
 
   addNewRow() {

@@ -7,22 +7,18 @@ import {ToggleService} from "../../services/toggle.service";
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent {
-  navigation: any[] = [
-    { id: 1, text: "Diagram", icon: "mediumiconslayout", path: "new" },
-    { id: 2, text: "IoT Rules", icon: "edit", path: "rules" }
-];
+
+  isDrawerOpened: boolean = false;
 
   constructor(private toggleService: ToggleService) {
   }
 
-  /**
-   * Returns the drawer state to the template to handle the drawer open/close.
-   */
-  getDrawerOpen(): boolean {
-    return this.toggleService.isDrawerOpened();
-  }
 
   sideBarToggler() {
-    this.toggleService.toggleDrawer();
+    this.isDrawerOpened = !this.isDrawerOpened;
+  }
+
+  getDrawerOpen(): boolean {
+    return this.toggleService.isDrawerOpened();
   }
 }

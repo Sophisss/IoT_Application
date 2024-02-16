@@ -14,10 +14,10 @@
 
 b {
   font-size: 25px;
-  color: #000000;
+  color: rgb(2, 4, 29);
 }
 
-::ng-deep .dx-toolbar-button .dx-button {
-  color: #000000;
-  border: none;
+::ng-deep .dx-button-mode-contained .dx-icon{
+  color: rgb(2, 4, 29);
 }
+
