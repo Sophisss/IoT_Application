@@ -1,3 +1,94 @@
+<div class="overlay"></div>
 <div class="rules">
-<app-prova></app-prova>
+    <dx-button class="changeButton" icon="edit" (click)="modify_iot_rules_configuration()"></dx-button>
+    <div class="container">
+        <div class="box" [style.zIndex]="firstBoxZIndex">
+            <div class="step-indicator">1</div>
+            <h2 class="box-title">Storage settings</h2>
+            <p class="box-subtitle">Configure the database and table for Timestream, used to store data from IoT
+                devices.</p>
+            <dx-validation-group>
+                <form [formGroup]="form" class="form">
+                    <div class="field-container">
+                        <div class="field-label">Database *</div>
+                        <div class="field-value">
+                            <dx-text-box [(value)]="iot.database_name" [showClearButton]="true" [inputAttr]="{ 'aria-label': 'database_name' }"
+                                formControlName="database_name" label="Database Name" labelMode="floating">
+                                <dx-validator>
+                                    <dxi-validation-rule type="required"
+                                        message="Database name is required"></dxi-validation-rule>
+                                </dx-validator>
+                            </dx-text-box>
+                        </div>
+                    </div>
+                    <div class="field-container">
+                        <div class="field-label">Table *</div>
+                        <div class="field-value">
+                            <dx-text-box [(value)]="iot.table_name" [showClearButton]="true" [inputAttr]="{ 'aria-label': 'table_name' }"
+                                formControlName="table_name" label="Table Name" labelMode="floating">
+                                <dx-validator>
+                                    <dxi-validation-rule type="required"
+                                        message="Table name is required"></dxi-validation-rule>
+                                </dx-validator>
+                            </dx-text-box>
+                        </div>
+                    </div>
+                </form>
+                <dx-button id="nextButton" icon="chevronnext" [useSubmitBehavior]="true"
+                    (onClick)="secondBoxVisibility_nextButton()"></dx-button>
+            </dx-validation-group>
+        </div>
+        <div class="arrow"></div>
+        <div class="triangle"></div>
+        <div class="box" [style.zIndex]="secondBoxZIndex">
+            <div class="step-indicator">2</div>
+            <h2 class="box-title">Choice storage method</h2>
+            <p class="box-subtitle">Choose the methodology for storing data read by IoT devices.</p>
+            <dx-validation-group>
+                <dx-radio-group id="radio" [items]="choice_list" (onValueChanged)="onStorageMethodChanged($event)">
+                    <dx-validator>
+                        <dxi-validation-rule type="required" message="Storage method is required">
+                        </dxi-validation-rule>
+                    </dx-validator>
+                </dx-radio-group>
+                <dx-button id="backwardsButton" icon="chevronleft"
+                    (onClick)="firstBoxVisibility_backButton()"></dx-button>
+                <dx-button id="nextButton" icon="chevronnext" [useSubmitBehavior]="true"
+                    (onClick)="thirdBoxVisibility_nextButton()"></dx-button>
+            </dx-validation-group>
+        </div>
+        <div class="arrow"></div>
+        <div class="triangle"></div>
+        <div class="box" [style.zIndex]="thirdBoxZIndex">
+            <div class="step-indicator">3</div>
+            <h2 class="box-title">Topic configuration</h2>
+            <p class="box-subtitle">Set the topic on which the thing will send data.</p>
+            <dx-validation-group>
+            <form [formGroup]="form" class="form">
+                <div class="field-container">
+                    <div class="field-label">Topic *</div>
+                    <div class="field-value">
+                        <dx-text-box *ngIf="configure_topic" [(value)]="iot.topic" [showClearButton]="true" [disabled]="false"
+                            [inputAttr]="{ 'aria-label': 'topic' }" formControlName="topic" label="Topic"
+                            labelMode="floating">
+                            <dx-validator>
+                                <dxi-validation-rule type="required" message="Topic is required"></dxi-validation-rule>
+                            </dx-validator>
+                        </dx-text-box>
+
+                        <dx-text-box class="fixTopic" *ngIf="!configure_topic" [disabled]="true"
+                            [inputAttr]="{ 'aria-label': 'topic' }"
+                            value="$aws/things/thingName/shadow/update/documents">
+                        </dx-text-box>
+
+                    </div>
+                </div>
+            </form>
+            <dx-button id="backwardsButton" icon="chevronleft" (onClick)="secondBoxVisibility_backButton()"></dx-button>
+            <dx-button id="nextButton" icon="save" [useSubmitBehavior]="true" (onClick)="save()"></dx-button>
+        </dx-validation-group>
+        </div>
+        <dx-toast [(visible)]="isToastVisible" [type]="type" [message]="message">
+        </dx-toast>
+    </div>
 </div>
