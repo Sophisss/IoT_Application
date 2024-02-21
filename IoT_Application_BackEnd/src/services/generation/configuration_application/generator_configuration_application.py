@@ -199,7 +199,7 @@ def __generate_iot_resources(configuration_application_code: dict, json: dict):
     """
     configuration_application_code['src/iot/device_status_change.py'] = generate_device_status_change()
     configuration_application_code['src/iot/device_status_event.py'] = generate_device_status_event()
-    configuration_application_code['src/iot_rules_app.py'] = generate_iot_rules_app()
+    configuration_application_code['src/iot_rules_app.py'] = generate_iot_rules_app(json)
 
 
 def __generate_lambdas_functions(configuration_application_code: dict, json: dict):

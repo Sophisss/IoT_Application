@@ -36,8 +36,8 @@ def get_timestream_data(json_data: dict) -> tuple:
     :param json_data: The json data from the project configuration file.
     :return: The timestream database and table names.
     """
-    database_name = json_data['awsConfig']['timestream']['database']['name']
-    table_name = json_data['awsConfig']['timestream']['table']['name']
+    database_name = json_data['awsConfig']['iot']['timestream']['database']['name']
+    table_name = json_data['awsConfig']['iot']['timestream']['table']['name']
 
     return database_name, table_name
 

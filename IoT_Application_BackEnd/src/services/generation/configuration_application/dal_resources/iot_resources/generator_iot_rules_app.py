@@ -1,6 +1,8 @@
-def generate_iot_rules_app() -> str:
+def generate_iot_rules_app(json: dict) -> str:
     return f"""{__generate_header()}
-{__generate_lambdas()}
+{__generate_lambdas(json)}
+{__generate_get_event()}
+{__generate_device_status_storage()}
     """
 
 
@@ -12,11 +14,12 @@ from iot.device_status_change import DeviceStatusChange
     """
 
 
-def __generate_lambdas() -> str:
-    return f"""{__generate_monitor_device_status_shadow()}
-{__generate_monitor_device_status_mqtt()}
-{__generate_get_event()}
-{__generate_device_status_storage()}
+def __generate_lambdas(json: dict) -> str:
+
+    topic = json['awsConfig']['iot'].get('topic')
+
+    return f"""{__generate_monitor_device_status_mqtt()}
+    """ if topic else f"""{__generate_monitor_device_status_shadow()}
     """
 
 

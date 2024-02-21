@@ -1,5 +1,6 @@
 from services.generation.utility_methods import get_timestream_data
-from services.generation.configuration_application.template_resources.generator_header_template import generate_header_template
+from services.generation.configuration_application.template_resources.generator_header_template import \
+    generate_header_template
 
 
 def generate_telemetry_resources_template(json: dict) -> str:
@@ -13,6 +14,9 @@ def generate_telemetry_resources_template(json: dict) -> str:
 Resources:
 
 {__generate_device_changes_resources(json)}
+{__generate_lambda_role()}
+{__generate_lambda_policy(json)}
+{__generate_lambda_permission()}
     """
 
 
@@ -22,12 +26,15 @@ def __generate_device_changes_resources(json: dict) -> str:
     :param json: the json object.
     :return: the resources to monitor the changes in the device shadow and stores the data in Timestream.
     """
-    return f"""{__generate_lambda_shadow_changes()}
-{__generate_lambda_mqtt()}
-{__generate_lambda_role()}
-{__generate_lambda_policy(json)}
-{__generate_iot_rules()}
-    """
+
+    topic = json['awsConfig']['iot'].get('topic')
+
+    return f"""{__generate_lambda_mqtt()}
+{__generate_rule_mqtt(topic)}
+      """ if topic else \
+        f"""{__generate_lambda_shadow_changes()}
+{__generate_rule_shadow_changes()}
+      """
 
 
 def __generate_lambda_shadow_changes() -> str:
@@ -113,17 +120,6 @@ def __generate_lambda_policy(json: dict) -> str:
     """
 
 
-def __generate_iot_rules() -> str:
-    """
-    This function generates the IoT rules.
-    :return: the IoT rules.
-    """
-    return f"""{__generate_rule_shadow_changes()}
-{__generate_rule_mqtt()}
-{__generate_lambda_permission()}
-    """
-
-
 def __generate_rule_shadow_changes() -> str:
     """
     This function generates the IoT rule who intercepts device shadow changes and send them to a lambda.
@@ -150,19 +146,19 @@ def __generate_rule_shadow_changes() -> str:
 
 # TODO: rivedi sql topic
 
-def __generate_rule_mqtt() -> str:
+def __generate_rule_mqtt(topic: str) -> str:
     """
     This function generates the IoT rule who intercepts mqtt messages and send them to a lambda.
     :return: the IoT rule who intercepts mqtt messages and send them to a lambda.
     """
-    return """  DeviceStatusMonitoringRule:
+    return f"""  DeviceStatusMonitoringRule:
     Type: AWS::IoT::TopicRule
     Properties:
-      RuleName: !Sub "${Project}_DeviceStatusMonitoringRule"
+      RuleName: !Sub "${{Project}}_DeviceStatusMonitoringRule"
       TopicRulePayload:
         RuleDisabled: false
         AwsIotSqlVersion: 2016-03-23
-        Sql: "SELECT * FROM 'devices/+/status'"
+        Sql: "SELECT * FROM '{topic}'"
         Actions:
           - Lambda:
               FunctionArn: !GetAtt DeviceStatusMonitoring.Arn
@@ -170,7 +166,7 @@ def __generate_rule_mqtt() -> str:
         - Key: Project
           Value: !Ref Project
         - Key: Name
-          Value: !Sub "${Project}_DeviceStatusMonitoringRule"
+          Value: !Sub "${{Project}}_DeviceStatusMonitoringRule"
     """
 
 
