@@ -1,18 +1,22 @@
-import {Injectable} from '@angular/core';
-import {Item} from "../models/item.model";
+import { Injectable } from '@angular/core';
+import { Item } from "../models/item.model";
 import ArrayStore from "devextreme/data/array_store";
-import {BehaviorSubject} from "rxjs";
-import {TitleCasePipe} from "@angular/common";
-import {Field} from "../models/field.model";
-
-const items: Item[] = [];
+import { BehaviorSubject } from "rxjs";
+import { TitleCasePipe } from "@angular/common";
+import { Field } from "../models/field.model";
+import { IoT } from '../models/iot.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigurationService {
 
+  items: Item[] = [];
+
+  private iot: IoT = new IoT();
+
   projectTitle: string = "IoT Application";
+
   readonly defaultTitle: string = "IoT Application";
 
   //Since the ID is generated automatically, we need to keep track of the first and last ID.
@@ -23,7 +27,14 @@ export class ConfigurationService {
   private updateSignalSubject = new BehaviorSubject<void>(null);
   updateSignal$ = this.updateSignalSubject.asObservable();
 
-  constructor(private titleCase: TitleCasePipe) {
+  constructor(private titleCase: TitleCasePipe) { }
+
+  updateIoTConfiguration(iot: IoT) {
+    this.iot = iot;
+  }
+
+  getIoTConfiguration(): IoT {
+    return this.iot;
   }
 
   /**
@@ -41,12 +52,11 @@ export class ConfigurationService {
    * This method increments the ID by 1 and returns it to assign it to a new item.
    */
   assignID() {
-    //console.log("generatedID", this.generatedID)
     return this.generatedID++;
   }
 
   getItems(): Item[] {
-    return items;
+    return this.items;
   }
 
   getTitle(): string {
@@ -58,9 +68,9 @@ export class ConfigurationService {
    */
   exportConfiguration() {
     const jsonEntities = this.createEntityJson();
-    const jsonTable = this.createTableJson()
-    const jsonLinks = this.createLinkJson()
-    const jsonTimestream = this.createTimestreamJson()
+    const jsonTable = this.createTableJson();
+    const jsonLinks = this.createLinkJson();
+    const IoTConfiguration = this.createIoTConfigurationJson();
 
     return {
       projectName: this.projectTitle.trim().replace(/\s/g, '_'),
@@ -70,7 +80,7 @@ export class ConfigurationService {
         dynamo: {
           tables: jsonTable,
         },
-        timestream: jsonTimestream,
+        iot: IoTConfiguration,
         authentication: {
           cognito: {
             UserPool: {
@@ -102,20 +112,14 @@ export class ConfigurationService {
   updateConfiguration(nodes: ArrayStore, links: ArrayStore) {
     this.clearList();
     for (let i = this.getFirstID(); i <= this.getCurrentID(); i++) {
-      //console.log("nodes", i)
       nodes.byKey(i).then((data) => {
-
-        items.push(data);
-        //console.log(data)
+        this.items.push(data);
       });
     }
 
     for (let i = this.getFirstID(); i <= this.getCurrentID(); i++) {
-      //console.log("links", i)
       links.byKey(i).then((data) => {
-
-        items.push(data);
-        //console.log(data)
+        this.items.push(data);
       });
     }
   }
@@ -186,19 +190,27 @@ export class ConfigurationService {
    * Clears the list of items.
    */
   private clearList() {
-    items.splice(0, items.length);
+    this.items.splice(0, this.items.length);
   }
 
-  private createTimestreamJson() {
+  /**
+   * Creates the IoT configuration part of the .json file.
+   */
+  private createIoTConfigurationJson() {
     return {
-      database : {
-        name: ""
+      timestream: {
+      database: {
+        name: this.iot.database_name
       },
       table: {
-        name: ""
+        name: this.iot.table_name
       }
+    },
+    iotrule: {
+      topic: this.iot.topic
     }
   }
+}
 
   /**
    * Iterates over the list of items and creates a list of entities ready to be exported.
