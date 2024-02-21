@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {ToggleService} from "./toggle.service";
-import {ConfigurationService} from "./configuration.service";
-import {JsonDownloadService} from "./json-download.service";
+import { Injectable } from '@angular/core';
+import { ToggleService } from "./toggle.service";
+import { ConfigurationService } from "./configuration.service";
+import { JsonDownloadService } from "./json-download.service";
 import ArrayStore from "devextreme/data/array_store";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {environment} from "../../environments/environments";
-import {ToastNotificationService} from "./toast-notification.service";
-import {lastValueFrom} from "rxjs";
-import {Clipboard} from "@angular/cdk/clipboard";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../environments/environments";
+import { ToastNotificationService } from "./toast-notification.service";
+import { lastValueFrom } from "rxjs";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,8 @@ import {Clipboard} from "@angular/cdk/clipboard";
 export class CustomCommandService {
 
   constructor(private toggleService: ToggleService, private configService: ConfigurationService,
-              private jsonDownload: JsonDownloadService, private httpClient: HttpClient,
-              private notificationService: ToastNotificationService, private clipboard: Clipboard) {
+    private jsonDownload: JsonDownloadService, private httpClient: HttpClient,
+    private notificationService: ToastNotificationService, private clipboard: Clipboard) {
   }
 
   /**
@@ -50,7 +50,6 @@ export class CustomCommandService {
       const jsonFile = this.configService.exportConfiguration();
       this.generateCode(jsonFile).then(
         (data: any) => {
-          console.log('Response:', data);
           const responseData = data.url;
 
           if (typeof responseData === 'string') {
@@ -63,14 +62,11 @@ export class CustomCommandService {
             this.notificationService.displayToast("Unknown Error", 230,
               "#toast-container", "error", 3000);
           }
-
         },
-        (error: any) => {
+        () => {
           this.notificationService.displayToast("Something went wrong, you might want " +
             "to check your configuration...", 300,
             "#toast-container", "warning", 4000);
-
-          console.error('Error:', error);
         }
       );
     }
@@ -90,6 +86,6 @@ export class CustomCommandService {
       'Content-Type': 'application/json' // Set the content type based on your API requirements
     });
 
-    return await lastValueFrom(this.httpClient.post(apiURL, jsonFile, {headers}));
+    return await lastValueFrom(this.httpClient.post(apiURL, jsonFile, { headers }));
   }
 }

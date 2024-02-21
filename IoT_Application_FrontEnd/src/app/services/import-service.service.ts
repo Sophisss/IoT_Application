@@ -1,7 +1,8 @@
-import {Injectable} from '@angular/core';
-import {ConfigurationService} from "./configuration.service";
-import {Item} from "../models/item.model";
-import {Field} from "../models/field.model";
+import { Injectable } from '@angular/core';
+import { ConfigurationService } from "./configuration.service";
+import { Item } from "../models/item.model";
+import { Field } from "../models/field.model";
+import { IoT } from '../models/iot.model';
 
 @Injectable({
   providedIn: 'root'
@@ -72,25 +73,33 @@ export class ImportServiceService {
     //read links
     for (const link of jsonContent.links) {
       let edge: Item =
-        {
-          ID: this.configService.assignID(),
-          name: null,
-          type: 'link',
-          table: link.table,
-          partition_key_name: null,
-          partition_key_type: null,
-          sort_key_name: null,
-          sort_key_type: null,
-          first_item_ID: this.getIDFromName(link.first_entity),
-          second_item_ID: this.getIDFromName(link.second_entity),
-          numerosity: link.numerosity,
-          fields: link.fields,
-          primary_key: link.primary_key,
-          keyword: null,
-          separator: null
-        }
+      {
+        ID: this.configService.assignID(),
+        name: null,
+        type: 'link',
+        table: link.table,
+        partition_key_name: null,
+        partition_key_type: null,
+        sort_key_name: null,
+        sort_key_type: null,
+        first_item_ID: this.getIDFromName(link.first_entity),
+        second_item_ID: this.getIDFromName(link.second_entity),
+        numerosity: link.numerosity,
+        fields: link.fields,
+        primary_key: link.primary_key,
+        keyword: null,
+        separator: null
+      }
       this.configService.getItems().push(edge);
     }
+
+    let iot: IoT = {
+      database_name: jsonContent.awsConfig.iot.timestream.database.name,
+      table_name: jsonContent.awsConfig.iot.timestream.table.name,
+      topic: jsonContent.awsConfig.iot.iotrule.topic,
+      storage_method: null
+    }
+    this.configService.updateIoTConfiguration(iot);
   }
 
   /**

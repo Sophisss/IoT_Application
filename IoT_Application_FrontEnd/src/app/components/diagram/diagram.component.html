@@ -1,336 +1,227 @@
 <!-- The diagram: simple view keeps an entire grid instead of only the part you're using. -->
 <div class="diagram" *ngIf="!hasChild">
-<dx-diagram (onCustomCommand)="onCustomCommand($event)"
-            (onDisposing)="onDisposing()"
-            (onItemDblClick)="editItem($event.item.dataItem)"
-            (onRequestEditOperation)="requestEditOperationHandler($event)"
-            (onSelectionChanged)="diagramSelectionHandler($event)"
-            [simpleView]="false"
-            id="diagram"
-            units="cm"
-            viewUnits="cm"
->
-    <!-- The menu you get after left-clicking on an object or the diagram. -->
-    <dxo-context-menu [commands]="['bringToFront', 'sendToBack', 'copy', 'paste']" [enabled]="true"></dxo-context-menu>
+    <dx-diagram (onCustomCommand)="onCustomCommand($event)" (onDisposing)="onDisposing()"
+        (onItemDblClick)="editItem($event.item.dataItem)" (onRequestEditOperation)="requestEditOperationHandler($event)"
+        [simpleView]="false" id="diagram" units="cm" viewUnits="cm">
+        <!-- The menu you get after left-clicking on an object or the diagram. -->
+        <dxo-context-menu [commands]="['bringToFront', 'sendToBack', 'copy', 'paste']"
+            [enabled]="true"></dxo-context-menu>
 
-    <!-- The little bar with the undo/redo button that gets covered so it's disabled and its buttons moved. -->
-    <dxo-history-toolbar [visible]="false"></dxo-history-toolbar>
+        <!-- The little bar with the undo/redo button that gets covered so it's disabled and its buttons moved. -->
+        <dxo-history-toolbar [visible]="false"></dxo-history-toolbar>
 
-    <!-- The totality of entities.
+        <!-- The totality of entities.
          There can only be one set of nodes, so all the items need to be stored in the same data source. -->
-    <dxo-nodes
-            [customDataExpr]="itemCustomDataExpr"
-            [dataSource]="dataSource"
-            keyExpr="ID"
-            textExpr="name"
-            typeExpr="type"
-    >
-        <dxo-auto-layout type="layered"></dxo-auto-layout>
-    </dxo-nodes>
+        <dxo-nodes [customDataExpr]="itemCustomDataExpr" [dataSource]="dataSource" keyExpr="ID" textExpr="name"
+            typeExpr="type">
+            <dxo-auto-layout type="layered"></dxo-auto-layout>
+        </dxo-nodes>
 
-    <!-- The totality of links. -->
-    <dxo-edges
-            [customDataExpr]="itemCustomDataExpr"
-            [dataSource]="linksDataSource"
-            fromExpr="first_item_ID"
-            keyExpr="ID"
-            textExpr="numerosity"
-            toExpr="second_item_ID"
-    ></dxo-edges>
+        <!-- The totality of links. -->
+        <dxo-edges [customDataExpr]="itemCustomDataExpr" [dataSource]="linksDataSource" fromExpr="first_item_ID"
+            keyExpr="ID" textExpr="numerosity" toExpr="second_item_ID"></dxo-edges>
 
-    <!-- The toolbar on the left-bottom corner. -->
-    <dxo-view-toolbar [visible]="true">
-        <dxi-command name="toolbox"></dxi-command>
-        <dxi-command name="separator"></dxi-command>
-        <dxi-command name="undo"></dxi-command>
-        <dxi-command name="redo"></dxi-command>
-        <dxi-command name="separator"></dxi-command>
-        <dxi-command name="selectAll"></dxi-command>
-        <dxi-command name='layoutTreeTopToBottom'></dxi-command>
-        <dxi-command name="separator"></dxi-command>
-        <dxi-command icon="export" name='export' text="Export JSON"></dxi-command>
-        <dxi-command icon="tips" name='generateCode' text="Generate code from Diagram"></dxi-command>
-        <dxi-command icon="alignright" name='viewJson'
-                     text="View JSON"></dxi-command>
-    </dxo-view-toolbar>
+        <!-- The toolbar on the left-bottom corner. -->
+        <dxo-view-toolbar [visible]="true">
+            <dxi-command name="toolbox"></dxi-command>
+            <dxi-command name="separator"></dxi-command>
+            <dxi-command name="undo"></dxi-command>
+            <dxi-command name="redo"></dxi-command>
+            <dxi-command name="separator"></dxi-command>
+            <dxi-command name="selectAll"></dxi-command>
+            <dxi-command name='layoutTreeTopToBottom'></dxi-command>
+            <dxi-command name="separator"></dxi-command>
+            <dxi-command icon="export" name='export' text="Export JSON"></dxi-command>
+            <dxi-command icon="tips" name='generateCode' text="Generate code from Diagram"></dxi-command>
+            <dxi-command icon="alignright" name='viewJson' text="View JSON"></dxi-command>
+        </dxo-view-toolbar>
 
-    <!-- A button for modifying the page layout, the text font and dimensions. -->
-    <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
+        <!-- A button for modifying the page layout, the text font and dimensions. -->
+        <dxo-properties-panel visibility="disabled"></dxo-properties-panel>
 
-    <!-- The list of possible shapes to drag on the diagram, with a custom group of objects. -->
-    <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false">
-        <dxi-group [expanded]="true" category="iot-devq" displayMode="texts" title="IoT"></dxi-group>
-    </dxo-toolbox>
+        <!-- The list of possible shapes to drag on the diagram, with a custom group of objects. -->
+        <dxo-toolbox [shapeIconsPerRow]="1" [showSearch]="false">
+            <dxi-group [expanded]="true" category="iot-devq" displayMode="texts" title="IoT"></dxi-group>
+        </dxo-toolbox>
 
-    <!-- Entity custom shape -->
-    <dxi-custom-shape
-            [allowEditText]="false"
-            [defaultHeight]="2.5"
-            [defaultWidth]="3.8"
-            [maxHeight]="5"
-            [maxWidth]="7.6"
-            [minHeight]="2.5"
-            [minWidth]="3.8"
-            [toolboxWidthToHeightRatio]="2"
-            baseType="ellipse"
-            category="iot-devq"
-            defaultText="Entity"
-            title="New Entity"
-            type="entity"
-    >
-    </dxi-custom-shape>
+        <!-- Entity custom shape -->
+        <dxi-custom-shape [allowEditText]="false" [defaultHeight]="2.5" [defaultWidth]="3.8" [maxHeight]="5"
+            [maxWidth]="7.6" [minHeight]="2.5" [minWidth]="3.8" [toolboxWidthToHeightRatio]="2" baseType="ellipse"
+            category="iot-devq" defaultText="Entity" title="New Entity" type="entity">
+        </dxi-custom-shape>
 
-    <!-- Table custom shape -->
-    <dxi-custom-shape
-            [allowEditText]="false"
-            [defaultHeight]="2.5"
-            [defaultWidth]="3.8"
-            [maxHeight]="5"
-            [maxWidth]="7.6"
-            [minHeight]="2.5"
-            [minWidth]="3.8"
-            [toolboxWidthToHeightRatio]="2"
-            baseType="internalStorage"
-            category="iot-devq"
-            defaultText="Table"
-            title="New Table"
-            type="table"
-    >
-    </dxi-custom-shape>
+        <!-- Table custom shape -->
+        <dxi-custom-shape [allowEditText]="false" [defaultHeight]="2.5" [defaultWidth]="3.8" [maxHeight]="5"
+            [maxWidth]="7.6" [minHeight]="2.5" [minWidth]="3.8" [toolboxWidthToHeightRatio]="2"
+            baseType="internalStorage" category="iot-devq" defaultText="Table" title="New Table" type="table">
+        </dxi-custom-shape>
 
 
-    <!-- The menu that appears at the end of a connector that leads to nothing to create a new object. -->
-    <dxo-context-toolbox [enabled]="false"></dxo-context-toolbox>
-</dx-diagram>
+        <!-- The menu that appears at the end of a connector that leads to nothing to create a new object. -->
+        <dxo-context-toolbox [enabled]="false"></dxo-context-toolbox>
+    </dx-diagram>
 
-<dx-popup
-        [(visible)]="popupVisible"
-        [dragEnabled]="true"
-        [height]="'70%'"
-        [hideOnOutsideClick]="false"
-        [showCloseButton]="false"
-        [showTitle]="true"
-        [width]="'57%'"
-        title="Edit {{currentItem.type | titlecase}}"
->
-    <dxi-toolbar-item [options]="saveButtonOptions"
-                      cssClass="saveButton"
-                      locateInMenu="never"
-                      location="after"
-                      toolbar="top"
-                      widget="dxButton">
-    </dxi-toolbar-item>
+    <dx-popup [(visible)]="popupVisible" [dragEnabled]="true" [height]="'70%'" [hideOnOutsideClick]="false"
+        [showCloseButton]="false" [showTitle]="true" [width]="'57%'" title="Edit {{currentItem.type | titlecase}}">
+        <dxi-toolbar-item [options]="saveButtonOptions" cssClass="saveButton" locateInMenu="never" location="after"
+            toolbar="top" widget="dxButton">
+        </dxi-toolbar-item>
 
-    <dxi-toolbar-item [options]="deleteButtonOptions"
-                      cssClass="deleteButton"
-                      locateInMenu="never"
-                      location="after"
-                      toolbar="top"
-                      widget="dxButton">
-    </dxi-toolbar-item>
+        <dxi-toolbar-item [options]="deleteButtonOptions" cssClass="deleteButton" locateInMenu="never" location="after"
+            toolbar="top" widget="dxButton">
+        </dxi-toolbar-item>
 
-    <dxi-toolbar-item [options]="cancelButtonOptions"
-                      cssClass="cancelButton"
-                      locateInMenu="never"
-                      location="after"
-                      toolbar="top"
-                      widget="dxButton">
-    </dxi-toolbar-item>
+        <dxi-toolbar-item [options]="cancelButtonOptions" cssClass="cancelButton" locateInMenu="never" location="after"
+            toolbar="top" widget="dxButton">
+        </dxi-toolbar-item>
 
-    <div *dxTemplate="let data of 'content'">
-        <form (submit)="updateItem()" [formGroup]="getFormGroup()">
-            <div class="dx-fieldset">
-                <div class="dx-field">
-                    <div class="dx-field-label">ID</div>
-                    <div class="dx-field-value">
-                        <dx-text-box
-                                [disabled]="true"
-                                [inputAttr]="{ 'aria-label': 'ID' }"
-                                value="{{currentItem.ID}}"
-                        ></dx-text-box>
-                    </div>
-                </div>
-                <div class="dx-field">
-                    <div class="dx-field-label">Name</div>
-                    <div class="dx-field-value">
-                        <dx-text-box
-                                [(value)]="currentItem.name"
-                                [inputAttr]="{ 'aria-label': 'Name' }"
-                                formControlName="name"
-                        ></dx-text-box>
-                    </div>
-                </div>
-
-                <div *ngIf="currentItem.type === 'table'" class="tableCondition">
-                    <div class="keysSection">
-                        <dx-box [height]="75" direction="row" width="100%">
-                            <dxi-item [ratio]="1" class="tableKeys">
-                                <div class="dx-field">
-                                    <div class="dx-field-label">Partition Key</div>
-                                    <div class="dx-field-value">
-                                        <dx-text-box
-                                                [(value)]="currentItem.partition_key_name"
-                                                [inputAttr]="{ 'aria-label': 'Partition Key' }"
-                                                formControlName="partition_key_name"
-                                        ></dx-text-box>
-                                    </div>
-                                </div>
-                                <div class="dx-field">
-                                    <div class="dx-field-label">Sort Key</div>
-                                    <div class="dx-field-value">
-                                        <dx-text-box
-                                                [(value)]="currentItem.sort_key_name"
-                                                [inputAttr]="{ 'aria-label': 'Sort Key' }"
-                                                formControlName="sort_key_name"
-                                        ></dx-text-box>
-                                    </div>
-                                </div>
-                            </dxi-item>
-                            <dxi-item [ratio]="1" class="tableKeys rightSide">
-                                <div class="dx-field">
-                                    <div class="dx-field-label">Type</div>
-                                    <div class="dx-field-value">
-                                        <dx-select-box
-                                                [(value)]="currentItem.partition_key_type"
-                                                [inputAttr]="{ 'aria-label': 'Partition Key Type' }"
-                                                [items]="keysTypes"
-                                                formControlName="partition_key_type"
-                                        ></dx-select-box>
-                                    </div>
-                                </div>
-                                <div class="dx-field">
-                                    <div class="dx-field-label">Type</div>
-                                    <div class="dx-field-value">
-                                        <dx-select-box
-                                                [(value)]="currentItem.sort_key_type"
-                                                [inputAttr]="{ 'aria-label': 'Sort Key Type' }"
-                                                [items]="keysTypes"
-                                                formControlName="sort_key_type"
-                                        ></dx-select-box>
-                                    </div>
-                                </div>
-                            </dxi-item>
-                        </dx-box>
-                    </div>
-
-                    <hr>
-
+        <div *dxTemplate="let data of 'content'">
+            <form (submit)="updateItem()" [formGroup]="getFormGroup()">
+                <div class="dx-fieldset">
                     <div class="dx-field">
-                        <div class="dx-field-label">SES Keyword</div>
+                        <div class="dx-field-label">ID</div>
                         <div class="dx-field-value">
-                            <dx-select-box
-                                    [(value)]="currentItem.keyword"
-                                    [inputAttr]="{ 'aria-label': 'Single Entity Storage Keyword' }"
-                                    [items]="parameterWords"
-                                    formControlName="keyword"
-                            ></dx-select-box>
+                            <dx-text-box [disabled]="true" [inputAttr]="{ 'aria-label': 'ID' }"
+                                value="{{currentItem.ID}}"></dx-text-box>
+                        </div>
+                    </div>
+                    <div class="dx-field">
+                        <div class="dx-field-label">Name</div>
+                        <div class="dx-field-value">
+                            <dx-text-box [(value)]="currentItem.name" [inputAttr]="{ 'aria-label': 'Name' }"
+                                formControlName="name"></dx-text-box>
                         </div>
                     </div>
 
-                    <div class="dx-field">
-                        <div class="dx-field-label">Id Separator</div>
+                    <div *ngIf="currentItem.type === 'table'" class="tableCondition">
+                        <div class="keysSection">
+                            <dx-box [height]="75" direction="row" width="100%">
+                                <dxi-item [ratio]="1" class="tableKeys">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Partition Key</div>
+                                        <div class="dx-field-value">
+                                            <dx-text-box [(value)]="currentItem.partition_key_name"
+                                                [inputAttr]="{ 'aria-label': 'Partition Key' }"
+                                                formControlName="partition_key_name"></dx-text-box>
+                                        </div>
+                                    </div>
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Sort Key</div>
+                                        <div class="dx-field-value">
+                                            <dx-text-box [(value)]="currentItem.sort_key_name"
+                                                [inputAttr]="{ 'aria-label': 'Sort Key' }"
+                                                formControlName="sort_key_name"></dx-text-box>
+                                        </div>
+                                    </div>
+                                </dxi-item>
+                                <dxi-item [ratio]="1" class="tableKeys rightSide">
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Type</div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box [(value)]="currentItem.partition_key_type"
+                                                [inputAttr]="{ 'aria-label': 'Partition Key Type' }" [items]="keysTypes"
+                                                formControlName="partition_key_type"></dx-select-box>
+                                        </div>
+                                    </div>
+                                    <div class="dx-field">
+                                        <div class="dx-field-label">Type</div>
+                                        <div class="dx-field-value">
+                                            <dx-select-box [(value)]="currentItem.sort_key_type"
+                                                [inputAttr]="{ 'aria-label': 'Sort Key Type' }" [items]="keysTypes"
+                                                formControlName="sort_key_type"></dx-select-box>
+                                        </div>
+                                    </div>
+                                </dxi-item>
+                            </dx-box>
+                        </div>
+
+                        <hr>
+
+                        <div class="dx-field">
+                            <div class="dx-field-label">SES Keyword</div>
+                            <div class="dx-field-value">
+                                <dx-select-box [(value)]="currentItem.keyword"
+                                    [inputAttr]="{ 'aria-label': 'Single Entity Storage Keyword' }"
+                                    [items]="parameterWords" formControlName="keyword"></dx-select-box>
+                            </div>
+                        </div>
+
+                        <div class="dx-field">
+                            <div class="dx-field-label">Id Separator</div>
+                            <div class="dx-field-value">
+                                <dx-radio-group [(value)]="currentItem.separator" [items]="separatorSymbols"
+                                    formControlName="separator" layout="horizontal">
+                                </dx-radio-group>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="currentItem.type === 'link'" class="dx-field">
+                        <div class="dx-field-label">Numerosity</div>
                         <div class="dx-field-value">
-                            <dx-radio-group
-                                    [(value)]="currentItem.separator"
-                                    [items]="separatorSymbols"
-                                    formControlName="separator"
-                                    layout="horizontal">
+                            <dx-radio-group [(value)]="currentItem.numerosity" [items]="numerosityOptions"
+                                formControlName="numerosity" layout="horizontal">
                             </dx-radio-group>
                         </div>
                     </div>
-                </div>
-
-                <div *ngIf="currentItem.type === 'link'" class="dx-field">
-                    <div class="dx-field-label">Numerosity</div>
-                    <div class="dx-field-value">
-                        <dx-radio-group
-                                [(value)]="currentItem.numerosity"
-                                [items]="numerosityOptions"
-                                formControlName="numerosity"
-                                layout="horizontal">
-                        </dx-radio-group>
-                    </div>
-                </div>
 
 
-                <div *ngIf="currentItem.type === 'link' || currentItem.type === 'entity'">
+                    <div *ngIf="currentItem.type === 'link' || currentItem.type === 'entity'">
 
-                    <div class="dx-field">
-                        <div class="dx-field-label">Table *</div>
-                        <div class="dx-field-value">
-                            <dx-select-box
-                                    [(value)]="currentItem.table"
-                                    [dataSource]="tables"
-                                    [inputAttr]="{ 'aria-label': 'Table' }"
-                                    [searchEnabled]="true"
-                                    displayExpr="name"
-                                    formControlName="table"
-                                    noDataText="Please, add a table first."
-                                    placeholder="Select a table..."
-                                    searchMode='contains'
-                                    valueExpr="name"
-                            ></dx-select-box>
+                        <div class="dx-field">
+                            <div class="dx-field-label">Table *</div>
+                            <div class="dx-field-value">
+                                <dx-select-box [(value)]="currentItem.table" [dataSource]="tables"
+                                    [inputAttr]="{ 'aria-label': 'Table' }" [searchEnabled]="true" displayExpr="name"
+                                    formControlName="table" noDataText="Please, add a table first."
+                                    placeholder="Select a table..." searchMode='contains'
+                                    valueExpr="name"></dx-select-box>
+                            </div>
                         </div>
-                    </div>
 
-                    <hr>
-                    <dx-data-grid
-                            (onEditingStart)="cellEditingHandler($event)"
-                            (onSelectionChanged)="dataGridSelectionHandler($event)"
-                            [columnAutoWidth]="true"
-                            [columnMinWidth]=20
-                            [dataSource]="fieldsDataSource"
-                            [showBorders]="true"
-                            id="gridContainer"
-                    >
-                        <dxo-paging [enabled]="false"></dxo-paging>
-                        <dxo-editing
-                                [allowAdding]="true"
-                                [allowDeleting]="true"
-                                [allowUpdating]="true"
-                                [confirmDelete]="false"
-                                [useIcons]="true"
-                                mode="cell"
-                        >
-                        </dxo-editing>
-                        <dxo-selection mode="none"></dxo-selection>
+                        <hr>
+                        <dx-data-grid (onEditingStart)="cellEditingHandler($event)"
+                            (onSelectionChanged)="dataGridSelectionHandler($event)" [columnAutoWidth]="true"
+                            [columnMinWidth]=20 [dataSource]="fieldsDataSource" [showBorders]="true" id="gridContainer">
+                            <dxo-paging [enabled]="false"></dxo-paging>
+                            <dxo-editing [allowAdding]="true" [allowDeleting]="true" [allowUpdating]="true"
+                                [confirmDelete]="false" [useIcons]="true" mode="cell">
+                            </dxo-editing>
+                            <dxo-selection mode="none"></dxo-selection>
 
-                        <!--I nomi delle colonne sono:
+                            <!--I nomi delle colonne sono:
                         -a sx: campo string;
                         -centrale: boolean/button;
                         -a dx: numeri;
                         -->
 
-                        <dxi-column [width]="'14%'" dataField="name"></dxi-column>
-                        <dxi-column [width]="'12%'" dataField="type">
-                            <dxo-lookup [dataSource]="fieldTypes"></dxo-lookup>
-                        </dxi-column>
-                        <dxi-column [width]="'9%'" dataField="required" dataType="boolean"></dxi-column>
-                        <dxi-column [visible]="this.currentItem.type !== 'link'" [width]="'13%'"
-                                    dataField="isPrimaryKey"
-                                    dataType="boolean"></dxi-column>
-                        <dxi-column [width]="'11%'" dataField="minLength" dataType="number"></dxi-column>
-                        <dxi-column [width]="'11%'" dataField="maxLength" dataType="number"></dxi-column>
-                        <dxi-column [width]="'10%'" dataField="minimum" dataType="number"></dxi-column>
-                        <dxi-column [width]="'10%'" dataField="maximum" dataType="number"></dxi-column>
+                            <dxi-column [width]="'14%'" dataField="name"></dxi-column>
+                            <dxi-column [width]="'12%'" dataField="type">
+                                <dxo-lookup [dataSource]="fieldTypes"></dxo-lookup>
+                            </dxi-column>
+                            <dxi-column [width]="'9%'" dataField="required" dataType="boolean"></dxi-column>
+                            <dxi-column [visible]="this.currentItem.type !== 'link'" [width]="'13%'"
+                                dataField="isPrimaryKey" dataType="boolean"></dxi-column>
+                            <dxi-column [width]="'11%'" dataField="minLength" dataType="number"></dxi-column>
+                            <dxi-column [width]="'11%'" dataField="maxLength" dataType="number"></dxi-column>
+                            <dxi-column [width]="'10%'" dataField="minimum" dataType="number"></dxi-column>
+                            <dxi-column [width]="'10%'" dataField="maximum" dataType="number"></dxi-column>
 
-                        <dxo-toolbar>
-                            <dxi-item location="before" name="Title">
-                                <div class="gridTitle">
-                                    Fields
-                                </div>
-                            </dxi-item>
-                            <dxi-item location="after">
-                                <dx-button (onClick)="addNewRow()"
-                                           icon="add"
-                                           text="Add a row">
-                                </dx-button>
-                            </dxi-item>
-                        </dxo-toolbar>
-                    </dx-data-grid>
+                            <dxo-toolbar>
+                                <dxi-item location="before" name="Title">
+                                    <div class="gridTitle">
+                                        Fields
+                                    </div>
+                                </dxi-item>
+                                <dxi-item location="after">
+                                    <dx-button (onClick)="addNewRow()" icon="add" text="Add a row">
+                                    </dx-button>
+                                </dxi-item>
+                            </dxo-toolbar>
+                        </dx-data-grid>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
-</dx-popup>
+            </form>
+        </div>
+    </dx-popup>
 </div>

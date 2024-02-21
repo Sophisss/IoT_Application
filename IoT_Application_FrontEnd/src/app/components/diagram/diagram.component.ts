@@ -1,11 +1,11 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import ArrayStore from "devextreme/data/array_store";
-import {ConfigurationService} from "../../services/configuration.service";
-import {CustomCommandService} from "../../services/custom-command.service";
-import {Item} from "../../models/item.model";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {DxDataGridComponent, DxDiagramComponent} from "devextreme-angular";
-import {Field} from "../../models/field.model";
+import { ConfigurationService } from "../../services/configuration.service";
+import { CustomCommandService } from "../../services/custom-command.service";
+import { Item } from "../../models/item.model";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { DxDataGridComponent, DxDiagramComponent } from "devextreme-angular";
+import { Field } from "../../models/field.model";
 import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
@@ -43,8 +43,8 @@ export class DiagramComponent {
   hasChild = false;
 
   selectedItemKeys: any[] = [];
-  @ViewChild(DxDataGridComponent, {static: false}) dataGrid: DxDataGridComponent;
-  @ViewChild(DxDiagramComponent, {static: false}) diagram: DxDiagramComponent;
+  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
+  @ViewChild(DxDiagramComponent, { static: false }) diagram: DxDiagramComponent;
   private previousSpecialID: number = 0;
 
   /**
@@ -116,7 +116,6 @@ export class DiagramComponent {
           }
         } else if (this.currentItem.type === 'table') {
           if (this.getFormGroup().valid && this.currentItem.name.trim().length > 0) {
-            console.log("no fields");
             this.updateItem();
           } else {
             console.log("ERROR: Invalid form");
@@ -135,7 +134,7 @@ export class DiagramComponent {
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.hasChild = this.router.url.includes('/new/');
+        this.hasChild = this.router.url.includes('new/');
       }
     });
   }
@@ -198,11 +197,6 @@ export class DiagramComponent {
     }
   }
 
-  /**
-   * ???
-   * @param obj
-   * @param value
-   */
   itemCustomDataExpr(obj: Item, value: Item) {
     if (value === undefined) {
       return {
@@ -245,15 +239,13 @@ export class DiagramComponent {
     }
 
     if (isSpecialLink) {
-      this.currentItem = {...item};
+      this.currentItem = { ...item };
 
       if (this.currentItem.type === 'entity' && this.currentItem.table) {
         let designatedTable = this.tables.filter((table) => table.name === this.currentItem.table)[0]
         if (designatedTable) {
           this.previousSpecialID = this.configService.getSpecialID(designatedTable.ID, this.currentItem.ID);
         }
-        console.log("from", this.configService.getAllLinksFromEntity(this.currentItem))
-        console.log("to", this.configService.getAllLinksToEntity(this.currentItem))
       }
 
       this.tables = [];
@@ -267,14 +259,14 @@ export class DiagramComponent {
       }
 
       this.fieldsDataSource = new ArrayStore({
-          key: 'name',
-          data: this.currentItem.fields,
-          onInserting(values) {
-            values.type = values.type || "string";
-            values.required = values.required || false;
-            values.isPrimaryKey = false;
-          }
+        key: 'name',
+        data: this.currentItem.fields,
+        onInserting(values) {
+          values.type = values.type || "string";
+          values.required = values.required || false;
+          values.isPrimaryKey = false;
         }
+      }
       );
 
       this.popupVisible = true;
@@ -313,14 +305,14 @@ export class DiagramComponent {
       if (this.configService.specialIDs.includes(this.currentItem.ID)) {
         this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(this.currentItem.ID), 1);
       }
-      this.linksDataSource.push([{type: 'remove', key: this.currentItem.ID}]);
+      this.linksDataSource.push([{ type: 'remove', key: this.currentItem.ID }]);
     } else if (this.currentItem.type === 'table') {
-      this.dataSource.push([{type: 'remove', key: this.currentItem.ID}]);
+      this.dataSource.push([{ type: 'remove', key: this.currentItem.ID }]);
 
       for (let sID of this.configService.getAllSpecialIDsForTable(this.currentItem.ID)) {
         this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(sID), 1);
 
-        this.linksDataSource.push([{type: 'remove', key: sID}]);
+        this.linksDataSource.push([{ type: 'remove', key: sID }]);
       }
 
     } else if (this.currentItem.type === 'entity') {
@@ -329,7 +321,7 @@ export class DiagramComponent {
         if (designatedTable) {
           const tableLinkID = this.configService.getSpecialID(designatedTable.ID, this.currentItem.ID);
           this.configService.specialIDs.splice(this.configService.specialIDs.indexOf(tableLinkID), 1);
-          this.linksDataSource.push([{type: 'remove', key: tableLinkID}]);
+          this.linksDataSource.push([{ type: 'remove', key: tableLinkID }]);
         }
       }
 
@@ -338,7 +330,7 @@ export class DiagramComponent {
 
       this.cascadeLinkPKs(linksFromEntity, linksToEntity, this.currentItem, 'remove');
 
-      this.dataSource.push([{type: 'remove', key: this.currentItem.ID}]);
+      this.dataSource.push([{ type: 'remove', key: this.currentItem.ID }]);
     }
     this.cancelEditItem();
   }
@@ -385,7 +377,6 @@ export class DiagramComponent {
     } else if (this.currentItem.type === 'entity') {
 
       if (this.configService.tableAlreadyLinked(this.previousSpecialID)) {
-        console.log("already linked", this.previousSpecialID)
         this.deleteLinkWithTable(this.previousSpecialID);
       }
 
@@ -414,7 +405,6 @@ export class DiagramComponent {
       const finalID = this.configService.getSpecialID(
         (this.tables.filter((table) => table.name === this.currentItem.table)[0].ID), this.currentItem.ID);
 
-      console.log("new link", finalID)
       this.createLinkWithTable(this.currentItem, finalID);
 
     }
@@ -427,9 +417,11 @@ export class DiagramComponent {
    *  Handles the resources disposal of the diagram component.
    */
   onDisposing() {
-    this.dataSource.clear();
-    this.linksDataSource.clear();
-    this.configService.reset();
+    if (!this.hasChild) {
+      this.dataSource.clear();
+      this.linksDataSource.clear();
+      this.configService.reset();
+    }
   }
 
   /**
@@ -455,7 +447,6 @@ export class DiagramComponent {
       if (this.linkAlreadyExists(event.args.connector.fromKey, event.args.connector.toKey)) {
         event.allowed = false;
       }
-      //TODO modificare questo per permettere l'assegnazione del campo tabella quando traccio
       //Creating connections between entities and tables is allowed only through assigning inside the popup window
       if (event.args.connector.fromKey && event.args.connector.toKey && (this.isTable(parseInt(event.args.connector.fromKey)) || this.isTable(parseInt(event.args.connector.toKey)))) {
         event.allowed = false;
@@ -464,17 +455,12 @@ export class DiagramComponent {
     if (event.operation === "addShape") {
       //Adding a new blank shape before updating the existing one is not allowed
       if ((event.args.shape.type === 'entity' &&
-          this.configService.getItems().filter((item) => item.name === "Entity").length > 0) ||
+        this.configService.getItems().filter((item) => item.name === "Entity").length > 0) ||
         (event.args.shape.type === 'table' &&
           this.configService.getItems().filter((item) => item.name === "Table").length > 0)) {
         event.allowed = false;
       }
     }
-  }
-
-  //TODO delete
-  diagramSelectionHandler(event: any) {
-    //console.log("selected", event.items)
   }
 
   /**
@@ -658,7 +644,6 @@ export class DiagramComponent {
     this.dataSource.byKey(data.second_item_ID).then((data) => {
       secondItem = data;
     });
-    console.log(firstItem, secondItem)
     const firstPK = this.configService.getPrimaryKeyField(firstItem);
     const secondPK = this.configService.getPrimaryKeyField(secondItem);
     return [firstPK, secondPK];
@@ -713,7 +698,6 @@ export class DiagramComponent {
 
   private getAllItemsWithTable(tableName: string): Item[] {
     const itemList: Item[] = this.configService.getItems().filter((item) => item.table === tableName);
-    console.log("items", itemList)
     return itemList;
   }
 }
