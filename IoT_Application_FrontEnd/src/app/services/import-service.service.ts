@@ -93,11 +93,13 @@ export class ImportServiceService {
       this.configService.getItems().push(edge);
     }
 
+    const storageMethod = jsonContent.awsConfig.iot.topic ? "Sending and storing data when receives an MQTT message with changes to a device shadow" : "Sending and storing data when the device status (shadow) changes";
+
     let iot: IoT = {
       database_name: jsonContent.awsConfig.iot.timestream.database.name,
       table_name: jsonContent.awsConfig.iot.timestream.table.name,
-      topic: jsonContent.awsConfig.iot.iotrule.topic,
-      storage_method: null
+      topic: jsonContent.awsConfig.iot.topic,
+      storage_method: storageMethod
     }
     this.configService.updateIoTConfiguration(iot);
   }

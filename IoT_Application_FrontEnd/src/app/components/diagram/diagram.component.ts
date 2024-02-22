@@ -409,7 +409,6 @@ export class DiagramComponent {
 
     }
     this.popupVisible = false;
-
     this.drawerUpdateMethods();
   }
 
@@ -417,7 +416,8 @@ export class DiagramComponent {
    *  Handles the resources disposal of the diagram component.
    */
   onDisposing() {
-    if (!this.hasChild) {
+
+    if (!this.router.url.includes('new/')) {
       this.dataSource.clear();
       this.linksDataSource.clear();
       this.configService.reset();

@@ -2,40 +2,24 @@
     <app-header (toggleSidebarForMe)="sideBarToggler()"></app-header>
 </div>
 <div id="body">
-    <dx-drawer 
-    template="template"
-    [(opened)]="isDrawerOpened"
-    [minSize]="37"
-    position="left"
-    revealMode="slide"
-    openedStateMode="push"
-    [closeOnOutsideClick]="false">
+    <dx-drawer template="template" [(opened)]="isDrawerOpened" [minSize]="37" position="left" revealMode="expand"
+        openedStateMode="shrink" [closeOnOutsideClick]="false">
 
-    <div *dxTemplate="let data of 'template'">
-        <app-sidenav (toggleSidebarForMe)="sideBarToggler()"></app-sidenav>
-    </div>
+        <div *dxTemplate="let data of 'template'">
+            <app-sidenav (toggleSidebarForMe)="sideBarToggler()"></app-sidenav>
+        </div>
 
-    <dx-drawer
-    [closeOnOutsideClick]=false
-    [opened]="getDrawerOpen()"
-    openedStateMode="shrink"
-    position="right"
-    revealMode="slide"
-    template="template"
->
-    <div *dxTemplate="let data of 'template'" class="title">
-        <p id="drawer-title"><b>JSON configuration</b></p>
-        <app-drawer-content></app-drawer-content>
-    </div>
+        <dx-drawer [closeOnOutsideClick]="false" [opened]="getDrawerOpen()" openedStateMode="shrink" position="right"
+            revealMode="slide" template="template">
+            <div *dxTemplate="let data of 'template'" class="title">
+                <p id="drawer-title"><b>JSON configuration</b></p>
+                <app-drawer-content></app-drawer-content>
+            </div>
 
-    <app-diagram></app-diagram>
-    <router-outlet></router-outlet>
+            <app-diagram></app-diagram>
+            <router-outlet></router-outlet>
 
+        </dx-drawer>
     </dx-drawer>
-</dx-drawer>
 
 </div>
-
-
-
-

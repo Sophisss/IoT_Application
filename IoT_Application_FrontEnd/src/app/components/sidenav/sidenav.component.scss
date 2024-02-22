@@ -1,28 +1,24 @@
 ::ng-deep .dx-list-item-icon {
-    margin-right: 10px;
-  }
-  
-  
-  .dx-list-item-icon-container .dx-icon {
-    color: white; 
-  }
-  
-  
-  ::ng-deep .dx-list-item {
-    border-top: none;
-  }
-  
-  
-  
-  a {
-    text-decoration: none; 
-    color: #ffffff;
-  }
+  margin-right: 10px;
+}
+
+.dx-list-item-icon-container .dx-icon {
+  color: white;
+}
+
+::ng-deep .dx-list-item {
+  border-top: none;
+}
+
+a {
+  text-decoration: none;
+  color: #ffffff;
+}
 
 ::ng-deep .dx-list-item-selected {
-    color: #ffffff;
-  }
+  color: #ffffff;
+}
 
 ::ng-deep .dx-list-item .dx-state-hover {
-    color: #ffffff;
-  }
+  color: #ffffff;
+}

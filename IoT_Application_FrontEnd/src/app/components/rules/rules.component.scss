@@ -17,16 +17,25 @@
     z-index: 999;
 }
 
-.changeButton {
+.changeButton,
+.resizePageButton {
     position: absolute;
     top: 20px;
-    right: 20px;
     z-index: 999;
     background-color: transparent;
     border: none;
 }
 
-::ng-deep .changeButton .dx-icon {
+.changeButton {
+    right: 60px;
+}
+
+.resizePageButton {
+    right: 20px;
+}
+
+::ng-deep .changeButton .dx-icon,
+::ng-deep .resizePageButton .dx-icon {
     font-size: 20px;
     color: white;
 }
@@ -157,9 +166,8 @@
 
 ::ng-deep #radio .dx-item .dx-radiobutton {
     align-items: center;
-    height: 100px
+    height: 100px;
 }
-
 
 .arrow {
     position: relative;
@@ -184,4 +192,3 @@
     background-color: #4caf50;
     color: white;
 }
-

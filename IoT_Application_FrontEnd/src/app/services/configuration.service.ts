@@ -197,6 +197,7 @@ export class ConfigurationService {
    * Creates the IoT configuration part of the .json file.
    */
   private createIoTConfigurationJson() {
+    const ruleJson = this.createIoTRuleJson();
     return {
       timestream: {
       database: {
@@ -206,10 +207,13 @@ export class ConfigurationService {
         name: this.iot.table_name
       }
     },
-    iotrule: {
-      topic: this.iot.topic
-    }
+    ...ruleJson
   }
+}
+
+
+private createIoTRuleJson() {
+  return this.iot.topic !== "" ? { topic: this.iot.topic } : null;
 }
 
   /**

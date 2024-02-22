@@ -1,6 +1,7 @@
 <div class="overlay"></div>
 <div class="rules">
-    <dx-button class="changeButton" icon="edit" (click)="modify_iot_rules_configuration()"></dx-button>
+    <dx-button class="changeButton" icon="rename" (click)="modify_iot_rules_configuration()"></dx-button>
+    <dx-button class="resizePageButton" icon="pinright" (click)="showResizePage()"></dx-button>
     <div class="container">
         <div class="box" [style.zIndex]="firstBoxZIndex">
             <div class="step-indicator">1</div>
@@ -12,8 +13,9 @@
                     <div class="field-container">
                         <div class="field-label">Database *</div>
                         <div class="field-value">
-                            <dx-text-box [(value)]="iot.database_name" [showClearButton]="true" [inputAttr]="{ 'aria-label': 'database_name' }"
-                                formControlName="database_name" label="Database Name" labelMode="floating">
+                            <dx-text-box [(value)]="iot.database_name" [showClearButton]="true"
+                                [inputAttr]="{ 'aria-label': 'database_name' }" formControlName="database_name"
+                                label="Database Name" labelMode="floating">
                                 <dx-validator>
                                     <dxi-validation-rule type="required"
                                         message="Database name is required"></dxi-validation-rule>
@@ -24,8 +26,9 @@
                     <div class="field-container">
                         <div class="field-label">Table *</div>
                         <div class="field-value">
-                            <dx-text-box [(value)]="iot.table_name" [showClearButton]="true" [inputAttr]="{ 'aria-label': 'table_name' }"
-                                formControlName="table_name" label="Table Name" labelMode="floating">
+                            <dx-text-box [(value)]="iot.table_name" [showClearButton]="true"
+                                [inputAttr]="{ 'aria-label': 'table_name' }" formControlName="table_name"
+                                label="Table Name" labelMode="floating">
                                 <dx-validator>
                                     <dxi-validation-rule type="required"
                                         message="Table name is required"></dxi-validation-rule>
@@ -45,7 +48,8 @@
             <h2 class="box-title">Choice storage method</h2>
             <p class="box-subtitle">Choose the methodology for storing data read by IoT devices.</p>
             <dx-validation-group>
-                <dx-radio-group id="radio" [items]="choice_list" (onValueChanged)="onStorageMethodChanged($event)">
+                <dx-radio-group id="radio" [(value)]="iot.storage_method" [items]="choice_list"
+                    (onValueChanged)="onStorageMethodChanged($event)">
                     <dx-validator>
                         <dxi-validation-rule type="required" message="Storage method is required">
                         </dxi-validation-rule>
@@ -64,31 +68,52 @@
             <h2 class="box-title">Topic configuration</h2>
             <p class="box-subtitle">Set the topic on which the thing will send data.</p>
             <dx-validation-group>
-            <form [formGroup]="form" class="form">
-                <div class="field-container">
-                    <div class="field-label">Topic *</div>
-                    <div class="field-value">
-                        <dx-text-box *ngIf="configure_topic" [(value)]="iot.topic" [showClearButton]="true" [disabled]="false"
-                            [inputAttr]="{ 'aria-label': 'topic' }" formControlName="topic" label="Topic"
-                            labelMode="floating">
-                            <dx-validator>
-                                <dxi-validation-rule type="required" message="Topic is required"></dxi-validation-rule>
-                            </dx-validator>
-                        </dx-text-box>
+                <form [formGroup]="form" class="form">
+                    <div class="field-container">
+                        <div class="field-label">Topic *</div>
+                        <div class="field-value">
+                            <dx-text-box *ngIf="configure_topic" [(value)]="iot.topic" [showClearButton]="true"
+                                [inputAttr]="{ 'aria-label': 'topic' }" formControlName="topic" label="Topic"
+                                labelMode="floating">
+                                <dx-validator>
+                                    <dxi-validation-rule type="required"
+                                        message="Topic is required"></dxi-validation-rule>
+                                </dx-validator>
+                            </dx-text-box>
 
-                        <dx-text-box class="fixTopic" *ngIf="!configure_topic" [disabled]="true"
-                            [inputAttr]="{ 'aria-label': 'topic' }"
-                            value="$aws/things/thingName/shadow/update/documents">
-                        </dx-text-box>
+                            <dx-text-box class="fixTopic" *ngIf="!configure_topic"
+                                [inputAttr]="{ 'aria-label': 'topic' }"
+                                value="$aws/things/thingName/shadow/update/documents" [disabled]="true">
+                            </dx-text-box>
 
+                        </div>
                     </div>
-                </div>
-            </form>
-            <dx-button id="backwardsButton" icon="chevronleft" (onClick)="secondBoxVisibility_backButton()"></dx-button>
-            <dx-button id="nextButton" icon="save" [useSubmitBehavior]="true" (onClick)="save()"></dx-button>
-        </dx-validation-group>
+                </form>
+                <dx-button id="backwardsButton" icon="chevronleft"
+                    (onClick)="secondBoxVisibility_backButton()"></dx-button>
+                <dx-button id="nextButton" icon="save" [useSubmitBehavior]="true" (onClick)="save()"></dx-button>
+            </dx-validation-group>
         </div>
         <dx-toast [(visible)]="isToastVisible" [type]="type" [message]="message">
         </dx-toast>
     </div>
+    <!-- <div class="widget-container">
+        <div class="dx-fieldset">
+          <div class="dx-fieldset-header">Resizable DataGrid</div>
+          <div class="dx-field">
+            <dx-resizable
+              [class]="resizableClasses"
+              id="gridContainer"
+              [minWidth]="400"
+              [minHeight]="150"
+              [maxHeight]="370"
+              [keepAspectRatio]="keepAspectRatio"
+              [handles]="handles.join(' ')"
+              area=".widget-container .dx-field"
+            >
+        </dx-resizable>
+    </div>
+    </div>
+    </div> -->
+    <app-prova *ngIf="resizePage"></app-prova>
 </div>

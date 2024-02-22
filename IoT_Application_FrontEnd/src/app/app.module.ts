@@ -1,16 +1,17 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import {AppComponent} from './app.component';
-import {HomepageComponent} from "./components/homepage/homepage.component";
-import {HeaderComponent} from "./components/header/header.component";
-import {WorkspaceComponent} from "./components/workspace/workspace.component";
-import {DiagramComponent} from './components/diagram/diagram.component';
+import { AppComponent } from './app.component';
+import { HomepageComponent } from "./components/homepage/homepage.component";
+import { HeaderComponent } from "./components/header/header.component";
+import { WorkspaceComponent } from "./components/workspace/workspace.component";
+import { DiagramComponent } from './components/diagram/diagram.component';
 import { RulesComponent } from './components/rules/rules.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { ProvaComponent } from './components/prova/prova.component';
 
-import {AppRoutingModule} from './app-routing.module';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   DxBoxModule,
   DxButtonModule,
@@ -25,7 +26,7 @@ import {
   DxSelectBoxModule,
   DxTextBoxModule,
   DxToolbarModule,
-  DxTooltipModule ,
+  DxTooltipModule,
   DxListModule,
   DxTabPanelModule,
   DxValidatorModule,
@@ -34,11 +35,11 @@ import {
   DxToastModule,
   DxResizableModule
 } from "devextreme-angular";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {DrawerContentComponent} from './components/drawer-content/drawer-content.component';
-import {HttpClientModule} from '@angular/common/http';
-import {JsonPipe, TitleCasePipe} from "@angular/common";
-import {Clipboard} from "@angular/cdk/clipboard";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { DrawerContentComponent } from './components/drawer-content/drawer-content.component';
+import { HttpClientModule } from '@angular/common/http';
+import { JsonPipe, TitleCasePipe } from "@angular/common";
+import { Clipboard } from "@angular/cdk/clipboard";
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import {Clipboard} from "@angular/cdk/clipboard";
     DiagramComponent,
     DrawerContentComponent,
     RulesComponent,
-    SidenavComponent
+    SidenavComponent,
+    ProvaComponent
   ],
   imports: [
     BrowserModule,

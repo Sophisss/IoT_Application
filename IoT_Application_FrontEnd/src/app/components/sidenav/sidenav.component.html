@@ -1,17 +1,13 @@
-<dx-list
-[items]="navigation"
-[width]="200"
-selectionMode="single"
-(onSelectionChanged)="toggleSidebar()"
-itemTemplate="links">
-<div *dxTemplate="let link of 'links'">
-    <a [routerLink]="['/' + link.path]">
-        <div>
-            <div class="dx-list-item-icon-container">
-                <i class="dx-icon dx-list-item-icon dx-icon-{{link.icon}}"></i>
+<dx-list [items]="navigation" [width]="200" selectionMode="single" (onSelectionChanged)="toggleSidebar()"
+    itemTemplate="links">
+    <div *dxTemplate="let link of 'links'">
+        <a [routerLink]="['/' + link.path]">
+            <div>
+                <div class="dx-list-item-icon-container">
+                    <i class="dx-icon dx-list-item-icon dx-icon-{{link.icon}}"></i>
+                </div>
+                <span id="span">{{ link.text }}</span>
             </div>
-            <span id="span">{{ link.text }}</span>
-        </div>
-    </a>
-</div>
+        </a>
+    </div>
 </dx-list>

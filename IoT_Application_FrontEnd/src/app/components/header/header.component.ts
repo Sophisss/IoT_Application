@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {ConfigurationService} from "../../services/configuration.service";
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ConfigurationService } from "../../services/configuration.service";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -18,7 +19,15 @@ export class HeaderComponent {
     }
   }
 
-  constructor(protected configurationService: ConfigurationService) {
+  exitButtonOptions: any = {
+    icon: 'home',
+    text: 'Home',
+    onClick: () => {
+      this.router.navigate(['']);
+    }
+  }
+
+  constructor(protected configurationService: ConfigurationService, private router: Router) {
   }
 
   /**
