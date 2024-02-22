@@ -9,14 +9,11 @@ def generate_telemetry_resources_template(json: dict) -> str:
     :param json: the json object.
     :return: the resources to monitor the changes in the device shadow and stores the data in Timestream.
     """
-    return f"""{generate_header_template()}
-    
-Resources:
-
-{__generate_device_changes_resources(json)}
+    return f"""{__generate_device_changes_resources(json)}
 {__generate_lambda_role()}
 {__generate_lambda_policy(json)}
 {__generate_lambda_permission()}
+{__generate_thing()}
     """
 
 
@@ -144,11 +141,10 @@ def __generate_rule_shadow_changes() -> str:
     """
 
 
-# TODO: rivedi sql topic
-
 def __generate_rule_mqtt(topic: str) -> str:
     """
     This function generates the IoT rule who intercepts mqtt messages and send them to a lambda.
+    :topic: the topic to intercept.
     :return: the IoT rule who intercepts mqtt messages and send them to a lambda.
     """
     return f"""  DeviceStatusMonitoringRule:
@@ -158,7 +154,7 @@ def __generate_rule_mqtt(topic: str) -> str:
       TopicRulePayload:
         RuleDisabled: false
         AwsIotSqlVersion: 2016-03-23
-        Sql: "SELECT * FROM '{topic}'"
+        Sql: "SELECT *, topic(2) AS thingName FROM '{topic}'"
         Actions:
           - Lambda:
               FunctionArn: !GetAtt DeviceStatusMonitoring.Arn
@@ -182,4 +178,20 @@ def __generate_lambda_permission() -> str:
       Action: "lambda:InvokeFunction"
       Principal: "iot.amazonaws.com"
       SourceArn: !GetAtt DeviceStatusMonitoringRule.Arn
+    """
+
+
+def __generate_thing() -> str:
+    """
+    This function generates the IoT thing.
+    :return: the IoT thing.
+    """
+    return """  IoThing:
+    Type: AWS::IoT::Thing
+    Properties:
+      ThingName: !Sub "${Project}-IoTThing"
+      AttributePayload:
+        Attributes:
+          Key: Environment
+          Value: Test
     """

@@ -39,10 +39,6 @@ from services.generation.configuration_application.dal_resources.timeseries_mana
     generate_project_timeseries_manager
 from services.generation.configuration_application.dal_resources.iot_resources.generator_iot_rules_app import \
     generate_iot_rules_app
-from services.generation.configuration_application.template_resources.storage.generator_project_table import \
-    generate_project_table
-from services.generation.configuration_application.template_resources.telemetry.generator_telemetry_resources import \
-    generate_telemetry_resources_template
 
 
 def generate_code_configuration_application(json: dict) -> dict:
@@ -74,8 +70,6 @@ def __generate_templates(configuration_application_code: dict, json: dict):
     configuration_application_code['template/cognito.yaml'] = generate_cognito_template(
         json['awsConfig']['authentication']['cognito'])
     configuration_application_code['template/api.yaml'] = generate_api_template(json)
-    configuration_application_code['template/application_storage.yaml'] = generate_project_table(json)
-    configuration_application_code['template/iot_rules.yaml'] = generate_telemetry_resources_template(json)
 
 
 def __generate_deployment_guide(configuration_application_code: dict):

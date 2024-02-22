@@ -7,6 +7,10 @@ from services.generation.configuration_application.template_resources.api.resour
 from services.generation.configuration_application.template_resources.generator_header_template import generate_header_template
 from services.generation.configuration_application.template_resources.outputs.generator_graphql_output import \
     generate_graphql_outputs
+from services.generation.configuration_application.template_resources.telemetry.generator_telemetry_resources import \
+    generate_telemetry_resources_template
+from services.generation.configuration_application.template_resources.storage.generator_project_table import \
+    generate_project_table
 
 
 def generate_api_template(json: dict) -> str:
@@ -32,6 +36,8 @@ def __generate_resources(json: dict) -> str:
     return f"""Resources:
     {__generate_entity_link_resources(json['entities'] + json['links'])}
     {generate_roles_and_policies(json)}
+    {generate_project_table(json)}
+{generate_telemetry_resources_template(json)}
     """
 
 

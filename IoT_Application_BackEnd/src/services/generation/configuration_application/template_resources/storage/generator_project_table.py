@@ -9,9 +9,6 @@ def generate_project_table(json: dict) -> str:
     :param json: The JSON object that contains the configuration of the project.
     :return: The CloudFormation template for the table resources of the project.
     """
-    return f"""{generate_header_template()}
-    
-Resources:
-{generate_dynamo_table_template(json)}
+    return f"""{generate_dynamo_table_template(json)}
 {generate_timestream_template(json)}
     """
