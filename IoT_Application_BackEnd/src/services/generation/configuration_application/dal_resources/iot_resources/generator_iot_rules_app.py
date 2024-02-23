@@ -16,11 +16,16 @@ from iot.device_status_change import DeviceStatusChange
 
 def __generate_lambdas(json: dict) -> str:
 
-    topic = json['awsConfig']['iot'].get('topic')
+    iot_rule = json['awsConfig']['iot']['iot_rule']
+    topic = iot_rule['topic'] if iot_rule else None
 
-    return f"""{__generate_monitor_device_status_mqtt()}
-    """ if topic else f"""{__generate_monitor_device_status_shadow()}
-    """
+    if topic:
+        resources = __generate_monitor_device_status_mqtt()
+        if iot_rule['shadow_notify']:
+            resources += __generate_monitor_device_status_shadow()
+        return resources
+    else:
+        return __generate_monitor_device_status_shadow()
 
 
 def __generate_monitor_device_status_shadow() -> str:

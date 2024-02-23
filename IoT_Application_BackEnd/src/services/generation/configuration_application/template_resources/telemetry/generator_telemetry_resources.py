@@ -24,12 +24,34 @@ def __generate_device_changes_resources(json: dict) -> str:
     :return: the resources to monitor the changes in the device shadow and stores the data in Timestream.
     """
 
-    topic = json['awsConfig']['iot'].get('topic')
+    iot_rule = json['awsConfig']['iot']['iot_rule']
+    topic = iot_rule['topic'] if iot_rule else None
 
+    if topic:
+        resources = __generate_mqtt_resources(topic)
+        if iot_rule['shadow_notify']:
+            resources += __generate_shadow_changes_resources()
+        return resources
+    else:
+        return __generate_shadow_changes_resources()
+
+
+def __generate_mqtt_resources(topic: str) -> str:
+    """
+    This function generates the resources to monitor the changes in the device shadow and stores the data in Timestream.
+    :return: the resources to monitor the changes in the device shadow and stores the data in Timestream.
+    """
     return f"""{__generate_lambda_mqtt()}
 {__generate_rule_mqtt(topic)}
-      """ if topic else \
-        f"""{__generate_lambda_shadow_changes()}
+"""
+
+
+def __generate_shadow_changes_resources() -> str:
+    """
+    This function generates the resources to monitor the changes in the device shadow and stores the data in Timestream.
+    :return: the resources to monitor the changes in the device shadow and stores the data in Timestream.
+    """
+    return f"""{__generate_lambda_shadow_changes()}
 {__generate_rule_shadow_changes()}
       """
 
