@@ -197,24 +197,33 @@ export class ConfigurationService {
    * Creates the IoT configuration part of the .json file.
    */
   private createIoTConfigurationJson() {
-    const ruleJson = this.createIoTRuleJson();
-    return {
-      timestream: {
-      database: {
-        name: this.iot.database_name
-      },
-      table: {
-        name: this.iot.table_name
-      }
-    },
-    ...ruleJson
-  }
-}
+    const configuration: any = {
+        timestream: {
+            database: {
+                name: this.iot.database_name
+            },
+            table: {
+                name: this.iot.table_name
+            }
+        },
+        iot_rule: {
+            shadow_notify: this.iot.shadow_notify
+        }
+    };
 
+    if (this.iot.topic_notify) {
+        configuration.iot_rule.rule = this.createIoTRuleJson();
+    }
+
+    return configuration;
+}
 
 private createIoTRuleJson() {
-  return this.iot.topic !== "" ? { topic: this.iot.topic } : null;
+    return {
+        topic: this.iot.topic
+    };
 }
+
 
   /**
    * Iterates over the list of items and creates a list of entities ready to be exported.

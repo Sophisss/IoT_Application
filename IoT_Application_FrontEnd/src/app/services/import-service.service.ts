@@ -12,8 +12,7 @@ import { IoT } from '../models/iot.model';
  */
 export class ImportServiceService {
 
-  constructor(private configService: ConfigurationService) {
-  }
+  constructor(private configService: ConfigurationService) { }
 
   /**
    * Takes all the elements from the imported .json file and pushes them into the list.
@@ -21,6 +20,7 @@ export class ImportServiceService {
    */
   pushToConfiguration(jsonContent: any) {
     this.configService.setTitle(jsonContent.projectName);
+
     //read entities
     for (const entity of jsonContent.entities) {
       for (const field of entity.fields) {
@@ -93,14 +93,16 @@ export class ImportServiceService {
       this.configService.getItems().push(edge);
     }
 
-    const storageMethod = jsonContent.awsConfig.iot.topic ? "Sending and storing data when receives an MQTT message with changes to a device shadow" : "Sending and storing data when the device status (shadow) changes";
+    const rule = jsonContent.awsConfig.iot.iot_rule.rule;
 
     let iot: IoT = {
       database_name: jsonContent.awsConfig.iot.timestream.database.name,
       table_name: jsonContent.awsConfig.iot.timestream.table.name,
-      topic: jsonContent.awsConfig.iot.topic,
-      storage_method: storageMethod
+      topic: rule ? rule.topic : null,
+      shadow_notify: jsonContent.awsConfig.iot.iot_rule.shadow_notify,
+      topic_notify: rule ? true : false
     }
+
     this.configService.updateIoTConfiguration(iot);
   }
 
