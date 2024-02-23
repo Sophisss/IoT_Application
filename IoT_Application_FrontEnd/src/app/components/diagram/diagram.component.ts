@@ -6,7 +6,7 @@ import { Item } from "../../models/item.model";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DxDataGridComponent, DxDiagramComponent } from "devextreme-angular";
 import { Field } from "../../models/field.model";
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-diagram',
@@ -129,14 +129,6 @@ export class DiagramComponent {
         this.deleteItem();
       },
     };
-  }
-
-  ngOnInit() {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.hasChild = this.router.url.includes('new/');
-      }
-    });
   }
 
   addNewRow() {
@@ -416,7 +408,6 @@ export class DiagramComponent {
    *  Handles the resources disposal of the diagram component.
    */
   onDisposing() {
-
     if (!this.router.url.includes('new/')) {
       this.dataSource.clear();
       this.linksDataSource.clear();
