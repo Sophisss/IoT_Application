@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
@@ -13,8 +14,11 @@ export class SidenavComponent {
     { id: 2, text: "IoT Rules", icon: "edit", path: "new/rules" }
   ];
 
-  toggleSidebar() {
-    this.toggleSidebarForMe.emit();
+  constructor(private _router: Router) { }
+
+  itemClick(e: any) {
+    const destination = e.itemData.path;
+    this._router.navigateByUrl(destination);
   }
 
 }
