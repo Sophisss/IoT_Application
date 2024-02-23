@@ -7,7 +7,7 @@
     </div>
 
     <div class="open-create" id="open-create-text">
-        <a class="externalLink" routerLink="new">Create</a>
+        <a class="externalLink" routerLink="/new/diagram">Create</a>
         or
         <label class="externalLink" for="textInput">open</label>
         <input #jsonInput (change)="import($event)" accept=".json" hidden id="textInput"
@@ -23,7 +23,7 @@
     </div>
 
     <div class="open-create" id="open-create-icons">
-        <a id="new-diagram-button" routerLink="/new">
+        <a id="new-diagram-button" routerLink="/new/diagram">
             <dx-button class="child-button" icon="plus" id="newButton"></dx-button>
         </a>
 

@@ -26,7 +26,7 @@ export class HomepageComponent {
         this.importService.pushToConfiguration(jsonContent);
       })
       .then(() => {
-        this.router.navigate(['/new']);
+        this.router.navigate(['/new/diagram']);
       })
       .catch((error) => {
         alert(error);
