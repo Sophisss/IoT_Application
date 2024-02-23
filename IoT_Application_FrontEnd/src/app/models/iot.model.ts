@@ -1,8 +1,7 @@
-import { Optional } from "@angular/core"
-
 export class IoT {
     database_name: string = ''
     table_name: string = ''
     topic: string  = ''
-    storage_method: Optional = ''
+    shadow_notify: boolean = false
+    topic_notify: boolean = false
 }

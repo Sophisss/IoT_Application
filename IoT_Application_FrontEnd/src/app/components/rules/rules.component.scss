@@ -27,12 +27,12 @@
 }
 
 .changeButton {
-    right: 60px;
-}
-
-.resizePageButton {
     right: 20px;
 }
+
+// .resizePageButton {
+//     right: 20px;
+// }
 
 ::ng-deep .changeButton .dx-icon,
 ::ng-deep .resizePageButton .dx-icon {
@@ -85,6 +85,15 @@
     font-style: italic;
     text-align: center;
     padding: 10px;
+}
+
+#validationGroup {
+    margin-top: 40px;
+    padding: 10px;
+}
+
+::ng-deep .dx-checkbox-text {
+    padding-left: 15px;
 }
 
 .form {
@@ -157,11 +166,13 @@
     }
 }
 
-#radio {
+#checkbox {
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
     padding: 15px;
+    margin-bottom: 20px;
 }
 
 ::ng-deep #radio .dx-item .dx-radiobutton {

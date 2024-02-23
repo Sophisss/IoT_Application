@@ -4,7 +4,6 @@ import { HomepageComponent } from "./components/homepage/homepage.component";
 import { WorkspaceComponent } from "./components/workspace/workspace.component";
 import { RulesComponent } from './components/rules/rules.component';
 import { DiagramComponent } from './components/diagram/diagram.component';
-import { ProvaComponent } from './components/prova/prova.component';
 
 const routes: Routes = [
   { path: '', title: "Homepage", component: HomepageComponent },

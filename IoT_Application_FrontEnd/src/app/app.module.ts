@@ -8,7 +8,6 @@ import { WorkspaceComponent } from "./components/workspace/workspace.component";
 import { DiagramComponent } from './components/diagram/diagram.component';
 import { RulesComponent } from './components/rules/rules.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
-import { ProvaComponent } from './components/prova/prova.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -50,8 +49,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
     DiagramComponent,
     DrawerContentComponent,
     RulesComponent,
-    SidenavComponent,
-    ProvaComponent
+    SidenavComponent
   ],
   imports: [
     BrowserModule,
