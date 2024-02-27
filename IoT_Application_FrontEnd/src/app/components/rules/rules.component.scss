@@ -30,10 +30,6 @@
     right: 20px;
 }
 
-// .resizePageButton {
-//     right: 20px;
-// }
-
 ::ng-deep .changeButton .dx-icon,
 ::ng-deep .resizePageButton .dx-icon {
     font-size: 20px;
@@ -106,10 +102,15 @@
     padding: 15px;
 }
 
-.field-label {
+.field-label, .select-label{
     margin-right: 10px;
     font-weight: bold;
     padding: 5px;
+}
+
+.select-label {
+    margin-top: 20px;
+
 }
 
 .field-value {

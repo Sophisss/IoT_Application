@@ -13,6 +13,8 @@ export class ConfigurationService {
 
   items: Item[] = [];
 
+  selectedItems: string[] = [];
+
   private iot: IoT = new IoT();
 
   projectTitle: string = "IoT Application";
@@ -31,6 +33,7 @@ export class ConfigurationService {
 
   updateIoTConfiguration(iot: IoT) {
     this.iot = iot;
+    this.selectedItems = iot.select_fields;
   }
 
   getIoTConfiguration(): IoT {

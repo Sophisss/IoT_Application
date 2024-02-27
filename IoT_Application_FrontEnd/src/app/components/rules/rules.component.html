@@ -1,6 +1,7 @@
 <div class="overlay"></div>
 <div class="rules">
-    <dx-button class="changeButton" icon="rename" hint="Change configuration" (click)="modify_iot_rules_configuration()"></dx-button>
+    <dx-button class="changeButton" icon="rename" hint="Change configuration"
+        (click)="modify_iot_rules_configuration()"></dx-button>
     <div class="container">
 
         <!-- First Box-->
@@ -11,6 +12,7 @@
                 devices.</p>
             <dx-validation-group>
                 <form [formGroup]="form" class="form">
+
                     <div class="field-container">
                         <div class="field-label">Database *</div>
                         <div class="field-value">
@@ -24,6 +26,7 @@
                             </dx-text-box>
                         </div>
                     </div>
+
                     <div class="field-container">
                         <div class="field-label">Table *</div>
                         <div class="field-value">
@@ -37,6 +40,7 @@
                             </dx-text-box>
                         </div>
                     </div>
+
                 </form>
                 <dx-button id="nextButton" icon="chevronnext" [useSubmitBehavior]="true"
                     (onClick)="firstBox_nextButton()"></dx-button>
@@ -53,7 +57,7 @@
             <p class="box-subtitle">Choose the methodology for storing data read by IoT devices.</p>
             <dx-validation-group id="validationGroup">
                 <dx-check-box id="checkbox" *ngFor="let item of choice_list; let i = index" [(value)]="item.value"
-                    [text]="choice_list[i].text" (onContentReady)="initCheckBox()"
+                    [text]="choice_list[i].text"
                     (onValueChanged)="onStorageMethodChanged()" [(isValid)]="isSecondBoxValid">
                 </dx-check-box>
                 <dx-button id="backwardsButton" icon="chevronleft" (onClick)="secondBox_backButton()"></dx-button>
@@ -73,7 +77,8 @@
             <dx-validation-group>
                 <form [formGroup]="form" class="form">
                     <div class="field-container" *ngIf="configure_topic || showTopics">
-                        <div class="field-label">Topic mqtt*</div>
+
+                        <div class="field-label">Topic mqtt *</div>
                         <div class="field-value">
                             <dx-text-box [(value)]="iot.topic" [showClearButton]="true"
                                 [inputAttr]="{ 'aria-label': 'topic' }" formControlName="topic" label="Topic"
@@ -85,35 +90,35 @@
                             </dx-text-box>
                         </div>
 
-                        <!-- <div class="field-label">Select*</div>
+                        <div class="select-label">Select *</div>
                         <div class="field-value">
-                            <dx-text-box [(value)]="iot.topic" [showClearButton]="true"
-                                [inputAttr]="{ 'aria-label': 'select' }" formControlName="select" label="Field"
-                                labelMode="floating">
+                            <dx-tag-box [(value)]="iot.select_fields" [items]="items"
+                                [inputAttr]="{ 'aria-label': 'select' }" [acceptCustomValue]="true" label="Fields"
+                                labelMode="floating" [placeholder]="' '" [multiline]="true" [noDataText]="' '"
+                                (onValueChanged)="onValueChanged($event)">
                                 <dx-validator>
                                     <dxi-validation-rule type="required"
-                                        message="Select field is required"></dxi-validation-rule>
+                                        message="Select fields is required"></dxi-validation-rule>
                                 </dx-validator>
-                            </dx-text-box>
-                        </div> -->
+                            </dx-tag-box>
+                        </div>
                     </div>
 
                     <div class="field-container" *ngIf="!configure_topic || showTopics">
-                        <div class="field-label">Topic shadow*</div>
+                        <div class="field-label">Topic shadow *</div>
                         <div class="field-value">
                             <dx-text-box class="fixTopic" [inputAttr]="{ 'aria-label': 'topic' }"
                                 value="$aws/things/thingName/shadow/update/documents" [disabled]="true">
                             </dx-text-box>
-
                         </div>
                     </div>
+
                 </form>
                 <dx-button id="backwardsButton" icon="chevronleft" (onClick)="thirdBox_backButton()"></dx-button>
                 <dx-button id="nextButton" icon="save" [useSubmitBehavior]="true"
-                    (onClick)="save_configuration()"></dx-button>
+                    (onClick)="save_button()"></dx-button>
             </dx-validation-group>
         </div>
-
         <dx-toast [(visible)]="isToastVisible" [type]="type" [message]="message">
         </dx-toast>
     </div>

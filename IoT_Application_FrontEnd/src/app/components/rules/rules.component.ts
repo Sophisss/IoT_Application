@@ -19,6 +19,10 @@ export class RulesComponent implements OnInit {
     { text: "Sending and storing data when receives an MQTT message with changes to a device shadow", value: false }
   ];
 
+  // Variable for select form field
+
+  items = ["thingName"]
+
   // Variabile to change box visibility
 
   firstBoxZIndex = 1000
@@ -51,6 +55,7 @@ export class RulesComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.initCheckBox();
   }
 
 
@@ -121,21 +126,30 @@ export class RulesComponent implements OnInit {
     this.thirdBoxZIndex = 0;
   }
 
-  /**
-   * This method saves the IoT rule configuration.
-   */
-  save_configuration() {
-    this.changeConfiguration = true;
 
-    if (!this.configure_topic || this.form.value.topic !== '') {
-      this.iot.topic = this.configure_topic ? this.form.value.topic : '';
+  /**
+ * This method saves the IoT rule configuration.
+ */
+  save_button() {
+    if (!this.configure_topic) {
+      this.form.get('topic')?.setValue('');
+      this.iot.topic = '';
+      this.iot.select_fields = [];
+      this.configService.selectedItems = [];
       this.showToast('The IoT rule has been successfully configured!');
-      this.configService.updateIoTConfiguration(this.iot);
+    } else {
+      this.iot.topic = this.form.value.topic;
+      this.iot.select_fields = this.configService.selectedItems;
+
+      if (this.iot.topic !== '' && this.iot.select_fields.length > 0) {
+        this.showToast('The IoT rule has been successfully configured!');
+      }
     }
+    this.changeConfiguration = true;
   }
 
   /**
-   * This method is used to show the toast message.
+   * This method is used to show the toast message.s
    * @param message The message to show.
    */
   private showToast(message: string) {
@@ -154,6 +168,7 @@ export class RulesComponent implements OnInit {
   /**
    * This method is used to initialize the checkbox.
    */
+  // TODO check
   initCheckBox() {
     this.choice_list.forEach((choice, index) => {
       choice.value = index === 0 ? this.iot.shadow_notify : index === 1 && (this.configure_topic = !!this.iot.topic_notify);
@@ -168,8 +183,11 @@ export class RulesComponent implements OnInit {
   onStorageMethodChanged() {
     this.checkSecondBoxValidity();
 
-    this.iot.shadow_notify = this.choice_list[0].value || false;
-    this.iot.topic_notify = this.choice_list[1].value || false;
+    this.iot.shadow_notify = this.choice_list[0].value;
+    this.iot.topic_notify = this.choice_list[1].value;
+  }
 
+  onValueChanged(event: any) {
+    this.configService.selectedItems = event.value;
   }
 }
