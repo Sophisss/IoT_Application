@@ -201,32 +201,32 @@ export class ConfigurationService {
    */
   private createIoTConfigurationJson() {
     const configuration: any = {
-        timestream: {
-            database: {
-                name: this.iot.database_name
-            },
-            table: {
-                name: this.iot.table_name
-            }
+      timestream: {
+        database: {
+          name: this.iot.database_name
         },
-        iot_rule: {
-            shadow_notify: this.iot.shadow_notify
+        table: {
+          name: this.iot.table_name
         }
+      },
+      iot_rule: {
+        shadow_notify: this.iot.shadow_notify
+      }
     };
 
     if (this.iot.topic_notify) {
-        configuration.iot_rule.rule = this.createIoTRuleJson();
+      configuration.iot_rule.rule = this.createIoTRuleJson();
     }
 
     return configuration;
-}
+  }
 
-private createIoTRuleJson() {
+  private createIoTRuleJson() {
     return {
-        topic: this.iot.topic,
-        select: this.iot.select_fields
+      topic: this.iot.topic,
+      select: this.iot.select_fields
     };
-}
+  }
 
 
   /**

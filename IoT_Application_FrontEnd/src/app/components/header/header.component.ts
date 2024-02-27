@@ -23,16 +23,23 @@ export class HeaderComponent {
   }
 
   exitButtonOptions: any = {
-    icon: 'home',
-    text: 'Home',
+    icon: 'export',
+    text: 'Exit',
     onClick: () => {
-      // this.iot.database_name = '';
-      // this.iot.table_name = '';
-      // this.iot.topic = '';
-      // this.iot.shadow_notify = false;
-      // this.iot.topic_notify = false;
+      this.initDiagram();
+      this.initIoTRules();
       this.router.navigate(['']);
     }
+  }
+
+
+  initDiagram() {
+    this.configurationService.items = [];
+  }
+
+  initIoTRules() {
+    const iot = new IoT();
+    this.configurationService.updateIoTConfiguration(iot);
   }
 
   constructor(protected configurationService: ConfigurationService, private router: Router) { }

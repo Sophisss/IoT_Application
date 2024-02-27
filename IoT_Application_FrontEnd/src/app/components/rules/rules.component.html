@@ -57,8 +57,8 @@
             <p class="box-subtitle">Choose the methodology for storing data read by IoT devices.</p>
             <dx-validation-group id="validationGroup">
                 <dx-check-box id="checkbox" *ngFor="let item of choice_list; let i = index" [(value)]="item.value"
-                    [text]="choice_list[i].text"
-                    (onValueChanged)="onStorageMethodChanged()" [(isValid)]="isSecondBoxValid">
+                    [text]="choice_list[i].text" (onValueChanged)="onStorageMethodChanged()"
+                    [(isValid)]="isSecondBoxValid">
                 </dx-check-box>
                 <dx-button id="backwardsButton" icon="chevronleft" (onClick)="secondBox_backButton()"></dx-button>
                 <dx-button id="nextButton" icon="chevronnext" [useSubmitBehavior]="true"
@@ -115,8 +115,7 @@
 
                 </form>
                 <dx-button id="backwardsButton" icon="chevronleft" (onClick)="thirdBox_backButton()"></dx-button>
-                <dx-button id="nextButton" icon="save" [useSubmitBehavior]="true"
-                    (onClick)="save_button()"></dx-button>
+                <dx-button id="nextButton" icon="save" [useSubmitBehavior]="true" (onClick)="save_button()"></dx-button>
             </dx-validation-group>
         </div>
         <dx-toast [(visible)]="isToastVisible" [type]="type" [message]="message">

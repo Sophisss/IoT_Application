@@ -19,8 +19,6 @@ export class RulesComponent implements OnInit {
     { text: "Sending and storing data when receives an MQTT message with changes to a device shadow", value: false }
   ];
 
-  // Variable for select form field
-
   items = ["thingName"]
 
   // Variabile to change box visibility
@@ -68,6 +66,17 @@ export class RulesComponent implements OnInit {
       table_name: [this.iot.table_name, Validators.required],
       topic: [this.iot.topic, Validators.required]
     });
+  }
+
+  /**
+ * This method is used to initialize the checkbox.
+ */
+  initCheckBox() {
+    this.choice_list.forEach((choice, index) => {
+      choice.value = index === 0 ? this.iot.shadow_notify : index === 1 && (this.configure_topic = !!this.iot.topic_notify);
+    });
+
+    this.showTopics = this.choice_list.every(choice => choice.value);
   }
 
   /**
@@ -133,7 +142,6 @@ export class RulesComponent implements OnInit {
   save_button() {
     if (!this.configure_topic) {
       this.form.get('topic')?.setValue('');
-      this.iot.topic = '';
       this.iot.select_fields = [];
       this.configService.selectedItems = [];
       this.showToast('The IoT rule has been successfully configured!');
@@ -166,18 +174,6 @@ export class RulesComponent implements OnInit {
   }
 
   /**
-   * This method is used to initialize the checkbox.
-   */
-  // TODO check
-  initCheckBox() {
-    this.choice_list.forEach((choice, index) => {
-      choice.value = index === 0 ? this.iot.shadow_notify : index === 1 && (this.configure_topic = !!this.iot.topic_notify);
-    });
-
-    this.showTopics = this.choice_list.every(choice => choice.value);
-  }
-
-  /**
  * This method is used when a checkbox is changed.
  */
   onStorageMethodChanged() {
@@ -187,6 +183,10 @@ export class RulesComponent implements OnInit {
     this.iot.topic_notify = this.choice_list[1].value;
   }
 
+  /**
+   * This method save the selected items.
+   * @param event The event that contains the selected items.
+   */
   onValueChanged(event: any) {
     this.configService.selectedItems = event.value;
   }
