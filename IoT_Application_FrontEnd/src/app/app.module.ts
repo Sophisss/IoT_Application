@@ -32,7 +32,7 @@ import {
   DxValidationSummaryModule,
   DxValidationGroupModule,
   DxToastModule,
-  DxResizableModule
+  DxTagBoxModule
 } from "devextreme-angular";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { DrawerContentComponent } from './components/drawer-content/drawer-content.component';
@@ -78,7 +78,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
     DxValidationSummaryModule,
     DxValidationGroupModule,
     DxToastModule,
-    DxResizableModule
+    DxTagBoxModule
   ],
   providers: [
     JsonPipe,

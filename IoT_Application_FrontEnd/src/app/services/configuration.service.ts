@@ -220,7 +220,8 @@ export class ConfigurationService {
 
 private createIoTRuleJson() {
     return {
-        topic: this.iot.topic
+        topic: this.iot.topic,
+        select: this.iot.select_fields
     };
 }
 

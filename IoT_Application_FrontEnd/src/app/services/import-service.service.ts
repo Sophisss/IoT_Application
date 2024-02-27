@@ -100,7 +100,8 @@ export class ImportServiceService {
       table_name: jsonContent.awsConfig.iot.timestream.table.name,
       topic: rule ? rule.topic : null,
       shadow_notify: jsonContent.awsConfig.iot.iot_rule.shadow_notify,
-      topic_notify: rule ? true : false
+      topic_notify: rule ? true : false,
+      select_fields: rule ? rule.select : null
     }
 
     this.configService.updateIoTConfiguration(iot);

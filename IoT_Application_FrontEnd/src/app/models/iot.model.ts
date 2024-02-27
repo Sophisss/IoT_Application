@@ -4,4 +4,5 @@ export class IoT {
     topic: string  = ''
     shadow_notify: boolean = false
     topic_notify: boolean = false
+    select_fields: string[] = []
 }
