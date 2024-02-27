@@ -18,7 +18,7 @@ def generate_device_status_event() -> str:
     This function generates the DeviceStatusEvent class.
     :return: The DeviceStatusEvent class.
     """
-    return """from iot.models.device_status_change import DeviceStatusChange
+    return """from iot.device_status_change import DeviceStatusChange
 
 
 class DeviceStatusEvent:
