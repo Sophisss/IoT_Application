@@ -56,7 +56,6 @@ export class RulesComponent implements OnInit {
     this.initCheckBox();
   }
 
-
   /**
    * This method is used to initialize the form.
    */
@@ -92,7 +91,6 @@ export class RulesComponent implements OnInit {
     }
   }
 
-
   /**
    * This method is used to show the first box and hide the second box.
    */
@@ -121,7 +119,6 @@ export class RulesComponent implements OnInit {
     this.isSecondBoxValid = this.choice_list.find(item => item.value) != null;
   }
 
-
   isShowedTopics() {
     this.configure_topic = this.iot.topic_notify;
     this.showTopics = this.iot.shadow_notify && this.iot.topic_notify;
@@ -135,24 +132,35 @@ export class RulesComponent implements OnInit {
     this.thirdBoxZIndex = 0;
   }
 
-
   /**
  * This method saves the IoT rule configuration.
  */
   save_button() {
     if (!this.configure_topic) {
-      this.form.get('topic')?.setValue('');
-      this.iot.select_fields = [];
-      this.configService.selectedItems = [];
-      this.showToast('The IoT rule has been successfully configured!');
+      this.resetData();
+      this.ifSuccess();
     } else {
       this.iot.topic = this.form.value.topic;
       this.iot.select_fields = this.configService.selectedItems;
 
-      if (this.iot.topic !== '' && this.iot.select_fields.length > 0) {
-        this.showToast('The IoT rule has been successfully configured!');
-      }
+      if (this.iot.topic !== '' && this.iot.select_fields.length > 0) this.ifSuccess();
     }
+  }
+
+  /**
+   * This method is used to reset the data.
+   */
+  private resetData() {
+    this.form.value.topic = '';
+    this.iot.select_fields = [];
+    this.configService.selectedItems = [];
+  }
+
+  /**
+   * This method is used when the configuration is successful.
+   */
+  private ifSuccess() {
+    this.showToast('The IoT rule has been successfully configured!');
     this.changeConfiguration = true;
   }
 
@@ -174,8 +182,8 @@ export class RulesComponent implements OnInit {
   }
 
   /**
- * This method is used when a checkbox is changed.
- */
+   * This method is used when a checkbox is changed.
+  */
   onStorageMethodChanged() {
     this.checkSecondBoxValidity();
 
