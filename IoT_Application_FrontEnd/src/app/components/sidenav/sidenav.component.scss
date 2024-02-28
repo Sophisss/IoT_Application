@@ -3,7 +3,7 @@
 }
 
 .dx-list-item-icon-container .dx-icon {
-  color: white;
+  color: lightgray;
 }
 
 ::ng-deep .dx-list-item {
@@ -11,5 +11,28 @@
 }
 
 #span {
-  color: #ffffff;
+  color: lightgray;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+}
+
+h2 {
+  color: lightgray;
+  margin-left: 10px; 
+}
+
+#menu {
+  background-color: transparent;
+  border: none; 
+  padding: 20px; 
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+::ng-deep #menu .dx-icon {
+  margin-right: 10px; 
+  color: lightgray;
 }

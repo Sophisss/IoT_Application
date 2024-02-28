@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfigurationService } from "../../services/configuration.service";
 import { Router } from '@angular/router';
 import { IoT } from 'src/app/models/iot.model';
@@ -9,9 +9,8 @@ import { IoT } from 'src/app/models/iot.model';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
+  @Input() isSidebarOpen: boolean = false;
   @Output() toggleSidebarForMe: EventEmitter<any> = new EventEmitter();
-
-  // iot: IoT = this.configurationService.getIoTConfiguration();
 
   isModifiable: boolean = false;
 
@@ -53,6 +52,7 @@ export class HeaderComponent {
   }
 
   toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
     this.toggleSidebarForMe.emit();
   }
 }

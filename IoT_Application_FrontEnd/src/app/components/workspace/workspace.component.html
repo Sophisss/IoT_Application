@@ -1,25 +1,22 @@
 <div id="container">
-    <div id="header">
-        <app-header (toggleSidebarForMe)="sideBarToggler()"></app-header>
-    </div>
-    <div id="body">
-        <dx-drawer #drawer template="template" [(opened)]="isDrawerOpened" [minSize]="37" position="left"
+        <dx-drawer #drawer template="template" [(opened)]="isDrawerOpened" position="left"
             revealMode="expand" openedStateMode="shrink" [closeOnOutsideClick]="false">
-
             <div *dxTemplate="let data of 'template'">
-                <app-sidenav (toggleSidebarForMe)="sideBarToggler()"></app-sidenav>
+                <app-sidenav [isSidebarOpen]="isDrawerOpened" (toggleSidebarForMe)="sideBarToggler()"></app-sidenav>
             </div>
-
-            <dx-drawer #drawer1 [closeOnOutsideClick]="false" [opened]="getDrawerOpen()" openedStateMode="overlap"
-                position="right" revealMode="slide" template="template">
-                <div *dxTemplate="let data of 'template'" class="title">
-                    <p id="drawer-title"><b>JSON configuration</b></p>
-                    <app-drawer-content></app-drawer-content>
-                </div>
-                
-                <router-outlet></router-outlet>
-
-            </dx-drawer>
+            <div id="header">
+                <app-header [isSidebarOpen]="isDrawerOpened" (toggleSidebarForMe)="sideBarToggler()"></app-header>
+            </div>
+        
+            <div id="body">
+                <dx-drawer #drawer1 [closeOnOutsideClick]="false" [opened]="getDrawerOpen()" openedStateMode="overlap"
+                    position="right" revealMode="slide" template="template">
+                    <div *dxTemplate="let data of 'template'" class="title">
+                        <p id="drawer-title"><b>JSON configuration</b></p>
+                        <app-drawer-content></app-drawer-content>
+                    </div>
+                    <router-outlet></router-outlet>
+                </dx-drawer>
+            </div>
         </dx-drawer>
-    </div>
 </div>
