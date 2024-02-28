@@ -92,13 +92,15 @@
 
                         <div class="select-label">Select *</div>
                         <div class="field-value">
-                            <dx-tag-box [(value)]="iot.select_fields" [items]="items"
+                            <dx-tag-box [(value)]="iot.select_fields" noDataText="' '"
                                 [inputAttr]="{ 'aria-label': 'select' }" [acceptCustomValue]="true" label="Fields"
                                 labelMode="floating" [placeholder]="' '" [multiline]="true" [noDataText]="' '"
                                 (onValueChanged)="onValueChanged($event)">
                                 <dx-validator>
                                     <dxi-validation-rule type="required"
                                         message="Select fields is required"></dxi-validation-rule>
+                                    <dxi-validation-rule type="pattern" [pattern]="selectFieldPattern"
+                                        message="Field name is invalid"></dxi-validation-rule>
                                 </dx-validator>
                             </dx-tag-box>
                         </div>
