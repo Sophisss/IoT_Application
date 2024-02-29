@@ -1,22 +1,35 @@
-<div id="container">
-        <dx-drawer #drawer template="template" [(opened)]="isDrawerOpened" position="left"
-            revealMode="expand" openedStateMode="shrink" [closeOnOutsideClick]="false">
-            <div *dxTemplate="let data of 'template'">
-                <app-sidenav [isSidebarOpen]="isDrawerOpened" (toggleSidebarForMe)="sideBarToggler()"></app-sidenav>
-            </div>
-            <div id="header">
-                <app-header [isSidebarOpen]="isDrawerOpened" (toggleSidebarForMe)="sideBarToggler()"></app-header>
-            </div>
-        
-            <div id="body">
-                <dx-drawer #drawer1 [closeOnOutsideClick]="false" [opened]="getDrawerOpen()" openedStateMode="overlap"
-                    position="right" revealMode="slide" template="template">
-                    <div *dxTemplate="let data of 'template'" class="title">
-                        <p id="drawer-title"><b>JSON configuration</b></p>
-                        <app-drawer-content></app-drawer-content>
+<div id="container" (exitClicked)="showPopup()">
+    <dx-drawer #drawer template="template" [(opened)]="isDrawerOpened" position="left" revealMode="expand"
+        openedStateMode="shrink" [closeOnOutsideClick]="false">
+        <div *dxTemplate="let data of 'template'">
+            <app-sidenav [isSidebarOpen]="isDrawerOpened" (toggleSidebarForMe)="sideBarToggler()"></app-sidenav>
+        </div>
+        <div id="header">
+            <app-header [isSidebarOpen]="isDrawerOpened" (toggleSidebarForMe)="sideBarToggler()"
+                (exitClicked)="showPopup()"></app-header>
+        </div>
+
+        <div id="body">
+            <dx-drawer #drawer1 [closeOnOutsideClick]="false" [opened]="getDrawerOpen()" openedStateMode="overlap"
+                position="right" revealMode="slide" template="template">
+                <div *dxTemplate="let data of 'template'" class="title">
+                    <p id="drawer-title"><b>JSON configuration</b></p>
+                    <app-drawer-content></app-drawer-content>
+                </div>
+                <router-outlet></router-outlet>
+                <dx-popup [width]="280" [height]="260" [showTitle]="false" [dragEnabled]="false"
+                    [hideOnOutsideClick]="true" container=".dx-viewport"
+                    [(visible)]="popupVisible">
+                    <div class="popup-content">
+                        <p class="popup-message">Are you sure you want to exit? Changes will be lost.</p>
+                        <div class="popup-button">
+                            <dx-button id="cancelButton" text="Cancel" (onClick)="showPopup()"></dx-button>
+                            <dx-button id="exitButton" text="Exit" (onClick)="exit()"></dx-button>
+                        </div>
                     </div>
-                    <router-outlet></router-outlet>
-                </dx-drawer>
-            </div>
-        </dx-drawer>
+                </dx-popup>
+
+            </dx-drawer>
+        </div>
+    </dx-drawer>
 </div>
