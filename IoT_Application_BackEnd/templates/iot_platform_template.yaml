@@ -69,26 +69,6 @@ Resources:
             Method: POST
 
 
-
-  SqlValidator:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub "${Project}-SqlValidator"
-      Description: Function to validate SQL query
-      CodeUri: ../src/
-      Handler: services/sql_validator.validate_sql_instructions
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Tags:
-        Name: !Sub "${Project}-SqlValidator"
-      Events:
-        SqlValidator:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApplicationApiGateway
-            Path: /validate
-            Method: POST
-
-
   # region Lambda functions roles and policies
 
   LambdaExecutionRole:
