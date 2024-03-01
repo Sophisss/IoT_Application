@@ -19,7 +19,7 @@ export class RulesComponent implements OnInit {
     { text: "Sending and storing data when receives an MQTT message with changes to a device shadow", value: false }
   ];
 
-  items = ["thingName"]
+  selectFieldPattern: RegExp = /^topic\(\d+\) as [A-Za-z]+$/;
 
   // Variabile to change box visibility
 
@@ -196,6 +196,7 @@ export class RulesComponent implements OnInit {
    * @param event The event that contains the selected items.
    */
   onValueChanged(event: any) {
-    this.configService.selectedItems = event.value;
+    const validItems = event.value.filter((item: string) => this.selectFieldPattern.test(item));
+    this.configService.selectedItems = validItems;
   }
 }

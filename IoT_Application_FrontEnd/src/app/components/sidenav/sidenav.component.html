@@ -1,11 +1,17 @@
-<dx-list [items]="navigation" [width]="200" selectionMode="none" itemTemplate="links" [hoverStateEnabled]="false"
-    (onItemClick)="itemClick($event)">
-    <div *dxTemplate="let link of 'links'">
-        <div>
-            <div class="dx-list-item-icon-container">
-                <i class="dx-icon dx-list-item-icon dx-icon-{{link.icon}}"></i>
+<div id="container">
+    <div id="title" class="title-container">
+        <h2>Dashboard</h2>
+        <dx-button id="menu" icon="chevrondoubleleft" (click)="click()"></dx-button>
+    </div>    
+    <dx-list [items]="navigation" [width]="200" selectionMode="none" itemTemplate="links" [hoverStateEnabled]="false"
+        (onItemClick)="itemClick($event)">
+        <div *dxTemplate="let link of 'links'">
+            <div>
+                <div class="dx-list-item-icon-container">
+                    <i class="dx-icon dx-list-item-icon dx-icon-{{link.icon}}"></i>
+                </div>
+                <span id="span">{{ link.text }}</span>
             </div>
-            <span id="span">{{ link.text }}</span>
         </div>
-    </div>
-</dx-list>
+    </dx-list>
+</div>

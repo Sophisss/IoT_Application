@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,6 +7,9 @@ import { Router } from '@angular/router';
   styleUrl: './sidenav.component.scss'
 })
 export class SidenavComponent {
+
+  @Input() isSidebarOpen: boolean = false;
+
   @Output() toggleSidebarForMe: EventEmitter<any> = new EventEmitter();
 
   navigation: any[] = [
@@ -19,6 +22,10 @@ export class SidenavComponent {
   itemClick(e: any) {
     const destination = e.itemData.path;
     this._router.navigateByUrl(destination);
+  }
+
+  click() {
+    this.toggleSidebarForMe.emit();
   }
 
 }

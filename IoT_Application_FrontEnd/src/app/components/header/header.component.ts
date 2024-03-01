@@ -1,7 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConfigurationService } from "../../services/configuration.service";
-import { Router } from '@angular/router';
-import { IoT } from 'src/app/models/iot.model';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +7,10 @@ import { IoT } from 'src/app/models/iot.model';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  @Output() toggleSidebarForMe: EventEmitter<any> = new EventEmitter();
 
-  // iot: IoT = this.configurationService.getIoTConfiguration();
+  @Input() isSidebarOpen: boolean = false;
+  @Output() toggleSidebarForMe: EventEmitter<any> = new EventEmitter();
+  @Output() exitClicked: EventEmitter<void> = new EventEmitter<void>();
 
   isModifiable: boolean = false;
 
@@ -26,23 +25,11 @@ export class HeaderComponent {
     icon: 'export',
     text: 'Exit',
     onClick: () => {
-      this.initDiagram();
-      this.initIoTRules();
-      this.router.navigate(['']);
+      this.exitClicked.emit();
     }
   }
 
-
-  initDiagram() {
-    this.configurationService.items = [];
-  }
-
-  initIoTRules() {
-    const iot = new IoT();
-    this.configurationService.updateIoTConfiguration(iot);
-  }
-
-  constructor(protected configurationService: ConfigurationService, private router: Router) { }
+  constructor(protected configurationService: ConfigurationService) { }
 
   /**
    * Handles the switch to the text mode of the title of the project.
@@ -53,6 +40,7 @@ export class HeaderComponent {
   }
 
   toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
     this.toggleSidebarForMe.emit();
   }
 }
