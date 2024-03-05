@@ -19,7 +19,11 @@ export class RulesComponent implements OnInit {
     { text: "Sending and storing data when receives an MQTT message with changes to a device shadow", value: false }
   ];
 
-  selectFieldPattern: RegExp = /^topic\(\d+\) as [A-Za-z]+$/;
+  // selectFieldPattern: RegExp = /^topic\(\d+\) as [A-Za-z]+$/;
+
+  sql_statement_pattern: RegExp = /^SELECT\s+((\*|[A-Za-z]+)(\s+as\s+[A-Za-z]+)?)(,\s+(\*|[A-Za-z]+)(\s+as\s+[A-Za-z]+)?)*\s+FROM\s+[A-Za-z]+$/;
+
+  sql_statement: string = '';
 
   // Variabile to change box visibility
 
@@ -41,15 +45,14 @@ export class RulesComponent implements OnInit {
 
   configure_topic: boolean = false;
 
-  showTopics: boolean = false;
+  show_sql_statement: boolean = false;
 
   changeConfiguration = false;
 
   isSecondBoxValid = true;
 
   constructor(private formBuilder: FormBuilder,
-    public configService: ConfigurationService) { }
-
+    protected configService: ConfigurationService) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -63,7 +66,7 @@ export class RulesComponent implements OnInit {
     this.form = this.formBuilder.group({
       database_name: [this.iot.database_name, Validators.required],
       table_name: [this.iot.table_name, Validators.required],
-      topic: [this.iot.topic, Validators.required]
+      sql_statement: [this.iot.sql_statement, Validators.required]
     });
   }
 
@@ -75,7 +78,7 @@ export class RulesComponent implements OnInit {
       choice.value = index === 0 ? this.iot.shadow_notify : index === 1 && (this.configure_topic = !!this.iot.topic_notify);
     });
 
-    this.showTopics = this.choice_list.every(choice => choice.value);
+    this.show_sql_statement = this.choice_list.every(choice => choice.value);
   }
 
   /**
@@ -106,7 +109,7 @@ export class RulesComponent implements OnInit {
     this.checkSecondBoxValidity();
 
     if (this.isSecondBoxValid) {
-      this.isShowedTopics();
+      this.isShowedSqlStatement();
       this.secondBoxZIndex = 0;
       this.thirdBoxZIndex = 1000;
     }
@@ -119,9 +122,9 @@ export class RulesComponent implements OnInit {
     this.isSecondBoxValid = this.choice_list.find(item => item.value) != null;
   }
 
-  isShowedTopics() {
+  isShowedSqlStatement() {
     this.configure_topic = this.iot.topic_notify;
-    this.showTopics = this.iot.shadow_notify && this.iot.topic_notify;
+    this.show_sql_statement = this.iot.shadow_notify && this.iot.topic_notify;
   }
 
   /**
@@ -140,10 +143,10 @@ export class RulesComponent implements OnInit {
       this.resetData();
       this.ifSuccess();
     } else {
-      this.iot.topic = this.form.value.topic;
-      this.iot.select_fields = this.configService.selectedItems;
-
-      if (this.iot.topic !== '' && this.iot.select_fields.length > 0) this.ifSuccess();
+      if (this.sql_statement !== '') {
+        this.iot.sql_statement = this.sql_statement;
+        this.ifSuccess();
+      }
     }
   }
 
@@ -151,9 +154,9 @@ export class RulesComponent implements OnInit {
    * This method is used to reset the data.
    */
   private resetData() {
-    this.form.value.topic = '';
-    this.iot.select_fields = [];
-    this.configService.selectedItems = [];
+    this.iot.sql_statement = '';
+    this.sql_statement = '';
+    this.form.get('sql_statement').reset();
   }
 
   /**
@@ -192,11 +195,10 @@ export class RulesComponent implements OnInit {
   }
 
   /**
-   * This method save the selected items.
-   * @param event The event that contains the selected items.
+   * This method is used when user insert a sql statement.
+   * @param event The event to handle.
    */
   onValueChanged(event: any) {
-    const validItems = event.value.filter((item: string) => this.selectFieldPattern.test(item));
-    this.configService.selectedItems = validItems;
+    this.sql_statement = this.sql_statement_pattern.test(event.value) ? event.value : '';
   }
 }
