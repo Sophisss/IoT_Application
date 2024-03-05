@@ -21,7 +21,7 @@ export class RulesComponent implements OnInit {
 
   thingName_pattern: RegExp = /\sas\s+thingName\s+/i;
 
-  sql_statement_pattern: RegExp = /^SELECT\s+((\*|([A-Za-z]+)(\(\d+\))?\s+AS\s+[A-Za-z]+)(,\s+(\*|([A-Za-z]+)(\(\d+\))?\s+AS\s+[A-Za-z]+))*)\s+FROM\s+[A-Za-z]+$/;
+  sql_statement_pattern: RegExp = /^SELECT\s+((\*|([A-Za-z]+)(\(\d+\))?\s+AS\s+[A-Za-z]+)(,\s+(\*|([A-Za-z]+)(\(\d+\))?\s+AS\s+[A-Za-z]+))*)\s+FROM\s+([A-Za-z\/+#]+)$/;
 
   sql_statement: string = '';
 
