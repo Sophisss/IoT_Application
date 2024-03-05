@@ -25,11 +25,10 @@ def __generate_device_changes_resources(json: dict) -> str:
 
     iot_rule = json['awsConfig']['iot']['iot_rule']
     rule_section = iot_rule['rule']
-    topic = rule_section['topic'] if rule_section else None
-    select = rule_section['select'] if rule_section else None
+    sql_statement = rule_section['sql_statement'] if rule_section else None
 
-    if topic:
-        resources = __generate_mqtt_resources(topic, select)
+    if sql_statement:
+        resources = __generate_mqtt_resources(sql_statement)
         if iot_rule['shadow_notify']:
             resources += __generate_shadow_changes_resources()
         return resources
@@ -37,15 +36,14 @@ def __generate_device_changes_resources(json: dict) -> str:
         return __generate_shadow_changes_resources()
 
 
-def __generate_mqtt_resources(topic: str, select_field: list) -> str:
+def __generate_mqtt_resources(sql_statement: str) -> str:
     """
     This function generates the resources to monitor the changes in the device shadow and stores the data in Timestream.
-    :param topic: the topic to intercept.
-    :param select_field: the fields for the select.
+    :param sql_statement: the sql statement.
     :return: the resources to monitor the changes in the device shadow and stores the data in Timestream.
     """
     return f"""{__generate_lambda_mqtt()}
-{__generate_rule_mqtt(topic, select_field)}
+{__generate_rule_mqtt(sql_statement)}
 {__generate_lambda_mqtt_permission()}
 """
 
@@ -168,14 +166,12 @@ def __generate_rule_shadow_changes() -> str:
     """
 
 
-def __generate_rule_mqtt(topic: str, select_fields: list) -> str:
+def __generate_rule_mqtt(sql_statement: str) -> str:
     """
     This function generates the IoT rule who intercepts mqtt messages and send them to a lambda.
-    :param topic: the topic to intercept.
-    :param select_field: the fields for the select.
+    :param sql_statement: the sql statement.
     :return: the IoT rule who intercepts mqtt messages and send them to a lambda.
     """
-    select_clause = ', '.join(select_fields)
     return f"""  DeviceStatusMonitoringRule:
     Type: AWS::IoT::TopicRule
     Properties:
@@ -183,7 +179,7 @@ def __generate_rule_mqtt(topic: str, select_fields: list) -> str:
       TopicRulePayload:
         RuleDisabled: false
         AwsIotSqlVersion: 2016-03-23
-        Sql: "SELECT {select_clause} FROM '{topic}'"
+        Sql: !Sub "{sql_statement}"
         Actions:
           - Lambda:
               FunctionArn: !GetAtt DeviceStatusMonitoring.Arn
