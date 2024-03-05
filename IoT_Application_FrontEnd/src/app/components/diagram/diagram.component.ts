@@ -7,6 +7,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { DxDataGridComponent, DxDiagramComponent } from "devextreme-angular";
 import { Field } from "../../models/field.model";
 import { Router } from '@angular/router';
+import { ToggleService } from 'src/app/services/toggle.service';
 
 @Component({
   selector: 'app-diagram',
@@ -54,7 +55,7 @@ export class DiagramComponent {
    * @param configService the service that handles the configuration aspects of the diagram
    */
   constructor(private customCommandService: CustomCommandService, private configService: ConfigurationService,
-    private router: Router) {
+    private router: Router, private toggleService: ToggleService) {
     const that = this;
     this.items = this.configService.getItems();
     this.dataSource = new ArrayStore({
@@ -129,6 +130,12 @@ export class DiagramComponent {
         this.deleteItem();
       },
     };
+  }
+
+  closeJsonViewer() {
+    if (this.toggleService.isDrawerOpened()) {
+      this.toggleService.toggleDrawer();
+    }
   }
 
   addNewRow() {
