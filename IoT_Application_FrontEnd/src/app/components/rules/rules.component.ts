@@ -19,9 +19,9 @@ export class RulesComponent implements OnInit {
     { text: "Sending and storing data when receives an MQTT message with changes to a device shadow", value: false }
   ];
 
-  // selectFieldPattern: RegExp = /^topic\(\d+\) as [A-Za-z]+$/;
+  thingName_pattern: RegExp = /\sas\s+thingName\s+/i;
 
-  sql_statement_pattern: RegExp = /^SELECT\s+((\*|[A-Za-z]+)(\s+as\s+[A-Za-z]+)?)(,\s+(\*|[A-Za-z]+)(\s+as\s+[A-Za-z]+)?)*\s+FROM\s+[A-Za-z]+$/;
+  sql_statement_pattern: RegExp = /^SELECT\s+((\*|([A-Za-z]+)(\(\d+\))?\s+AS\s+[A-Za-z]+)(,\s+(\*|([A-Za-z]+)(\(\d+\))?\s+AS\s+[A-Za-z]+))*)\s+FROM\s+[A-Za-z]+$/;
 
   sql_statement: string = '';
 
