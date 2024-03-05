@@ -98,10 +98,9 @@ export class ImportServiceService {
     let iot: IoT = {
       database_name: jsonContent.awsConfig.iot.timestream.database.name,
       table_name: jsonContent.awsConfig.iot.timestream.table.name,
-      topic: rule ? rule.topic : null,
       shadow_notify: jsonContent.awsConfig.iot.iot_rule.shadow_notify,
       topic_notify: rule ? true : false,
-      select_fields: rule ? rule.select : null
+      sql_statement: rule ? rule.sql_statement : null
     }
 
     this.configService.updateIoTConfiguration(iot);

@@ -76,37 +76,23 @@
             <p class="box-subtitle">Set the topic on which the thing will send data.</p>
             <dx-validation-group>
                 <form [formGroup]="form" class="form">
-                    <div class="field-container" *ngIf="configure_topic || showTopics">
+                    <div class="field-container" *ngIf="configure_topic || show_sql_statement">
 
-                        <div class="field-label">Topic mqtt *</div>
+                        <div class="field-label">SQL Statement *</div>
                         <div class="field-value">
-                            <dx-text-box [(value)]="iot.topic" [showClearButton]="true"
-                                [inputAttr]="{ 'aria-label': 'topic' }" formControlName="topic" label="Topic"
-                                labelMode="floating">
+                            <dx-text-box [showClearButton]="true" hint="Enter sql statement for iot rule"
+                                [inputAttr]="{ 'aria-label': 'sql_statement' }" formControlName="sql_statement"
+                                label="SQL" labelMode="floating" (onValueChanged)="onValueChanged($event)">
                                 <dx-validator>
-                                    <dxi-validation-rule type="required"
-                                        message="Topic is required"></dxi-validation-rule>
-                                </dx-validator>
+                                    <dxi-validation-rule type="required" message="SQL statement is required"></dxi-validation-rule>
+                                    <dxi-validation-rule type="pattern" [pattern]="sql_statement_pattern" message="SQL statement is invalid"></dxi-validation-rule>
+                                    <dxi-validation-rule type="pattern" [pattern]="thingName_pattern" message="thingName field is required"></dxi-validation-rule>
+                                </dx-validator>                                
                             </dx-text-box>
-                        </div>
-
-                        <div class="select-label">Select *</div>
-                        <div class="field-value">
-                            <dx-tag-box [(value)]="iot.select_fields" noDataText="' '"
-                                [inputAttr]="{ 'aria-label': 'select' }" [acceptCustomValue]="true" label="Fields"
-                                labelMode="floating" [placeholder]="' '" [multiline]="true" [noDataText]="' '"
-                                (onValueChanged)="onValueChanged($event)">
-                                <dx-validator>
-                                    <dxi-validation-rule type="required"
-                                        message="Select fields is required"></dxi-validation-rule>
-                                    <dxi-validation-rule type="pattern" [pattern]="selectFieldPattern"
-                                        message="Field name is invalid"></dxi-validation-rule>
-                                </dx-validator>
-                            </dx-tag-box>
                         </div>
                     </div>
 
-                    <div class="field-container" *ngIf="!configure_topic || showTopics">
+                    <div class="field-container" *ngIf="!configure_topic || show_sql_statement">
                         <div class="field-label">Topic shadow *</div>
                         <div class="field-value">
                             <dx-text-box class="fixTopic" [inputAttr]="{ 'aria-label': 'topic' }"
