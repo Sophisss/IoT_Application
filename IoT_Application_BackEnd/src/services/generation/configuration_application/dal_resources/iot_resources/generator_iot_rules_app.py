@@ -1,3 +1,6 @@
+import re
+
+
 def generate_iot_rules_app(json: dict) -> str:
     return f"""{__generate_header()}
 {__generate_lambdas(json)}
@@ -17,11 +20,10 @@ from iot.device_status_change import DeviceStatusChange
 def __generate_lambdas(json: dict) -> str:
     iot_rule = json['awsConfig']['iot']['iot_rule']
     rule_section = iot_rule['rule']
-    topic = rule_section['topic'] if rule_section else None
-    select = rule_section['select'] if rule_section else None
+    sql_statement = rule_section['sql_statement'] if rule_section else None
 
-    if topic:
-        resources = __generate_monitor_device_status_mqtt(select)
+    if sql_statement:
+        resources = __generate_monitor_device_status_mqtt(sql_statement)
         if iot_rule['shadow_notify']:
             resources += __generate_monitor_device_status_shadow()
         return resources
@@ -40,11 +42,11 @@ def monitor_device_status_shadow(event, _):
     """
 
 
-def __generate_variables(select_fields) -> str:
+def __generate_variables(select_fields: list) -> str:
     return '\n'.join(map(lambda field: f"    {field} = event['{field}']", select_fields))
 
 
-def __generate_device_status_dict(select_fields) -> str:
+def __generate_device_status_dict(select_fields: list) -> str:
     filtered_fields = filter(lambda field: field != 'thingName', select_fields)
     return """
     device_status = {
@@ -52,7 +54,9 @@ def __generate_device_status_dict(select_fields) -> str:
     }"""
 
 
-def __generate_monitor_device_status_mqtt(select_fields) -> str:
+def __generate_monitor_device_status_mqtt(sql_statement: str) -> str:
+    select_fields = re.findall(r'\bAS\s+(\w+)\b', sql_statement)
+
     return f"""
 def monitor_device_status_mqtt(event, _):
 {__generate_variables(select_fields)}

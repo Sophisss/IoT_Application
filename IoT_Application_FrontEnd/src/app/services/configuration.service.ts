@@ -33,7 +33,6 @@ export class ConfigurationService {
 
   updateIoTConfiguration(iot: IoT) {
     this.iot = iot;
-    this.selectedItems = iot.select_fields;
   }
 
   getIoTConfiguration(): IoT {
@@ -223,8 +222,7 @@ export class ConfigurationService {
 
   private createIoTRuleJson() {
     return {
-      topic: this.iot.topic,
-      select: this.iot.select_fields
+      sql_statement: this.iot.sql_statement
     };
   }
 

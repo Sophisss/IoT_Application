@@ -1,6 +1,6 @@
 <!-- The diagram: simple view keeps an entire grid instead of only the part you're using. -->
 <div class="diagram" *ngIf="!hasChild">
-    <dx-diagram (onCustomCommand)="onCustomCommand($event)"
+    <dx-diagram (onCustomCommand)="onCustomCommand($event)" (onDisposing)="closeJsonViewer()"
         (onItemDblClick)="editItem($event.item.dataItem)" (onRequestEditOperation)="requestEditOperationHandler($event)"
         id="diagram" units="cm" viewUnits="cm">
         <!-- The menu you get after left-clicking on an object or the diagram. -->
