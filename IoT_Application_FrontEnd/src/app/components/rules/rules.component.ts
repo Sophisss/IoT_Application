@@ -89,6 +89,7 @@ export class RulesComponent implements OnInit {
     this.iot.table_name = this.form.value.table_name;
 
     if (this.iot.database_name != '' && this.iot.table_name != '') {
+      this.updateConfiguration();
       this.firstBoxZIndex = 0;
       this.secondBoxZIndex = 1000;
     }
@@ -110,6 +111,7 @@ export class RulesComponent implements OnInit {
 
     if (this.isSecondBoxValid) {
       this.isShowedSqlStatement();
+      this.updateConfiguration();
       this.secondBoxZIndex = 0;
       this.thirdBoxZIndex = 1000;
     }
@@ -120,11 +122,6 @@ export class RulesComponent implements OnInit {
    */
   checkSecondBoxValidity() {
     this.isSecondBoxValid = this.choice_list.find(item => item.value) != null;
-  }
-
-  isShowedSqlStatement() {
-    this.configure_topic = this.iot.topic_notify;
-    this.show_sql_statement = this.iot.shadow_notify && this.iot.topic_notify;
   }
 
   /**
@@ -142,39 +139,14 @@ export class RulesComponent implements OnInit {
     if (!this.configure_topic) {
       this.resetData();
       this.ifSuccess();
+      this.updateConfiguration();
     } else {
       if (this.sql_statement !== '') {
         this.iot.sql_statement = this.sql_statement;
         this.ifSuccess();
+        this.updateConfiguration();
       }
     }
-  }
-
-  /**
-   * This method is used to reset the data.
-   */
-  private resetData() {
-    this.iot.sql_statement = '';
-    this.sql_statement = '';
-    this.form.get('sql_statement').reset();
-  }
-
-  /**
-   * This method is used when the configuration is successful.
-   */
-  private ifSuccess() {
-    this.showToast('The IoT rule has been successfully configured!');
-    this.changeConfiguration = true;
-  }
-
-  /**
-   * This method is used to show the toast message.s
-   * @param message The message to show.
-   */
-  private showToast(message: string) {
-    this.message = message;
-    this.isToastVisible = true;
-    this.thirdBoxZIndex = 0;
   }
 
   /**
@@ -200,5 +172,44 @@ export class RulesComponent implements OnInit {
    */
   onValueChanged(event: any) {
     this.sql_statement = this.sql_statement_pattern.test(event.value) ? event.value : '';
+  }
+
+    /**
+   * This method is used to show the toast message.s
+   * @param message The message to show.
+   */
+    private showToast(message: string) {
+      this.message = message;
+      this.isToastVisible = true;
+      this.thirdBoxZIndex = 0;
+    }
+
+      /**
+   * This method is used to reset the data.
+   */
+  private resetData() {
+    this.iot.sql_statement = '';
+    this.sql_statement = '';
+    this.form.get('sql_statement').reset();
+  }
+
+  /**
+   * This method is used when the configuration is successful.
+   */
+  private ifSuccess() {
+    this.showToast('The IoT rule has been successfully configured!');
+    this.changeConfiguration = true;
+  }
+
+  private isShowedSqlStatement() {
+    this.configure_topic = this.iot.topic_notify;
+    this.show_sql_statement = this.iot.shadow_notify && this.iot.topic_notify;
+  }
+
+  /**
+   * This method is used to update the configuration.
+   */
+  private updateConfiguration() {
+    this.configService.updateContent();
   }
 }

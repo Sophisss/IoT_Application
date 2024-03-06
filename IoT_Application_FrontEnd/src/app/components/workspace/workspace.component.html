@@ -18,8 +18,7 @@
                 </div>
                 <router-outlet></router-outlet>
                 <dx-popup [width]="280" [height]="260" [showTitle]="false" [dragEnabled]="false"
-                    [hideOnOutsideClick]="true" container=".dx-viewport"
-                    [(visible)]="popupVisible">
+                    [hideOnOutsideClick]="true" container=".dx-viewport" [(visible)]="popupVisible">
                     <div class="popup-content">
                         <p class="popup-message">Are you sure you want to exit? Changes will be lost.</p>
                         <div class="popup-button">

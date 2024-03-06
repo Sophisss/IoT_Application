@@ -1,12 +1,3 @@
-.rules {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    background-color: lightgray;
-}
-
 .overlay {
     position: absolute;
     top: 0;
@@ -17,21 +8,25 @@
     z-index: 999;
 }
 
-.changeButton,
-.resizePageButton {
+.rules {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: lightgray;
+}
+
+.changeButton {
     position: absolute;
     top: 20px;
+    right: 20px;
     z-index: 999;
     background-color: transparent;
     border: none;
 }
 
-.changeButton {
-    right: 20px;
-}
-
-::ng-deep .changeButton .dx-icon,
-::ng-deep .resizePageButton .dx-icon {
+::ng-deep .changeButton .dx-icon {
     font-size: 20px;
     color: white;
 }
@@ -102,15 +97,10 @@
     padding: 15px;
 }
 
-.field-label, .select-label{
+.field-label {
     margin-right: 10px;
     font-weight: bold;
     padding: 5px;
-}
-
-.select-label {
-    margin-top: 20px;
-
 }
 
 .field-value {

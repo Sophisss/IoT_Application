@@ -77,8 +77,8 @@
   background-color: white;
 }
 
-
-#cancelButton, #exitButton {
+#cancelButton,
+#exitButton {
   text-align: center;
   margin-left: 5px;
   width: 80px;
@@ -95,6 +95,7 @@
   background-color: lightgray;
 }
 
-#exitButton:active, #cancelButton:active {
+#exitButton:active,
+#cancelButton:active {
   transform: scale(0.95);
 }
