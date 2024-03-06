@@ -13,8 +13,6 @@ export class ConfigurationService {
 
   items: Item[] = [];
 
-  selectedItems: string[] = [];
-
   private iot: IoT = new IoT();
 
   projectTitle: string = "IoT Application";
@@ -27,6 +25,7 @@ export class ConfigurationService {
   specialIDs: number[] = [];
 
   private updateSignalSubject = new BehaviorSubject<void>(null);
+
   updateSignal$ = this.updateSignalSubject.asObservable();
 
   constructor(private titleCase: TitleCasePipe) { }
