@@ -21,7 +21,9 @@ export class RulesComponent implements OnInit {
 
   thingName_pattern: RegExp = /\sas\s+thingName\s+/i;
 
-  sql_statement_pattern: RegExp = /^SELECT\s+((\*|([A-Za-z]+)(\(\d+\))?\s+AS\s+[A-Za-z]+)(,\s+(\*|([A-Za-z]+)(\(\d+\))?\s+AS\s+[A-Za-z]+))*)\s+FROM\s+([A-Za-z\/+#]+)$/;
+  from_pattern: RegExp = /'([A-Za-z\/+#]+)'/;
+
+  sql_statement_pattern: RegExp = /^SELECT\s+((\*|([A-Za-z]+)(\(\d+\))? AS [A-Za-z]+)(,\s+(\*|([A-Za-z]+)(\(\d+\))? AS [A-Za-z]+))*)\s+FROM\s+/;
 
   sql_statement: string = '';
 
@@ -171,7 +173,8 @@ export class RulesComponent implements OnInit {
    * @param event The event to handle.
    */
   onValueChanged(event: any) {
-    this.sql_statement = this.sql_statement_pattern.test(event.value) ? event.value : '';
+    const validation = this.sql_statement_pattern.test(event.value) && this.thingName_pattern.test(event.value) && this.from_pattern.test(event.value);
+    this.sql_statement = validation ? event.value : '';
   }
 
     /**

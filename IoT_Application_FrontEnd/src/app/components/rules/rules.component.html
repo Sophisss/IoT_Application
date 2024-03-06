@@ -90,6 +90,8 @@
                                         message="SQL statement is invalid"></dxi-validation-rule>
                                     <dxi-validation-rule type="pattern" [pattern]="thingName_pattern"
                                         message="thingName field is required"></dxi-validation-rule>
+                                    <dxi-validation-rule type="pattern" [pattern]="from_pattern"
+                                        message="Expression after FROM is invalid"></dxi-validation-rule>
                                 </dx-validator>
                             </dx-text-box>
                         </div>
