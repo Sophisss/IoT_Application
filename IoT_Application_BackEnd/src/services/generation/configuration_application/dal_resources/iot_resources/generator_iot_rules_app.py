@@ -33,6 +33,7 @@ def __generate_lambdas(json: dict) -> str:
 
 def __generate_monitor_device_status_shadow() -> str:
     return """
+    
 def monitor_device_status_shadow(event, _):
     device_id = event['thingName']
     device_status_reported = event['current']['state']['reported']
@@ -42,29 +43,49 @@ def monitor_device_status_shadow(event, _):
     """
 
 
-def __generate_variables(select_fields: list) -> str:
-    return '\n'.join(map(lambda field: f"    {field} = event['{field}']", select_fields))
-
-
-def __generate_device_status_dict(select_fields: list) -> str:
-    filtered_fields = filter(lambda field: field != 'thingName', select_fields)
-    return """
-    device_status = {
-""" + '\n'.join(map(lambda field: f"        '{field}': {field},", filtered_fields)) + """
-    }"""
-
-
 def __generate_monitor_device_status_mqtt(sql_statement: str) -> str:
-    select_fields = re.findall(r'\bAS\s+(\w+)\b', sql_statement)
+    is_present = '*' in sql_statement
+    select_fields = extract_select_fields(sql_statement)
+    filtered_fields = list(field for field in select_fields if field.split(' AS ', 1)[1] != 'thingName')
+
+    code = if_is_present() if is_present else not_is_present(filtered_fields)
 
     return f"""
 def monitor_device_status_mqtt(event, _):
-{__generate_variables(select_fields)}
-{__generate_device_status_dict(select_fields)}
-
-    event = get_event(thingName, device_status)
+{code}
     device_status_storage(event)
 """
+
+
+def extract_select_fields(sql_statement: str):
+    fields = re.findall(r'SELECT\s+(.*?)\s+FROM', sql_statement, re.IGNORECASE)
+    return list(map(lambda f: f.strip(), fields[0].split(','))) if fields else []
+
+
+def if_is_present() -> str:
+    return """    thingName = event['thingName']
+    del event['thingName']
+    
+    event = get_event(thingName, event)"""
+
+
+def not_is_present(filtered_fields) -> str:
+    return f"""    thingName = event['thingName']
+{__generate_variables(filtered_fields)}
+{__generate_device_status_dict(filtered_fields)}
+
+    event = get_event(thingName, device_status)"""
+
+
+def __generate_variables(filtered_fields: list) -> str:
+    return '\n'.join(
+        map(lambda field: f"    {field.split(' AS ', 1)[0]} = event['{field.split(' AS ', 1)[1]}']", filtered_fields))
+
+
+def __generate_device_status_dict(filtered_fields: list) -> str:
+    return f"""    device_status = {{
+{''.join(map(lambda field: f"        '{field.split(' AS ')[1].strip()}': {field.split(' AS ')[0].strip()},", filtered_fields))}
+    }}"""
 
 
 def __generate_get_event() -> str:
