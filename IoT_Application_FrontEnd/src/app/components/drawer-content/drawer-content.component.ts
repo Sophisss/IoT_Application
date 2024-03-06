@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ConfigurationService} from "../../services/configuration.service";
-import {Subscription} from "rxjs";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfigurationService } from "../../services/configuration.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-drawer-content',
@@ -30,6 +30,5 @@ export class DrawerContentComponent implements OnInit, OnDestroy {
   private updateContent() {
     let configuration = JSON.stringify(this.configService.exportConfiguration());
     this.drawerContent = JSON.parse(configuration);
-    //console.log(this.drawerContent);
   }
 }
