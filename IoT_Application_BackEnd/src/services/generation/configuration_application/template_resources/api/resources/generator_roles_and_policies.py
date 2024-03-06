@@ -79,5 +79,4 @@ def __generate_table_resource(table: dict) -> str:
     :return: the resource definition for a DynamoDB table.
     """
     return f"""              - !Sub "arn:aws:dynamodb:${{AWS::Region}}:${{AWS::AccountId}}:table/{table['tableName']}"
-              - !Sub "arn:aws:dynamodb:${{AWS::Region}}:${{AWS::AccountId}}:table/{table['tableName']}/index/{table['GSI']['index_name']}" 
-"""
+              - !Sub "arn:aws:dynamodb:${{AWS::Region}}:${{AWS::AccountId}}:table/{table['tableName']}/index/{table['GSI']['index_name']}" """
