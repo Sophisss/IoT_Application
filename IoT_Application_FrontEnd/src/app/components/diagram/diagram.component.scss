@@ -108,3 +108,7 @@ h3 {
 .toolbox-right {
   float: right;
 }
+
+::ng-deep .dx-datagrid .dx-datagrid-content .dx-datagrid-table .dx-row .dx-command-edit-with-icons .dx-link {
+  color: firebrick;
+}
