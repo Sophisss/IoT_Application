@@ -46,7 +46,7 @@ def monitor_device_status_shadow(event, _):
 def __generate_monitor_device_status_mqtt(sql_statement: str) -> str:
     is_present = '*' in sql_statement
     select_fields = extract_select_fields(sql_statement)
-    filtered_fields = list(field for field in select_fields if field.split(' AS ', 1)[1] != 'thingName')
+    filtered_fields = list(field for field in select_fields if field.split(' AS ', 1)[1] != 'thingName') if not is_present else select_fields
 
     code = if_is_present() if is_present else not_is_present(filtered_fields)
 
