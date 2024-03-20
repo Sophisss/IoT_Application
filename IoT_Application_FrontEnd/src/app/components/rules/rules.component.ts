@@ -15,8 +15,8 @@ export class RulesComponent implements OnInit {
   iot: IoT = this.configService.getIoTConfiguration();
 
   choice_list = [
-    { text: "Sending and storing data when the device status changes", value: false },
-    { text: "Sending and storing data when receives an MQTT message with changes to a device shadow", value: false }
+    { text: "Archiving data only when there is a change in the device shadow state", value: false },
+    { text: "Archiving data upon receiving an MQTT message indicating changes", value: false }
   ];
 
   thingName_pattern: RegExp = /\sas\s+thingName\s+/i;
@@ -177,19 +177,19 @@ export class RulesComponent implements OnInit {
     this.sql_statement = validation ? event.value : '';
   }
 
-    /**
-   * This method is used to show the toast message.s
-   * @param message The message to show.
-   */
-    private showToast(message: string) {
-      this.message = message;
-      this.isToastVisible = true;
-      this.thirdBoxZIndex = 0;
-    }
+  /**
+ * This method is used to show the toast message.s
+ * @param message The message to show.
+ */
+  private showToast(message: string) {
+    this.message = message;
+    this.isToastVisible = true;
+    this.thirdBoxZIndex = 0;
+  }
 
-      /**
-   * This method is used to reset the data.
-   */
+  /**
+* This method is used to reset the data.
+*/
   private resetData() {
     this.iot.sql_statement = '';
     this.sql_statement = '';

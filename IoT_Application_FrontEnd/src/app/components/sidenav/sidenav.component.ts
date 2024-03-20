@@ -7,9 +7,6 @@ import { Router } from '@angular/router';
   styleUrl: './sidenav.component.scss'
 })
 export class SidenavComponent {
-
-  @Input() isSidebarOpen: boolean = false;
-
   @Output() toggleSidebarForMe: EventEmitter<any> = new EventEmitter();
 
   navigation: any[] = [
@@ -27,5 +24,4 @@ export class SidenavComponent {
   click() {
     this.toggleSidebarForMe.emit();
   }
-
 }

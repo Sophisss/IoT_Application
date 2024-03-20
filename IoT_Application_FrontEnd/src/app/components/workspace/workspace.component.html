@@ -2,7 +2,7 @@
     <dx-drawer #drawer template="template" [(opened)]="isDrawerOpened" position="left" revealMode="expand"
         openedStateMode="shrink" [closeOnOutsideClick]="false">
         <div *dxTemplate="let data of 'template'">
-            <app-sidenav [isSidebarOpen]="isDrawerOpened" (toggleSidebarForMe)="sideBarToggler()"></app-sidenav>
+            <app-sidenav (toggleSidebarForMe)="sideBarToggler()"></app-sidenav>
         </div>
         <div id="header">
             <app-header [isSidebarOpen]="isDrawerOpened" (toggleSidebarForMe)="sideBarToggler()"

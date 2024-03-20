@@ -14,11 +14,22 @@ export class HeaderComponent {
 
   isModifiable: boolean = false;
 
-  buttonOptions: any = {
-    icon: "menu",
-    onClick: () => {
-      this.toggleSidebar();
-    }
+  icon = "menu";
+
+  buttonOptions: any = this.getButtonOptions();
+
+  updateButtonOptions() {
+    this.buttonOptions = this.getButtonOptions();
+  }
+
+  getButtonOptions() {
+    return {
+      icon: this.icon,
+      onClick: () => {
+        this.toggleSidebar();
+        this.updateButtonOptions();
+      }
+    };
   }
 
   exitButtonOptions: any = {
@@ -40,7 +51,12 @@ export class HeaderComponent {
   }
 
   toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
+    this.icon = this.isSidebarOpen ? "menu" : "chevrondoubleleft";
+    if (this.isSidebarOpen) {
+      this.icon = "menu";
+    } else {
+      this.icon = "chevrondoubleleft";
+    }
     this.toggleSidebarForMe.emit();
   }
 }

@@ -24,17 +24,3 @@ h2 {
   margin-left: 10px; 
   margin-right: 10px;
 }
-
-#menu {
-  background-color: transparent;
-  border: none; 
-  padding: 20px; 
-  margin-top: 5px;
-  margin-left: 20px;
-  cursor: pointer;
-}
-
-::ng-deep #menu .dx-icon {
-  margin-right: 10px; 
-  color: lightgray;
-}
