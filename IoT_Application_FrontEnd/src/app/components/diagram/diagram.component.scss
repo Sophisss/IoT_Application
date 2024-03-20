@@ -1,10 +1,15 @@
 .diagram {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
   height: 100%;
-  width: 100%;
+  background-color: #d9d9d9;
 }
 
 ::ng-deep #diagram {
   height: 100%;
+  width: 100%;
 }
 
 ::ng-deep #diagram .template .template-name {
