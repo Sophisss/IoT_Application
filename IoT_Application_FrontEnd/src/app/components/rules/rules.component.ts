@@ -65,6 +65,7 @@ export class RulesComponent implements OnInit {
    * This method is used to initialize the form.
    */
   initForm() {
+    this.sql_statement = this.iot.sql_statement;
     this.form = this.formBuilder.group({
       database_name: [this.iot.database_name, Validators.required],
       table_name: [this.iot.table_name, Validators.required],
